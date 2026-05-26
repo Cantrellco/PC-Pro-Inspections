@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-ink text-bone font-sans antialiased;
+    background-image:
+      radial-gradient(at 92% 6%, rgba(29, 58, 138, 0.10) 0px, transparent 50%),
+      radial-gradient(at 6% 96%, rgba(212, 38, 58, 0.06) 0px, transparent 45%);
+    background-attachment: fixed;
+  }
+  /* Visible focus ring on dark theme — WCAG AA */
+  :focus-visible {
+    @apply outline-none ring-2 ring-flag-redSoft ring-offset-2 ring-offset-ink rounded-sm;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight;
+  }
+  /* Avoid layout shift from images without intrinsic size */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  /* Headings should be tabbable for focus-on-route-change */
+  [tabindex='-1']:focus {
+    outline: none;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-md
+           px-5 py-3 text-sm font-semibold uppercase tracking-wider
+           transition-all duration-200 select-none
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-flag-red text-white shadow-red
+           hover:bg-flag-redSoft hover:-translate-y-0.5
+           active:translate-y-0 active:bg-flag-redDeep;
+  }
+  .btn-secondary {
+    @apply btn border border-bone/20 bg-ink-50 text-bone
+           hover:bg-ink-100 hover:border-bone/40
+           active:bg-ink-200;
+  }
+  .btn-ghost {
+    @apply btn text-bone hover:text-flag-redSoft;
+  }
+
+  .card {
+    @apply rounded-lg border border-white/10 bg-ink-50/80 shadow-card
+           backdrop-blur-sm;
+  }
+
+  .field-label {
+    @apply block text-sm font-medium text-bone-muted mb-1.5;
+  }
+  .field-input {
+    @apply w-full rounded-md border border-white/10 bg-ink-100/70 px-3.5 py-2.5
+           text-bone placeholder:text-bone-dim
+           focus:border-flag-redSoft focus:bg-ink-50 transition-colors;
+  }
+  .field-error {
+    @apply text-flag-redSoft text-sm mt-1.5;
+  }
+
+  /* The thin red/white/blue accent line — used as a section divider motif. */
+  .stripe {
+    background-image: linear-gradient(
+      90deg,
+      theme('colors.flag.red') 0 33%,
+      #ffffff 33% 66%,
+      theme('colors.flag.navy') 66% 100%
+    );
+  }
+
+  /* Section container */
+  .container-narrow {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .container-tight {
+    @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
+  }
+
+  /* Star divider (small SVG-friendly inline motif) */
+  .star-divider {
+    @apply flex items-center justify-center gap-3 my-8;
+  }
+  .star-divider::before,
+  .star-divider::after {
+    content: '';
+    @apply flex-1 h-px bg-bone/15;
+    max-width: 6rem;
+  }
+}
