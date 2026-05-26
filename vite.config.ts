@@ -6,7 +6,10 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// VITE_BASE allows building for a subpath (e.g. GitHub Pages).
+// Local dev / Netlify / Vercel / Cloudflare Pages all leave it unset and serve from /.
 export default defineConfig({
+  base: process.env.VITE_BASE || '/',
   plugins: [react()],
   resolve: {
     alias: {

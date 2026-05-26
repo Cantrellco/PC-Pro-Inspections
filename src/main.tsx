@@ -10,9 +10,12 @@ initAnalytics();
 const container = document.getElementById('root');
 if (!container) throw new Error('Root container not found');
 
+// Strip trailing slash so BrowserRouter accepts it. Empty string when base = "/".
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </StrictMode>,
