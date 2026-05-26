@@ -1,0 +1,135 @@
+import { siteConfig } from '@/config/siteConfig';
+import { ADD_ONS, SQFT_TIERS } from '@/config/pricing';
+import SEO from '@/components/SEO';
+import Section from '@/components/Section';
+import SectionHeader from '@/components/SectionHeader';
+import Card from '@/components/Card';
+import QuoteCalculator from '@/components/QuoteCalculator';
+
+const currency = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
+const SERVICES = [
+  {
+    title: 'Standard Home Inspection',
+    body: 'A full visual inspection of all accessible major systems: roof, exterior, structure, plumbing, electrical, HVAC, attic, basement/crawl, and interior. Includes a same-day photo-rich report.',
+  },
+  {
+    title: 'New Construction Inspection',
+    body: 'A second set of expert eyes on a brand-new build before final walk-through. Catches the surprising number of issues that slip past a typical builder QC.',
+  },
+  {
+    title: 'Pre-Listing (Seller) Inspection',
+    body: 'For sellers who want to know what an inspector will find — before the buyer does. Lets you fix or disclose proactively and avoid renegotiation.',
+  },
+  {
+    title: '11-Month Warranty Inspection',
+    body: "Before your builder's one-year warranty expires, we look for any issues so they can be addressed under warranty. Worth far more than its cost.",
+  },
+  {
+    title: 'Annual Maintenance Inspection',
+    body: "An ongoing check-up after you've moved in — catches small issues before they become expensive ones.",
+  },
+];
+
+export default function Services() {
+  const c = siteConfig;
+  const cityForTitle = c.address.city || 'Your Area';
+
+  return (
+    <>
+      <SEO
+        title={`Services & Pricing — Home Inspector in ${cityForTitle} | ${c.businessName}`}
+        description="See what we inspect, our add-on options, and get a real-time estimate with our quote calculator. Estimate only — final price confirmed at scheduling."
+        pathname="/services"
+      />
+
+      <Section>
+        <SectionHeader
+          as="h1"
+          eyebrow="Services & Pricing"
+          title="Pick what you need. Pay only for what you pick."
+          description="Pricing is driven by square footage with optional add-ons. Use the calculator below for an itemized estimate in seconds."
+        />
+
+        {/* Services list */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
+          {SERVICES.map((s) => (
+            <Card key={s.title}>
+              <h2 className="font-semibold text-lg text-white mb-1.5">
+                {s.title}
+              </h2>
+              <p className="text-bone-muted text-sm leading-relaxed">{s.body}</p>
+            </Card>
+          ))}
+        </div>
+
+        {/* Calculator */}
+        <div>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
+            Quote Calculator
+          </h2>
+          <p className="text-bone-muted mb-8 max-w-2xl">
+            Move the slider, toggle the add-ons. The breakdown updates live.
+            When you are ready, send us the quote — or jump straight to booking.
+          </p>
+          <QuoteCalculator />
+        </div>
+
+        {/* Reference: base prices and add-ons (transparency) */}
+        <div className="star-divider" aria-hidden="true">
+          <svg viewBox="0 0 20 20" className="h-4 w-4 text-flag-red" fill="currentColor">
+            <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
+          </svg>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <Card>
+            <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
+              Base pricing by sqft
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {SQFT_TIERS.map((t) => (
+                <li
+                  key={t.label}
+                  className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
+                >
+                  <span className="text-bone">{t.label}</span>
+                  <span className="text-white font-semibold">
+                    {currency.format(t.price)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+          <Card>
+            <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
+              Add-on options
+            </h3>
+            <ul className="space-y-2 text-sm">
+              {ADD_ONS.map((a) => (
+                <li
+                  key={a.id}
+                  className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
+                >
+                  <span className="text-bone">{a.label}</span>
+                  <span className="text-flag-redSoft font-semibold">
+                    +{currency.format(a.price)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </div>
+
+        <p className="mt-6 text-xs text-bone-dim text-center">
+          Estimate only — final price confirmed at scheduling based on the
+          actual property and services chosen.
+        </p>
+      </Section>
+    </>
+  );
+}
