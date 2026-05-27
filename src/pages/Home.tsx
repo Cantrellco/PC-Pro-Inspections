@@ -8,6 +8,8 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
+import StarField from '@/components/StarField';
+import StripeDivider from '@/components/StripeDivider';
 
 export default function Home() {
   const c = siteConfig;
@@ -25,30 +27,48 @@ export default function Home() {
 
       {/* ─── Hero ────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
+        {/* Canton — a star field anchored top-right, like the flag's union */}
         <div
-          className="absolute inset-0 opacity-30 pointer-events-none"
+          className="absolute -top-12 -right-20 w-[460px] h-[460px] sm:w-[640px] sm:h-[640px] pointer-events-none"
+          aria-hidden="true"
+        >
+          <StarField className="w-full h-full opacity-50" count={48} opacity={0.6} />
+        </div>
+        {/* Stripes — soft horizontal bands across the bottom of the hero */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-40 opacity-[0.07] pointer-events-none"
+          aria-hidden="true"
+          style={{
+            backgroundImage:
+              'repeating-linear-gradient(180deg, #d4263a 0 10px, transparent 10px 28px, #f5f5f4 28px 36px, transparent 36px 56px)',
+          }}
+        />
+        {/* Color washes for depth */}
+        <div
+          className="absolute inset-0 opacity-50 pointer-events-none"
           aria-hidden="true"
           style={{
             background:
-              'radial-gradient(ellipse at top right, rgba(29,58,138,0.35), transparent 60%), radial-gradient(ellipse at bottom left, rgba(212,38,58,0.20), transparent 55%)',
+              'radial-gradient(ellipse at 95% 8%, rgba(29,58,138,0.45), transparent 55%), radial-gradient(ellipse at 5% 95%, rgba(212,38,58,0.25), transparent 55%)',
           }}
         />
-        <div className="container-narrow relative pt-14 pb-14 sm:pt-20 sm:pb-24">
-          <p className="mb-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-flag-redSoft">
-            <span
-              className="inline-block h-1.5 w-1.5 rounded-full bg-flag-red"
-              aria-hidden="true"
-            />
-            Serving {c.serviceAreaSummary}
-          </p>
+
+        <div className="container-narrow relative pt-14 pb-16 sm:pt-20 sm:pb-24">
+          <p className="eyebrow mb-5">Serving {c.serviceAreaSummary}</p>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] max-w-3xl">
             Honest, thorough
             <br />
-            <span className="text-flag-red">home inspections</span>
+            <span className="relative inline-block text-flag-red">
+              home inspections
+              <span
+                aria-hidden="true"
+                className="absolute -left-1 -right-1 -bottom-1.5 h-1 stripe rounded-full opacity-80"
+              />
+            </span>
             <br />
             in {cityForTitle}.
           </h1>
-          <p className="mt-6 text-lg sm:text-xl text-bone-muted max-w-2xl">
+          <p className="mt-7 text-lg sm:text-xl text-bone-muted max-w-2xl">
             {c.tagline} Same-day photo-rich reports, walked through with you on
             site. Buying a home is the biggest purchase of your life — go in
             with eyes open.
@@ -56,6 +76,7 @@ export default function Home() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button as="link" to="/services" className="!px-7 !py-4 !text-base">
+              <span aria-hidden="true">★</span>
               Get a Free Quote
             </Button>
             <Button
@@ -69,46 +90,59 @@ export default function Home() {
             </Button>
           </div>
 
-          {/* Trust numbers */}
-          <dl className="mt-12 grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl">
-            <div>
-              <dt className="text-xs uppercase tracking-wider text-bone-dim mb-1">
-                Years
-              </dt>
-              <dd className="text-3xl sm:text-4xl font-bold text-white font-display">
-                {c.yearsInBusiness}+
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wider text-bone-dim mb-1">
-                Inspections
-              </dt>
-              <dd className="text-3xl sm:text-4xl font-bold text-white font-display">
-                {c.inspectionsCompleted.toLocaleString()}+
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs uppercase tracking-wider text-bone-dim mb-1">
-                Avg Rating
-              </dt>
-              <dd className="text-3xl sm:text-4xl font-bold text-white font-display flex items-baseline gap-1">
-                {(
+          {/* Trust numbers — each on a navy-tinted plinth with a star divider */}
+          <dl className="mt-14 grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl">
+            {[
+              ['Years', `${c.yearsInBusiness}+`, null],
+              ['Inspections', `${c.inspectionsCompleted.toLocaleString()}+`, null],
+              [
+                'Avg Rating',
+                (
                   c.testimonials.reduce((a, t) => a + t.rating, 0) /
                   Math.max(c.testimonials.length, 1)
-                ).toFixed(1)}
-                <span className="text-flag-red text-xl">★</span>
-              </dd>
-            </div>
+                ).toFixed(1),
+                '★',
+              ],
+            ].map(([label, value, suffix], idx) => (
+              <div
+                key={label as string}
+                className="relative pl-3 sm:pl-4 border-l-2 border-flag-red/70"
+              >
+                <dt className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-bone-dim mb-1">
+                  {label}
+                </dt>
+                <dd className="text-3xl sm:text-4xl font-bold text-white font-display flex items-baseline gap-1">
+                  {value}
+                  {suffix && <span className="text-flag-red text-xl">{suffix}</span>}
+                </dd>
+                {idx === 2 && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute -top-3 right-0 text-flag-navyLight text-xl"
+                  >
+                    ★
+                  </span>
+                )}
+              </div>
+            ))}
           </dl>
         </div>
-        <div className="stripe h-px w-full opacity-50" aria-hidden="true" />
+        <StripeDivider />
       </section>
 
       {/* ─── Response Promise ─────────────────────────────────────────── */}
-      <Section tone="elevated">
+      <Section tone="americana">
+        <div className="text-center mb-10">
+          <p className="eyebrow mb-3">Our Promise to You</p>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
+            Quick callback. Quick inspection.
+          </h2>
+        </div>
         <div className="grid md:grid-cols-2 gap-6">
-          <Card accent>
-            <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-2">
+          <div className="relative rounded-lg border border-flag-red/40 bg-ink-100/85 shadow-card p-7 sm:p-8 overflow-hidden">
+            <div aria-hidden="true" className="absolute top-0 inset-x-0 h-1 stripes-bar opacity-90" />
+            <span aria-hidden="true" className="absolute top-3 right-4 text-2xl text-flag-red">★</span>
+            <p className="text-xs uppercase tracking-[0.22em] text-flag-redSoft font-semibold mb-2">
               We Call Back In
             </p>
             <p className="text-5xl sm:text-6xl font-bold font-display text-white">
@@ -119,9 +153,11 @@ export default function Home() {
               You message us. We reply. No voicemail black holes, no waiting
               days to learn whether we have availability.
             </p>
-          </Card>
-          <Card accent>
-            <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-2">
+          </div>
+          <div className="relative rounded-lg border border-flag-navyLight/50 bg-ink-100/85 shadow-card p-7 sm:p-8 overflow-hidden">
+            <div aria-hidden="true" className="absolute top-0 inset-x-0 h-1 stripes-bar opacity-90" />
+            <span aria-hidden="true" className="absolute top-3 right-4 text-2xl text-flag-navyLight">★</span>
+            <p className="text-xs uppercase tracking-[0.22em] text-flag-redSoft font-semibold mb-2">
               We Inspect Within
             </p>
             <p className="text-5xl sm:text-6xl font-bold font-display text-white">
@@ -132,7 +168,7 @@ export default function Home() {
               Quick turnaround that keeps your closing on track. Same-week
               availability is the norm.
             </p>
-          </Card>
+          </div>
         </div>
       </Section>
 
@@ -231,10 +267,20 @@ export default function Home() {
           ].map(([n, title, desc]) => (
             <li key={n} className="relative">
               <Card className="h-full">
-                <p className="text-flag-red font-display text-5xl font-bold leading-none">
-                  {n}
-                </p>
-                <h3 className="mt-3 text-lg font-semibold text-white">{title}</h3>
+                <div className="relative inline-flex items-center justify-center mb-3">
+                  <svg
+                    viewBox="0 0 60 60"
+                    className="h-14 w-14 text-flag-red"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M30 2 L37 22 L58 22 L41 35 L48 56 L30 43 L12 56 L19 35 L2 22 L23 22 Z" />
+                  </svg>
+                  <span className="absolute font-display text-2xl font-bold text-white">
+                    {n}
+                  </span>
+                </div>
+                <h3 className="text-lg font-semibold text-white">{title}</h3>
                 <p className="mt-1.5 text-sm text-bone-muted">{desc}</p>
               </Card>
             </li>
@@ -274,8 +320,9 @@ export default function Home() {
             {c.serviceAreaTowns.slice(0, 12).map((town) => (
               <li
                 key={town}
-                className="rounded-full border border-white/15 bg-ink-100/60 px-3.5 py-1.5 text-sm text-bone-muted"
+                className="inline-flex items-center gap-1.5 rounded-full border border-flag-navyLight/40 bg-flag-navy/10 px-3.5 py-1.5 text-sm text-bone-muted"
               >
+                <span aria-hidden="true" className="text-flag-red text-xs">★</span>
                 {town}
               </li>
             ))}
@@ -343,16 +390,22 @@ export default function Home() {
       )}
 
       {/* ─── Footer CTA ───────────────────────────────────────────────── */}
-      <Section>
-        <Card accent className="text-center !py-12 sm:!py-16">
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-3">
+      <Section tone="americana">
+        <div className="text-center max-w-3xl mx-auto py-6 sm:py-10 relative">
+          <div className="flex items-center justify-center gap-3 mb-5" aria-hidden="true">
+            <span className="text-flag-red text-3xl">★</span>
+            <span className="text-bone text-3xl">★</span>
+            <span className="text-flag-navyLight text-3xl">★</span>
+          </div>
+          <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-4">
             Ready to inspect your future home?
           </h2>
-          <p className="text-bone-muted max-w-xl mx-auto mb-8">
+          <p className="text-bone-muted max-w-xl mx-auto mb-8 text-lg">
             Get a free quote in seconds, or call now and we will pick up.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <Button as="link" to="/services" className="!px-7 !py-4">
+            <Button as="link" to="/services" className="!px-7 !py-4 !text-base">
+              <span aria-hidden="true">★</span>
               Get a Free Quote
             </Button>
             <Button
@@ -360,12 +413,12 @@ export default function Home() {
               href={`tel:${c.phoneHref}`}
               variant="secondary"
               onClick={() => track('tel_click', { location: 'home_footer_cta' })}
-              className="!px-7 !py-4"
+              className="!px-7 !py-4 !text-base"
             >
               Call {c.phone}
             </Button>
           </div>
-        </Card>
+        </div>
       </Section>
     </>
   );

@@ -16,11 +16,7 @@ export default function SectionHeader({
 }: Props) {
   return (
     <header className={`mb-10 ${centered ? 'text-center' : ''}`}>
-      {eyebrow && (
-        <p className="mb-3 text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-flag-redSoft">
-          {eyebrow}
-        </p>
-      )}
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
       <Heading className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
         {title}
       </Heading>

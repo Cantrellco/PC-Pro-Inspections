@@ -2,13 +2,16 @@ import { Link } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 import StarMark from './StarMark';
+import StripeDivider from './StripeDivider';
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-white/10 bg-ink-200/80 mt-16">
-      <div className="stripe h-[2px] w-full opacity-70" aria-hidden="true" />
+      {/* Heavy red/bone stripe cap — "bunting" along the top edge */}
+      <div className="stripes-bar h-2 w-full opacity-80" aria-hidden="true" />
+      <StripeDivider className="mt-0.5" />
       <div className="container-narrow py-12 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <Link to="/" className="flex items-center gap-2.5 text-white">
@@ -18,6 +21,11 @@ export default function Footer() {
           <p className="mt-3 text-bone-muted max-w-md">{siteConfig.tagline}</p>
           <p className="mt-4 text-bone-dim text-sm">
             {siteConfig.serviceAreaSummary}
+          </p>
+          <p className="mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-flag-redSoft font-semibold">
+            <span aria-hidden="true" className="text-flag-red">★</span>
+            American-owned &amp; operated
+            <span aria-hidden="true" className="text-flag-navyLight">★</span>
           </p>
         </div>
 
@@ -96,6 +104,7 @@ export default function Footer() {
         </div>
       </div>
 
+      <div className="stripes-bar h-1.5 w-full opacity-70" aria-hidden="true" />
       <div className="border-t border-white/10">
         <div className="container-narrow py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-bone-dim">
           <p>

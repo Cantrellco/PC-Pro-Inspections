@@ -3,6 +3,7 @@ import { NavLink, Link } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 import StarMark from './StarMark';
+import StripeDivider from './StripeDivider';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -19,7 +20,7 @@ export default function Nav() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-ink/85 backdrop-blur-md">
-      <div className="stripe h-[2px] w-full opacity-80" aria-hidden="true" />
+      <StripeDivider />
       <nav
         className="container-narrow flex items-center justify-between py-3 sm:py-4"
         aria-label="Primary"

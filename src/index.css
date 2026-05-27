@@ -10,8 +10,8 @@
   body {
     @apply bg-ink text-bone font-sans antialiased;
     background-image:
-      radial-gradient(at 92% 6%, rgba(29, 58, 138, 0.10) 0px, transparent 50%),
-      radial-gradient(at 6% 96%, rgba(212, 38, 58, 0.06) 0px, transparent 45%);
+      radial-gradient(at 92% 6%, rgba(29, 58, 138, 0.16) 0px, transparent 50%),
+      radial-gradient(at 6% 96%, rgba(212, 38, 58, 0.08) 0px, transparent 45%);
     background-attachment: fixed;
   }
   /* Visible focus ring on dark theme — WCAG AA */
@@ -84,13 +84,78 @@
     @apply text-flag-redSoft text-sm mt-1.5;
   }
 
-  /* The thin red/white/blue accent line — used as a section divider motif. */
+  /* The red/white/blue stripe — the flag's three colors as a thin band.
+     Used at the top of nav, between major sections, and as a footer cap. */
   .stripe {
     background-image: linear-gradient(
       90deg,
       theme('colors.flag.red') 0 33%,
       #ffffff 33% 66%,
       theme('colors.flag.navy') 66% 100%
+    );
+  }
+
+  /* Six-band stripe — alternating red and bone — used as a heavier accent
+     for hero overlays, banner edges, and footer caps. */
+  .stripes-bar {
+    background-image: repeating-linear-gradient(
+      180deg,
+      theme('colors.flag.red') 0 4px,
+      theme('colors.bone.DEFAULT') 4px 8px
+    );
+  }
+
+  /* Subtle star field — the flag's canton motif as a low-opacity texture.
+     Layered behind hero text and key CTA cards. */
+  .star-field {
+    background-color: theme('colors.flag.navyDeep' / 35%);
+    background-image:
+      radial-gradient(
+        circle at 12% 18%,
+        rgba(255, 255, 255, 0.55) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 32% 38%,
+        rgba(255, 255, 255, 0.45) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 58% 22%,
+        rgba(255, 255, 255, 0.55) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 72% 62%,
+        rgba(255, 255, 255, 0.45) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 22% 72%,
+        rgba(255, 255, 255, 0.5) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 88% 86%,
+        rgba(255, 255, 255, 0.45) 0.5px,
+        transparent 1.4px
+      ),
+      radial-gradient(
+        circle at 46% 88%,
+        rgba(255, 255, 255, 0.5) 0.5px,
+        transparent 1.4px
+      );
+    background-size: 56px 56px;
+  }
+
+  /* Diagonal red/navy ribbon — used as accent strokes on key headings. */
+  .ribbon-accent {
+    background-image: repeating-linear-gradient(
+      135deg,
+      theme('colors.flag.red') 0 6px,
+      transparent 6px 12px,
+      theme('colors.flag.navy') 12px 18px,
+      transparent 18px 24px
     );
   }
 
@@ -102,7 +167,7 @@
     @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
   }
 
-  /* Star divider (small SVG-friendly inline motif) */
+  /* Star divider — small SVG-friendly inline motif with a hairline on each side */
   .star-divider {
     @apply flex items-center justify-center gap-3 my-8;
   }
@@ -112,4 +177,17 @@
     @apply flex-1 h-px bg-bone/15;
     max-width: 6rem;
   }
+
+  /* The eyebrow tag used above section titles. The ::before pseudo paints the
+     small star so consumers don't have to wire up SVGs inline. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs sm:text-sm font-semibold
+           uppercase tracking-[0.22em] text-flag-redSoft;
+  }
+  .eyebrow::before,
+  .eyebrow::after {
+    content: '★';
+    @apply text-flag-red text-base leading-none;
+  }
 }
+

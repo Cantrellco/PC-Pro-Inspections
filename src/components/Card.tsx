@@ -15,10 +15,18 @@ export default function Card({ children, className = '', accent = false }: Props
       } ${className}`.trim()}
     >
       {accent && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-x-0 top-0 h-0.5 bg-flag-red"
-        />
+        <>
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-0.5 stripe opacity-90"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute top-1.5 right-3 text-flag-red text-sm leading-none select-none"
+          >
+            ★
+          </span>
+        </>
       )}
       {children}
     </div>
