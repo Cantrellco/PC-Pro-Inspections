@@ -8,6 +8,8 @@ const __dirname = path.dirname(__filename);
 
 // VITE_BASE allows building for a subpath (e.g. GitHub Pages).
 // Local dev / Netlify / Vercel / Cloudflare Pages all leave it unset and serve from /.
+// "./" produces relative asset URLs so the build is portable across host paths
+// (useful for GitHub Pages where the repo name's case affects the path).
 export default defineConfig({
   base: process.env.VITE_BASE || '/',
   plugins: [react()],
