@@ -47,10 +47,25 @@ export type SocialLink = {
   href: string;
 };
 
+export type SiteImages = {
+  /** Hero background — a wide home/exterior shot. */
+  hero: string;
+  /** Inspector portrait (About page), ideally 4:5 vertical. */
+  inspector: string;
+  /** Services section accent — inspection in progress. */
+  services: string;
+  /** Resources / report context image. */
+  resources: string;
+  /** Closing CTA band background. */
+  ctaBand: string;
+};
+
 export type SiteConfig = {
   businessName: string;
   legalName: string;
   tagline: string;
+  /** Royalty-free or owner-supplied photo URLs. Blank → elegant placeholder. */
+  images: SiteImages;
   phone: string;
   /** Raw digits for tel: link, e.g. "+15555551234". */
   phoneHref: string;

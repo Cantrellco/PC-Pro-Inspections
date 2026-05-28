@@ -10,9 +10,11 @@
   body {
     @apply bg-ink text-bone font-sans antialiased;
     background-image:
-      radial-gradient(at 92% 6%, rgba(29, 58, 138, 0.16) 0px, transparent 50%),
-      radial-gradient(at 6% 96%, rgba(212, 38, 58, 0.08) 0px, transparent 45%);
+      radial-gradient(at 92% 6%, rgba(29, 58, 138, 0.14) 0px, transparent 50%),
+      radial-gradient(at 6% 96%, rgba(212, 38, 58, 0.06) 0px, transparent 45%);
     background-attachment: fixed;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    text-rendering: optimizeLegibility;
   }
   /* Visible focus ring on dark theme — WCAG AA */
   :focus-visible {
@@ -22,7 +24,12 @@
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight;
+    @apply font-display;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
+  }
+  h1 {
+    letter-spacing: -0.035em;
   }
   /* Avoid layout shift from images without intrinsic size */
   img {
@@ -68,8 +75,22 @@
   }
 
   .card {
-    @apply rounded-lg border border-white/10 bg-ink-50/80 shadow-card
-           backdrop-blur-sm;
+    @apply rounded-xl border border-white/10 shadow-card backdrop-blur-sm
+           transition-all duration-300;
+    background-image: linear-gradient(
+      160deg,
+      rgba(26, 26, 26, 0.9) 0%,
+      rgba(15, 15, 15, 0.88) 100%
+    );
+  }
+  /* Interactive cards (links/buttons inside) lift gently on hover. */
+  .card-hover {
+    @apply hover:-translate-y-1 hover:border-white/20;
+  }
+  .card-hover:hover {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 18px 40px rgba(0, 0, 0, 0.5);
   }
 
   .field-label {
@@ -92,70 +113,6 @@
       theme('colors.flag.red') 0 33%,
       #ffffff 33% 66%,
       theme('colors.flag.navy') 66% 100%
-    );
-  }
-
-  /* Six-band stripe — alternating red and bone — used as a heavier accent
-     for hero overlays, banner edges, and footer caps. */
-  .stripes-bar {
-    background-image: repeating-linear-gradient(
-      180deg,
-      theme('colors.flag.red') 0 4px,
-      theme('colors.bone.DEFAULT') 4px 8px
-    );
-  }
-
-  /* Subtle star field — the flag's canton motif as a low-opacity texture.
-     Layered behind hero text and key CTA cards. */
-  .star-field {
-    background-color: theme('colors.flag.navyDeep' / 35%);
-    background-image:
-      radial-gradient(
-        circle at 12% 18%,
-        rgba(255, 255, 255, 0.55) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 32% 38%,
-        rgba(255, 255, 255, 0.45) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 58% 22%,
-        rgba(255, 255, 255, 0.55) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 72% 62%,
-        rgba(255, 255, 255, 0.45) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 22% 72%,
-        rgba(255, 255, 255, 0.5) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 88% 86%,
-        rgba(255, 255, 255, 0.45) 0.5px,
-        transparent 1.4px
-      ),
-      radial-gradient(
-        circle at 46% 88%,
-        rgba(255, 255, 255, 0.5) 0.5px,
-        transparent 1.4px
-      );
-    background-size: 56px 56px;
-  }
-
-  /* Diagonal red/navy ribbon — used as accent strokes on key headings. */
-  .ribbon-accent {
-    background-image: repeating-linear-gradient(
-      135deg,
-      theme('colors.flag.red') 0 6px,
-      transparent 6px 12px,
-      theme('colors.flag.navy') 12px 18px,
-      transparent 18px 24px
     );
   }
 
@@ -208,16 +165,30 @@
     animation: flag-wave 7s ease-in-out infinite;
   }
 
-  /* The eyebrow tag used above section titles. The ::before pseudo paints the
-     small star so consumers don't have to wire up SVGs inline. */
+  /* Editorial eyebrow: a short red rule + a single star + label. Reads as
+     a premium kicker rather than a busy star-bracketed tag. */
   .eyebrow {
-    @apply inline-flex items-center gap-2 text-xs sm:text-sm font-semibold
-           uppercase tracking-[0.22em] text-flag-redSoft;
+    @apply inline-flex items-center gap-2.5 text-xs font-semibold
+           uppercase tracking-[0.24em] text-flag-redSoft;
   }
-  .eyebrow::before,
-  .eyebrow::after {
-    content: '★';
-    @apply text-flag-red text-base leading-none;
+  .eyebrow::before {
+    content: '';
+    @apply h-px w-7 bg-flag-red;
+  }
+  /* Centered variant: rule on both sides for symmetry. */
+  .text-center .eyebrow::after {
+    content: '';
+    @apply h-px w-7 bg-flag-red;
+  }
+
+  /* Premium photo placeholder — a refined gradient + grain so an empty image
+     slot reads as intentional, never broken. Swap for a real <img>. */
+  .photo-placeholder {
+    background-color: #0f0f0f;
+    background-image:
+      radial-gradient(at 30% 20%, rgba(29, 58, 138, 0.35), transparent 55%),
+      radial-gradient(at 80% 80%, rgba(212, 38, 58, 0.18), transparent 55%),
+      linear-gradient(160deg, #16181d 0%, #0a0a0a 100%);
   }
 }
 

@@ -50,7 +50,6 @@ export default function Services() {
       <Section>
         <SectionHeader
           as="h1"
-          flag
           eyebrow="Services & Pricing"
           title="Pick what you need. Pay only for what you pick."
           description="Pricing is driven by square footage with optional add-ons. Use the calculator below for an itemized estimate in seconds."

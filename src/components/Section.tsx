@@ -22,27 +22,31 @@ export default function Section({
       : tone === 'dark'
         ? 'bg-ink-200'
         : tone === 'americana'
-          ? 'bg-flag-navyDeep/25 relative overflow-hidden'
+          ? 'relative overflow-hidden'
           : '';
   return (
     <section
       id={id}
       aria-label={ariaLabel}
-      className={`py-14 sm:py-20 ${toneClass} ${className}`.trim()}
+      className={`py-16 sm:py-24 ${toneClass} ${className}`.trim()}
     >
       {tone === 'americana' && (
         <>
           <div
             aria-hidden="true"
-            className="absolute inset-0 opacity-40 pointer-events-none star-field"
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(160deg, rgba(15,35,77,0.55) 0%, rgba(10,10,10,0.2) 55%, rgba(165,29,45,0.18) 100%)',
+            }}
           />
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-[2px] stripe opacity-80"
+            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-flag-red/60 to-transparent"
           />
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-[2px] stripe opacity-80"
+            className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-flag-navyLight/60 to-transparent"
           />
         </>
       )}

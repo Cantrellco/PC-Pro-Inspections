@@ -4,7 +4,7 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import Flag from '@/components/Flag';
+import Photo from '@/components/Photo';
 import FlagRosette from '@/components/FlagRosette';
 
 export default function About() {
@@ -22,10 +22,11 @@ export default function About() {
         <div className="grid md:grid-cols-5 gap-10 items-start">
           {/* Bio */}
           <div className="md:col-span-3">
-            <Flag className="h-10 w-[76px] rounded-sm shadow-card mb-4" />
-            <p className="eyebrow mb-3">About</p>
-            <h1 className="font-display text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
-              Built on craft, paid by trust.
+            <p className="eyebrow mb-4">About {c.businessName}</p>
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-[1.05] mb-6">
+              Built on craft,
+              <br />
+              <span className="italic text-flag-redSoft">paid by trust.</span>
             </h1>
             <div className="space-y-5 text-bone-muted text-lg leading-relaxed">
               <p>
@@ -59,36 +60,25 @@ export default function About() {
             </div>
           </div>
 
-          {/* Photo — framed as a flag medallion */}
+          {/* Photo — framed with a subtle flag medallion accent */}
           <div className="md:col-span-2">
-            <div className="relative px-3 pt-3">
-              {/* Stars-and-stripes frame: navy mat with a tri-color top rail */}
-              <div className="relative rounded-lg border border-flag-navyLight/40 bg-flag-navyDeep/40 p-2.5 shadow-card">
-                <div aria-hidden="true" className="absolute -top-px inset-x-0 h-1 stripe rounded-t-lg" />
-                <div className="aspect-[4/5] rounded-md overflow-hidden border border-white/10 bg-gradient-to-br from-ink-50 to-ink-200 relative">
-                  {/* TODO: owner — drop a real photo at public/inspector-photo.jpg and replace this. */}
-                  <div className="absolute inset-0 flex items-center justify-center text-bone-dim text-sm text-center p-6">
-                    <span>
-                      Photo placeholder
-                      <br />
-                      <span className="text-xs">
-                        Drop a portrait at <code>/public/inspector-photo.jpg</code>
-                      </span>
-                    </span>
-                  </div>
-                  {/* Corner stars */}
-                  <span aria-hidden="true" className="absolute top-2 left-2 text-flag-red text-sm">★</span>
-                  <span aria-hidden="true" className="absolute top-2 right-2 text-flag-navyLight text-sm">★</span>
-                  <span aria-hidden="true" className="absolute bottom-2 left-2 text-flag-navyLight text-sm">★</span>
-                  <span aria-hidden="true" className="absolute bottom-2 right-2 text-flag-red text-sm">★</span>
-                </div>
+            <div className="relative">
+              <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
+                <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
+                <Photo
+                  src={c.images.inspector}
+                  alt={`${c.businessName} — your inspector`}
+                  aspectClass="aspect-[4/5]"
+                  roundedClass="rounded-xl"
+                  placeholderLabel="Portrait of your inspector"
+                />
               </div>
               {/* Rosette medallion overlapping the lower-right corner */}
-              <FlagRosette className="absolute -bottom-5 -right-3 h-24 w-24 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]" />
+              <FlagRosette className="absolute -bottom-5 -right-4 h-20 w-20 drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]" />
             </div>
             <p className="mt-8 text-sm text-bone-dim italic">
-              We strongly prefer real photos over stock — inspection is a trust
-              business.
+              A real photo of your inspector builds trust — drop one in
+              <code className="not-italic"> siteConfig.images.inspector</code>.
             </p>
           </div>
         </div>
@@ -97,9 +87,7 @@ export default function About() {
       {/* Mission */}
       <Section tone="elevated">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
-            Our Mission
-          </p>
+          <p className="eyebrow mb-3">Our Mission</p>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-5">
             Give buyers the report we would want on our own home.
           </h2>

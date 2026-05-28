@@ -13,6 +13,19 @@ export const siteConfig: SiteConfig = {
   legalName: 'PC Pro Inspections LLC', // TODO: owner to fill
   tagline: 'Honest, thorough home inspections — so you buy with confidence.',
 
+  // ─── Photography ─────────────────────────────────────────────────────────
+  // Paste royalty-free (or your own) image URLs. Blank fields render a
+  // polished gradient placeholder, so the site never looks broken.
+  // Suggested free sources: Unsplash, Pexels, Pixabay (verify each loads).
+  // Prefer your OWN photos before launch — stock hurts trust on a service site.
+  images: {
+    hero: '', // TODO: owner — wide home/neighborhood exterior (≥1920px)
+    inspector: '', // TODO: owner — portrait of the inspector (4:5 vertical)
+    services: '', // TODO: owner — inspection in progress (roof, panel, etc.)
+    resources: '', // TODO: owner — clipboard/report or home interior
+    ctaBand: '', // TODO: owner — dusk home exterior for the closing banner
+  },
+
   // ─── Contact ─────────────────────────────────────────────────────────────
   phone: '(555) 123-4567', // TODO: owner to fill
   phoneHref: '+15551234567', // TODO: owner to fill (E.164, digits only)
