@@ -3,31 +3,17 @@ import type { ReactNode } from 'react';
 type Props = {
   children: ReactNode;
   className?: string;
-  /** Render a subtle red top-edge accent to highlight the card. */
-  accent?: boolean;
+  /** Antique-brass hairline along the top edge. */
+  rim?: boolean;
+  /** Lift on hover (for interactive cards). */
+  hover?: boolean;
 };
 
-export default function Card({ children, className = '', accent = false }: Props) {
+export default function Card({ children, className = '', rim = false, hover = false }: Props) {
   return (
     <div
-      className={`card p-6 sm:p-7 ${
-        accent ? 'relative overflow-hidden' : ''
-      } ${className}`.trim()}
+      className={`card ${rim ? 'card-rim' : ''} ${hover ? 'card-hover' : ''} p-6 sm:p-8 ${className}`.trim()}
     >
-      {accent && (
-        <>
-          <span
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-0.5 stripe opacity-90"
-          />
-          <span
-            aria-hidden="true"
-            className="absolute top-1.5 right-3 text-flag-red text-sm leading-none select-none"
-          >
-            ★
-          </span>
-        </>
-      )}
       {children}
     </div>
   );

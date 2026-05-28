@@ -65,7 +65,7 @@ export default function BookNow() {
 
         {/* Hand-off summary */}
         {handoff.hasAny && (
-          <Card accent className="mb-8">
+          <Card rim className="mb-8">
             <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-2">
               We have your quote ready
             </p>
@@ -122,7 +122,7 @@ export default function BookNow() {
           </Card>
         ) : (
           // ─── Not configured: graceful fallback ───────────────────────
-          <Card accent>
+          <Card rim>
             <div className="max-w-2xl mx-auto text-center py-6">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-flag-navy/30 border border-flag-navyLight/40 text-flag-redSoft mb-5">
                 <svg

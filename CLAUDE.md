@@ -82,6 +82,24 @@ No component changes. No prop refactor. That is the seam.
 | Sample Report PDF | drop file at `public/sample-report.pdf` (linked from Resources page) |
 | Open Graph preview image | drop file at `public/og-image.png` (1200×630) |
 | Favicon | replace `public/favicon.svg` |
+| Site photography (hero, inspector, services, resources, CTA) | `src/config/siteConfig.ts` → `images` (paste URLs; blank → elegant placeholder) |
+
+## Design System
+
+- **Type:** Fraunces (display serif) + Inter (UI), **self-hosted** under
+  `public/fonts/` (`fonts.css` + woff2). No third-party CDN — fonts always
+  load and there's no render-blocking round trip. To change fonts, replace the
+  woff2 files + `fonts.css`, then update `tailwind.config.js` → `fontFamily`.
+- **Palette:** near-black canvas, heritage crimson + navy, a restrained
+  antique-brass accent. Tokens live in `tailwind.config.js` → `colors`.
+- **Components:** `Section` (tones: default/elevated/dark/americana), `Card`
+  (`rim` brass hairline, `hover` lift), `SectionHeader`, `Button`, `Photo`
+  (image-or-placeholder), `Reveal` (scroll-in, respects reduced-motion),
+  `Flag` / `FlagRosette` (heritage accents). Fluid display type via
+  `.display-1/2/3` and `.lede` in `src/index.css`.
+- **Photography is the #1 upgrade:** fill `siteConfig.images` with real photos
+  (your own beat stock). Each slot degrades gracefully to a gradient
+  placeholder, so the site never looks broken while empty.
 
 ---
 
@@ -255,6 +273,7 @@ Open `src/config/siteConfig.ts` and resolve every `// TODO: owner to fill`.
 - [ ] Web3Forms access key (`web3FormsAccessKey`)
 - [ ] Booking URL / embed (`bookingUrl`) — only when scheduler is chosen
 - [ ] Analytics provider key (`analytics.domain`)
+- [ ] Site photography — fill `siteConfig.images` (hero, inspector, services, resources, ctaBand)
 - [ ] Sample Report PDF dropped at `public/sample-report.pdf`
 - [ ] Open Graph preview image at `public/og-image.png` (1200×630)
 - [ ] Favicon at `public/favicon.svg`

@@ -33,7 +33,7 @@ export default function Contact() {
 
           {/* Sidebar */}
           <div className="lg:col-span-2 space-y-5">
-            <Card accent>
+            <Card rim>
               <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
                 Reach us directly
               </h2>

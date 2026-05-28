@@ -10,11 +10,38 @@ import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
 import Flag from '@/components/Flag';
 import Photo from '@/components/Photo';
+import Reveal from '@/components/Reveal';
+import {
+  IconRoof, IconFoundation, IconPlumbing, IconElectrical, IconHvac,
+  IconAttic, IconInterior, IconBasement, IconAddons, IconShield, IconClock, IconDoc, IconPhone,
+} from '@/components/icons';
+
+const SERVICES = [
+  [IconRoof, 'Roof & Exterior', 'Covering, flashing, drainage, siding, soffits, trim, decks, grading.'],
+  [IconFoundation, 'Structure & Foundation', 'Visible framing, foundation walls, slabs, settlement indicators.'],
+  [IconPlumbing, 'Plumbing', 'Supply, drains, fixtures, water heater, visible piping, leaks.'],
+  [IconElectrical, 'Electrical', 'Service entrance, panel, breakers, GFCI/AFCI, wiring, outlets.'],
+  [IconHvac, 'Heating & Cooling', 'HVAC condition, distribution, thermostats, age and lifespan.'],
+  [IconAttic, 'Attic & Ventilation', 'Insulation depth, ventilation, moisture and pest indicators.'],
+  [IconInterior, 'Interior', 'Walls, ceilings, floors, doors, windows, stairs, safety hazards.'],
+  [IconBasement, 'Basement / Crawl', 'Moisture, sump pumps, vapor barriers, structural concerns.'],
+  [IconAddons, 'Optional Add-ons', 'Radon, mold, sewer scope, pool/spa, termite, well water.'],
+] as const;
+
+const PROCESS = [
+  [IconDoc, 'Get a quote', 'Use the live calculator or call. We confirm availability fast — usually same day.'],
+  [IconClock, 'Book your slot', 'Online or by phone. We coordinate with your agent and the seller for you.'],
+  [IconShield, 'On-site walkthrough', 'Two to three hours. Join us for the last 45 minutes — we tour the home together.'],
+  [IconDoc, 'Same-day report', 'A photo-rich digital report with a prioritized summary, typically that evening.'],
+] as const;
 
 export default function Home() {
   const c = siteConfig;
   const showcaseTestimonials = c.testimonials.slice(0, 3);
   const cityForTitle = c.address.city || 'Your Area';
+  const avgRating = (
+    c.testimonials.reduce((a, t) => a + t.rating, 0) / Math.max(c.testimonials.length, 1)
+  ).toFixed(1);
 
   return (
     <>
@@ -25,395 +52,297 @@ export default function Home() {
         jsonLd={c.faqs.length > 0 ? buildFaqJsonLd() : undefined}
       />
 
-      {/* ─── Hero ────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-ink-200 min-h-[88vh] flex items-center">
-        {/* Backdrop: a real home photo when set, otherwise the stylized flag. */}
-        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      {/* ─── Hero ─────────────────────────────────────────────────────── */}
+      <section className="relative isolate overflow-hidden min-h-[92vh] flex items-center">
+        <div className="absolute inset-0 -z-10" aria-hidden="true">
           {c.images.hero ? (
-            <img
-              src={c.images.hero}
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+            <img src={c.images.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
           ) : (
-            <Flag fit="cover" className="absolute inset-0 w-full h-full opacity-[0.7]" />
+            <Flag fit="cover" className="absolute inset-0 h-full w-full opacity-[0.6]" />
           )}
-          {/* Cinematic gradient: deep at the bottom-left where the copy sits. */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(105deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.74) 42%, rgba(8,8,8,0.5) 100%)',
+                'linear-gradient(102deg, rgba(8,8,9,0.95) 0%, rgba(8,8,9,0.8) 38%, rgba(8,8,9,0.5) 72%, rgba(8,8,9,0.35) 100%)',
             }}
           />
           <div
             className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(0deg, rgba(8,8,8,0.85) 0%, transparent 40%)',
-            }}
+            style={{ background: 'linear-gradient(0deg, rgba(8,8,9,0.95) 0%, transparent 38%)' }}
           />
-          {/* Thin tri-color accent rail down the left edge. */}
-          <div className="stripe absolute left-0 top-0 bottom-0 w-[3px] opacity-90" />
+          <div className="rule-flag absolute left-0 top-0 bottom-0 w-[3px] opacity-90" />
         </div>
 
-        <div className="container-narrow relative py-20 sm:py-28">
-          <p className="eyebrow mb-6">{c.serviceAreaSummary}</p>
-          <h1 className="font-display font-semibold text-white leading-[1.02] max-w-4xl text-[2.75rem] sm:text-6xl lg:text-7xl">
-            Honest, thorough{' '}
-            <span className="italic text-flag-redSoft">home inspections</span>{' '}
-            in {cityForTitle}.
-          </h1>
-          <p className="mt-7 text-lg sm:text-xl text-bone-muted max-w-2xl leading-relaxed">
-            {c.tagline} Same-day, photo-rich reports — walked through with you on
-            site. It's the biggest purchase of your life. Go in with eyes open.
-          </p>
+        <div className="container-wide above-grain py-24 sm:py-28">
+          <div className="max-w-3xl animate-fade-up">
+            <p className="eyebrow mb-6">{c.serviceAreaSummary}</p>
+            <h1 className="display-1 text-white">
+              Buy your home with{' '}
+              <span className="italic text-flag-redSoft">eyes wide open.</span>
+            </h1>
+            <p className="lede mt-6 max-w-2xl">
+              {c.tagline} Same-day, photo-rich reports — walked through with you on
+              site. The biggest purchase of your life deserves a real inspection.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
+                Get a Free Quote
+              </Button>
+              <Button
+                as="a"
+                href={`tel:${c.phoneHref}`}
+                variant="secondary"
+                onClick={() => track('tel_click', { location: 'hero' })}
+                className="!px-8 !py-4 !text-base"
+              >
+                Call {c.phone}
+              </Button>
+            </div>
 
-          <div className="mt-9 flex flex-wrap gap-3">
-            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-              Get a Free Quote
-            </Button>
-            <Button
-              as="a"
-              href={`tel:${c.phoneHref}`}
-              variant="secondary"
-              onClick={() => track('tel_click', { location: 'hero' })}
-              className="!px-8 !py-4 !text-base"
-            >
-              Call {c.phone}
-            </Button>
+            <dl className="mt-16 grid grid-cols-3 gap-5 sm:gap-10 max-w-xl">
+              {[
+                [`${c.yearsInBusiness}+`, 'Years experience', null],
+                [`${c.inspectionsCompleted.toLocaleString()}+`, 'Inspections', null],
+                [avgRating, 'Average rating', '★'],
+              ].map(([value, label, suffix]) => (
+                <div key={label as string} className="border-l border-white/15 pl-4">
+                  <dd className="font-display text-3xl sm:text-5xl font-semibold text-white flex items-baseline gap-1">
+                    {value}
+                    {suffix && <span className="text-flag-red text-2xl">{suffix}</span>}
+                  </dd>
+                  <dt className="mt-1.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim">{label}</dt>
+                </div>
+              ))}
+            </dl>
           </div>
-
-          {/* Trust numbers */}
-          <dl className="mt-16 grid grid-cols-3 gap-5 sm:gap-10 max-w-2xl">
-            {[
-              ['Years experience', `${c.yearsInBusiness}+`, null],
-              ['Inspections', `${c.inspectionsCompleted.toLocaleString()}+`, null],
-              [
-                'Average rating',
-                (
-                  c.testimonials.reduce((a, t) => a + t.rating, 0) /
-                  Math.max(c.testimonials.length, 1)
-                ).toFixed(1),
-                '★',
-              ],
-            ].map(([label, value, suffix]) => (
-              <div key={label as string} className="border-l border-white/15 pl-4">
-                <dd className="text-3xl sm:text-5xl font-semibold text-white font-display flex items-baseline gap-1">
-                  {value}
-                  {suffix && <span className="text-flag-red text-2xl">{suffix}</span>}
-                </dd>
-                <dt className="mt-1 text-[11px] sm:text-xs uppercase tracking-[0.18em] text-bone-dim">
-                  {label}
-                </dt>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
 
-      {/* ─── Response Promise ─────────────────────────────────────────── */}
-      <Section tone="americana">
-        <div className="text-center mb-10">
-          <p className="eyebrow mb-3">Our Promise to You</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white">
-            Quick callback. Quick inspection.
-          </h2>
-        </div>
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="relative rounded-xl border border-white/10 bg-ink-100/70 backdrop-blur-sm shadow-card p-8 sm:p-10">
-            <p className="eyebrow mb-4">We call back within</p>
-            <p className="text-6xl sm:text-7xl font-semibold font-display text-white leading-none">
-              {c.responsePromise.callbackHours}
-              <span className="ml-2 text-2xl text-bone-muted font-sans font-normal">hours</span>
-            </p>
-            <p className="mt-5 text-bone-muted leading-relaxed">
-              You message us. We reply. No voicemail black holes, no waiting
-              days to learn whether we have availability.
-            </p>
-          </div>
-          <div className="relative rounded-xl border border-white/10 bg-ink-100/70 backdrop-blur-sm shadow-card p-8 sm:p-10">
-            <p className="eyebrow mb-4">We inspect within</p>
-            <p className="text-6xl sm:text-7xl font-semibold font-display text-white leading-none">
-              {c.responsePromise.inspectionDays}
-              <span className="ml-2 text-2xl text-bone-muted font-sans font-normal">days</span>
-            </p>
-            <p className="mt-5 text-bone-muted leading-relaxed">
-              Quick turnaround that keeps your closing on track. Same-week
-              availability is the norm.
-            </p>
-          </div>
-        </div>
-      </Section>
-
-      {/* ─── Certifications strip ─────────────────────────────────────── */}
-      <Section>
-        <SectionHeader
-          eyebrow="Credentials"
-          title="Certified, licensed, fully insured."
-          description="Your inspector's qualifications matter. Here are ours, plainly listed — verify any of them."
-        />
-        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-          {c.certifications.map((cert) => (
-            <li key={cert.name}>
-              <Card className="!p-4 h-full">
-                <div className="flex items-start gap-3">
-                  {cert.badgeSrc ? (
-                    <img
-                      src={cert.badgeSrc}
-                      alt={cert.badgeAlt}
-                      width={48}
-                      height={48}
-                      loading="lazy"
-                      className="h-12 w-12 object-contain rounded"
-                    />
-                  ) : (
-                    <div
-                      aria-hidden="true"
-                      className="h-12 w-12 flex-shrink-0 rounded bg-flag-navy/40 border border-flag-navyLight/40 flex items-center justify-center text-flag-redSoft"
-                    >
-                      <svg
-                        viewBox="0 0 20 20"
-                        className="h-6 w-6"
-                        fill="currentColor"
-                      >
-                        <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
-                      </svg>
-                    </div>
-                  )}
-                  <div>
-                    <p className="font-semibold text-white text-sm leading-snug">
-                      {cert.name}
-                    </p>
-                    <p className="mt-1 text-xs text-bone-dim">{cert.issuer}</p>
-                  </div>
-                </div>
-              </Card>
-            </li>
+      {/* ─── Trust / credentials strip ────────────────────────────────── */}
+      <div className="border-y border-white/10 bg-white/[0.015]">
+        <div className="container-wide above-grain py-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
+          <span className="text-xs uppercase tracking-[0.24em] text-bone-dim">
+            Certified &amp; insured
+          </span>
+          <span className="hidden sm:inline h-4 w-px bg-white/15" aria-hidden="true" />
+          {c.certifications.slice(0, 5).map((cert) => (
+            <span key={cert.name} className="text-sm text-bone-muted">
+              {cert.name.replace(' Certified Professional Inspector', ' CPI').replace('State-Licensed Home Inspector', 'State-Licensed')}
+            </span>
           ))}
-        </ul>
+        </div>
+      </div>
+
+      {/* ─── Response promise (americana) ─────────────────────────────── */}
+      <Section tone="americana">
+        <div className="grid lg:grid-cols-12 gap-10 items-center">
+          <Reveal className="lg:col-span-5">
+            <p className="eyebrow mb-4">Our Promise</p>
+            <h2 className="display-2 text-white">A quick callback. A quick inspection.</h2>
+            <p className="lede mt-5">
+              No voicemail black holes. No waiting days to learn whether we have
+              availability. You reach out — we move.
+            </p>
+          </Reveal>
+          <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
+            <Reveal delay={60}>
+              <Card rim className="h-full">
+                <IconPhone className="h-7 w-7 text-flag-redSoft" />
+                <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
+                  {c.responsePromise.callbackHours}
+                  <span className="ml-2 text-xl text-bone-muted font-sans font-normal">hrs</span>
+                </p>
+                <p className="mt-3 text-bone-muted">to call you back, every time.</p>
+              </Card>
+            </Reveal>
+            <Reveal delay={140}>
+              <Card rim className="h-full">
+                <IconClock className="h-7 w-7 text-brass-soft" />
+                <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
+                  {c.responsePromise.inspectionDays}
+                  <span className="ml-2 text-xl text-bone-muted font-sans font-normal">days</span>
+                </p>
+                <p className="mt-3 text-bone-muted">to get you on the schedule.</p>
+              </Card>
+            </Reveal>
+          </div>
+        </div>
       </Section>
 
-      {/* ─── Services overview ────────────────────────────────────────── */}
+      {/* ─── Services feature + grid ──────────────────────────────────── */}
       <Section tone="elevated">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center mb-14">
-          <Photo
-            src={c.images.services}
-            alt="Home inspection in progress"
-            aspectClass="aspect-[4/3]"
-            placeholderLabel="Inspection in progress"
-          />
-          <div>
-            <p className="eyebrow mb-3">What We Inspect</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4 leading-tight">
-              A full-systems inspection — nothing skipped.
-            </h2>
-            <p className="text-bone-muted text-lg leading-relaxed">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16">
+          <Reveal>
+            <Photo
+              src={c.images.services}
+              alt="A certified inspector documenting a home's systems"
+              aspectClass="aspect-[5/4]"
+              placeholderLabel="Inspection in progress"
+            />
+          </Reveal>
+          <Reveal delay={80}>
+            <p className="eyebrow mb-4">What We Inspect</p>
+            <h2 className="display-2 text-white">A full-systems inspection — nothing skipped.</h2>
+            <p className="lede mt-5">
               Every visible major system, documented with photos and a clear
               priority summary. Optional add-ons go deeper where the property
-              warrants it — radon, mold, sewer scope, and more.
+              warrants it.
             </p>
-            <div className="mt-6">
-              <Button as="link" to="/services" variant="secondary">
-                See pricing &amp; calculator
-              </Button>
+            <div className="mt-7">
+              <Button as="link" to="/services" variant="secondary">See pricing &amp; calculator</Button>
             </div>
-          </div>
+          </Reveal>
         </div>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            ['Roof & Exterior', 'Roof covering, flashing, drainage, siding, soffits, trim, decks, grading.'],
-            ['Structure & Foundation', 'Visible framing, foundation walls, slabs, settlement indicators.'],
-            ['Plumbing', 'Supply, drains, fixtures, water heater, visible piping, leaks.'],
-            ['Electrical', 'Service entrance, panel, breakers, GFCI/AFCI, visible wiring, outlets, fixtures.'],
-            ['HVAC', 'Heating, cooling, distribution, thermostats, age and condition.'],
-            ['Attic, Insulation, Ventilation', 'Insulation depth, ventilation, signs of water or pests.'],
-            ['Interior', 'Walls, ceilings, floors, doors, windows, stairs, safety hazards.'],
-            ['Basement / Crawl Space', 'Moisture indicators, sump pumps, vapor barriers, structural concerns.'],
-            ['Optional Add-ons', 'Radon, mold, sewer scope, pool/spa, termite/WDO, well water.'],
-          ].map(([title, desc]) => (
-            <Card key={title} className="p-6">
-              <h3 className="text-lg font-semibold text-white mb-1.5">{title}</h3>
-              <p className="text-sm text-bone-muted leading-relaxed">{desc}</p>
-            </Card>
+          {SERVICES.map(([Icon, title, desc], i) => (
+            <Reveal key={title} delay={(i % 3) * 70}>
+              <Card hover className="h-full">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-flag-navy/20 text-brass-soft">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
+                <p className="mt-1.5 text-sm text-bone-muted leading-relaxed">{desc}</p>
+              </Card>
+            </Reveal>
           ))}
         </div>
       </Section>
 
-      {/* ─── How It Works ─────────────────────────────────────────────── */}
+      {/* ─── Process timeline ─────────────────────────────────────────── */}
       <Section>
-        <SectionHeader
-          eyebrow="How It Works"
-          title="Four steps, no friction."
-        />
-        <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {[
-            ['1', 'Get a quote', 'Use the calculator or call us. We confirm availability fast.'],
-            ['2', 'Book your slot', 'Online or by phone. We coordinate with your agent and seller.'],
-            ['3', 'On-site walkthrough', 'Two to three hours. Come for the last 45 minutes — we tour with you.'],
-            ['4', 'Same-day report', 'Photo-rich digital report with a priority summary in your inbox.'],
-          ].map(([n, title, desc]) => (
-            <li key={n} className="relative">
+        <SectionHeader eyebrow="How It Works" title="Four steps, zero friction." />
+        <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {PROCESS.map(([Icon, title, desc], i) => (
+            <Reveal as="li" key={title} delay={i * 80} className="relative">
               <Card className="h-full">
-                <div className="relative inline-flex items-center justify-center mb-3">
-                  <svg
-                    viewBox="0 0 60 60"
-                    className="h-14 w-14 text-flag-red"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path d="M30 2 L37 22 L58 22 L41 35 L48 56 L30 43 L12 56 L19 35 L2 22 L23 22 Z" />
-                  </svg>
-                  <span className="absolute font-display text-2xl font-bold text-white">
-                    {n}
+                <div className="flex items-center gap-3">
+                  <span className="font-display text-2xl font-semibold text-flag-red">
+                    {String(i + 1).padStart(2, '0')}
                   </span>
+                  <span className="flex-1 hairline" aria-hidden="true" />
+                  <Icon className="h-5 w-5 text-bone-dim" />
                 </div>
-                <h3 className="text-lg font-semibold text-white">{title}</h3>
-                <p className="mt-1.5 text-sm text-bone-muted">{desc}</p>
+                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
+                <p className="mt-2 text-sm text-bone-muted leading-relaxed">{desc}</p>
               </Card>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </Section>
 
-      {/* ─── Service area teaser ──────────────────────────────────────── */}
+      {/* ─── Service area ─────────────────────────────────────────────── */}
       <Section tone="elevated">
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <p className="eyebrow mb-3">Where We Work</p>
-            <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-3">
-              {c.serviceAreaSummary}
-            </h2>
-            <p className="text-bone-muted mb-5">
-              We inspect across the towns and counties listed below — plus
-              surrounding areas on request. Not sure if we cover your address?{' '}
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          <Reveal>
+            <p className="eyebrow mb-4">Where We Work</p>
+            <h2 className="display-2 text-white">{c.serviceAreaSummary}</h2>
+            <p className="lede mt-5">
+              We inspect across the towns and counties below — plus surrounding
+              areas on request. Not sure if we cover your address?{' '}
               <a
                 href={`tel:${c.phoneHref}`}
                 onClick={() => track('tel_click', { location: 'service_area_section' })}
                 className="text-flag-redSoft underline-offset-4 hover:underline"
               >
-                Give us a quick call.
+                Give us a call.
               </a>
             </p>
-            <Link
-              to="/service-areas"
-              className="text-flag-redSoft font-semibold inline-flex items-center gap-1.5 hover:underline"
-            >
-              See all service areas →
+            <Link to="/service-areas" className="mt-6 inline-flex items-center gap-1.5 text-flag-redSoft font-semibold hover:gap-2.5 transition-all">
+              See all service areas <span aria-hidden="true">→</span>
             </Link>
-          </div>
-          <ul className="flex flex-wrap gap-2 self-start">
-            {c.serviceAreaTowns.slice(0, 12).map((town) => (
-              <li
-                key={town}
-                className="inline-flex items-center gap-1.5 rounded-full border border-flag-navyLight/40 bg-flag-navy/10 px-3.5 py-1.5 text-sm text-bone-muted"
-              >
-                <span aria-hidden="true" className="text-flag-red text-xs">★</span>
-                {town}
-              </li>
-            ))}
-          </ul>
+          </Reveal>
+          <Reveal delay={80}>
+            <ul className="flex flex-wrap gap-2.5">
+              {c.serviceAreaTowns.slice(0, 14).map((town) => (
+                <li
+                  key={town}
+                  className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-bone-muted hover:border-brass/40 hover:text-white transition-colors"
+                >
+                  {town}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
         </div>
       </Section>
 
       {/* ─── Testimonials ─────────────────────────────────────────────── */}
-      <Section>
-        <SectionHeader
-          eyebrow="Word From Clients"
-          title="What buyers say."
-          description="A few of our reviews. See more on our Reviews page or on Google."
-        />
-        <div className="grid md:grid-cols-3 gap-5">
-          {showcaseTestimonials.map((t) => (
-            <Card key={t.name}>
-              <StarRating rating={t.rating} />
-              <blockquote className="mt-3 text-bone leading-relaxed">
-                "{t.quote}"
-              </blockquote>
-              <footer className="mt-4 text-sm text-bone-muted">
-                — {t.name}, {t.town}
-              </footer>
-            </Card>
-          ))}
-        </div>
-        <div className="mt-10 text-center">
-          <Button as="link" to="/reviews" variant="secondary">
-            Read all reviews
-          </Button>
-        </div>
-      </Section>
+      {showcaseTestimonials.length > 0 && (
+        <Section>
+          <SectionHeader eyebrow="Word From Clients" title="Trusted by buyers and their agents." />
+          <div className="grid md:grid-cols-3 gap-5">
+            {showcaseTestimonials.map((t, i) => (
+              <Reveal key={t.name} delay={i * 80}>
+                <Card className="h-full flex flex-col">
+                  <StarRating rating={t.rating} />
+                  <blockquote className="mt-4 text-bone leading-relaxed flex-1">"{t.quote}"</blockquote>
+                  <footer className="mt-5 pt-5 border-t border-white/10 text-sm">
+                    <span className="text-white font-semibold">{t.name}</span>
+                    <span className="text-bone-dim"> · {t.town}</span>
+                  </footer>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Button as="link" to="/reviews" variant="secondary">Read all reviews</Button>
+          </div>
+        </Section>
+      )}
 
       {/* ─── FAQ ──────────────────────────────────────────────────────── */}
       {c.faqs.length > 0 && (
         <Section tone="elevated">
-          <SectionHeader
-            eyebrow="Common Questions"
-            title="Quick answers."
-          />
-          <div className="space-y-3 max-w-3xl mx-auto">
+          <SectionHeader eyebrow="Common Questions" title="Answers, before you ask." />
+          <div className="max-w-3xl mx-auto divide-y divide-white/10 border-y border-white/10">
             {c.faqs.map((f, i) => (
-              <details
-                key={f.question}
-                className="group rounded-lg border border-white/10 bg-ink-100/60 overflow-hidden"
-                open={i === 0}
-              >
-                <summary className="cursor-pointer list-none px-5 py-4 flex justify-between items-center gap-3 hover:bg-white/5">
-                  <h3 className="font-semibold text-white">{f.question}</h3>
-                  <span
-                    aria-hidden="true"
-                    className="text-flag-redSoft transition-transform group-open:rotate-45 text-2xl leading-none"
-                  >
-                    +
-                  </span>
+              <details key={f.question} className="group" open={i === 0}>
+                <summary className="cursor-pointer list-none py-5 flex justify-between items-center gap-4 hover:text-white">
+                  <h3 className="font-display text-lg font-medium text-white">{f.question}</h3>
+                  <span aria-hidden="true" className="text-brass-soft text-2xl leading-none transition-transform duration-300 group-open:rotate-45">+</span>
                 </summary>
-                <div className="px-5 pb-5 text-bone-muted leading-relaxed">
-                  {f.answer}
-                </div>
+                <div className="pb-6 -mt-1 text-bone-muted leading-relaxed max-w-2xl">{f.answer}</div>
               </details>
             ))}
           </div>
         </Section>
       )}
 
-      {/* ─── Footer CTA — cinematic photo band ────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0" aria-hidden="true">
+      {/* ─── Closing CTA ──────────────────────────────────────────────── */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10" aria-hidden="true">
           {c.images.ctaBand ? (
             <img src={c.images.ctaBand} alt="" className="h-full w-full object-cover" />
           ) : (
-            <Flag fit="cover" className="h-full w-full opacity-30" />
+            <Flag fit="cover" className="h-full w-full opacity-[0.28]" />
           )}
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(180deg, rgba(8,8,8,0.86) 0%, rgba(8,8,8,0.78) 100%)',
-            }}
-          />
-          <div className="stripe absolute inset-x-0 top-0 h-[3px] opacity-90" />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(8,8,9,0.9) 0%, rgba(8,8,9,0.82) 100%)' }} />
+          <div className="rule-flag absolute inset-x-0 top-0 h-[3px] opacity-90" />
         </div>
-        <div className="container-narrow relative py-20 sm:py-28 text-center">
-          <p className="eyebrow mb-5 justify-center">Ready when you are</p>
-          <h2 className="font-display text-3xl sm:text-5xl font-semibold text-white mb-4 max-w-2xl mx-auto leading-tight">
-            Inspect your future home with confidence.
-          </h2>
-          <p className="text-bone-muted max-w-xl mx-auto mb-9 text-lg">
-            Get a free, itemized quote in seconds — or call now and we'll pick up.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-              Get a Free Quote
-            </Button>
-            <Button
-              as="a"
-              href={`tel:${c.phoneHref}`}
-              variant="secondary"
-              onClick={() => track('tel_click', { location: 'home_footer_cta' })}
-              className="!px-8 !py-4 !text-base"
-            >
-              Call {c.phone}
-            </Button>
-          </div>
+        <div className="container-narrow above-grain py-24 sm:py-32 text-center">
+          <Reveal>
+            <p className="eyebrow mb-5">Ready when you are</p>
+            <h2 className="display-1 text-white max-w-3xl mx-auto">
+              Inspect with confidence.
+            </h2>
+            <p className="lede mt-6 max-w-xl mx-auto">
+              Get a free, itemized quote in seconds — or call now and we'll pick up.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3 justify-center">
+              <Button as="link" to="/services" className="!px-8 !py-4 !text-base">Get a Free Quote</Button>
+              <Button
+                as="a"
+                href={`tel:${c.phoneHref}`}
+                variant="secondary"
+                onClick={() => track('tel_click', { location: 'home_footer_cta' })}
+                className="!px-8 !py-4 !text-base"
+              >
+                Call {c.phone}
+              </Button>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

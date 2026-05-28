@@ -27,7 +27,7 @@ export default function Resources() {
         />
 
         {/* Sample Report */}
-        <Card accent className="mb-12">
+        <Card rim className="mb-12">
           <div className="flex flex-col md:flex-row items-start gap-6">
             <div className="flex-shrink-0 h-28 w-20 rounded border border-white/10 bg-gradient-to-br from-flag-navy/30 to-ink-200 flex items-center justify-center text-flag-redSoft">
               <svg

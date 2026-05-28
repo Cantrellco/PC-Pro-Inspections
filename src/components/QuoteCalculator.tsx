@@ -209,7 +209,7 @@ export default function QuoteCalculator() {
       </Card>
 
       {/* Right: itemized breakdown */}
-      <Card accent className="lg:col-span-2 flex flex-col gap-5">
+      <Card rim className="lg:col-span-2 flex flex-col gap-5">
         <div>
           <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
             Your Estimate
@@ -265,7 +265,7 @@ export default function QuoteCalculator() {
       {/* Lead form */}
       {formOpen && (
         <Card
-          accent
+          rim
           className="lg:col-span-5 animate-fade-up"
         >
           <h3 className="font-display text-2xl text-white mb-1">

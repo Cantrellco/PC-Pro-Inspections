@@ -2,11 +2,13 @@ import type { ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
-  /** Section background variant. */
+  /** Background variant. */
   tone?: 'default' | 'elevated' | 'dark' | 'americana';
   className?: string;
   id?: string;
   ariaLabel?: string;
+  /** Use the wider container. */
+  wide?: boolean;
 };
 
 export default function Section({
@@ -15,12 +17,13 @@ export default function Section({
   className = '',
   id,
   ariaLabel,
+  wide = false,
 }: Props) {
   const toneClass =
     tone === 'elevated'
-      ? 'bg-ink-100/60'
+      ? 'bg-white/[0.018]'
       : tone === 'dark'
-        ? 'bg-ink-200'
+        ? 'bg-ink-300'
         : tone === 'americana'
           ? 'relative overflow-hidden'
           : '';
@@ -28,7 +31,7 @@ export default function Section({
     <section
       id={id}
       aria-label={ariaLabel}
-      className={`py-16 sm:py-24 ${toneClass} ${className}`.trim()}
+      className={`relative py-20 sm:py-28 ${toneClass} ${className}`.trim()}
     >
       {tone === 'americana' && (
         <>
@@ -37,20 +40,16 @@ export default function Section({
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                'linear-gradient(160deg, rgba(15,35,77,0.55) 0%, rgba(10,10,10,0.2) 55%, rgba(165,29,45,0.18) 100%)',
+                'linear-gradient(155deg, rgba(10,49,97,0.5) 0%, rgba(10,10,11,0.25) 52%, rgba(156,15,38,0.16) 100%)',
             }}
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-flag-red/60 to-transparent"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-flag-navyLight/60 to-transparent"
-          />
+          <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
+          <div aria-hidden="true" className="hairline absolute inset-x-0 bottom-0" />
         </>
       )}
-      <div className="container-narrow relative">{children}</div>
+      <div className={`${wide ? 'container-wide' : 'container-narrow'} relative above-grain`}>
+        {children}
+      </div>
     </section>
   );
 }

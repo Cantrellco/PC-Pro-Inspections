@@ -109,7 +109,7 @@ export default function About() {
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {c.certifications.map((cert) => (
             <li key={cert.name}>
-              <Card accent className="h-full">
+              <Card rim className="h-full">
                 <div className="flex items-start gap-4">
                   {cert.badgeSrc ? (
                     <img

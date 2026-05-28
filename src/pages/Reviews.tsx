@@ -56,7 +56,7 @@ export default function Reviews() {
               )}
             </Card>
           ) : c.googleReviews.placeUrl ? (
-            <Card accent className="text-center">
+            <Card rim className="text-center">
               <h2 className="text-2xl font-display font-semibold text-white mb-3">
                 Read our Google Reviews
               </h2>
