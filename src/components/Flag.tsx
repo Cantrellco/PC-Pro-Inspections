@@ -47,7 +47,7 @@ export default function Flag({ className, wave = false, animate = false, fit = '
     <svg
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio={fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet'}
-      className={className}
+      className={`${animate ? 'flag-animate ' : ''}${className ?? ''}`.trim()}
       aria-hidden="true"
     >
       <defs>
@@ -55,19 +55,12 @@ export default function Flag({ className, wave = false, animate = false, fit = '
           <stop offset="0%" stopColor="#1d3a8a" />
           <stop offset="100%" stopColor="#0f234d" />
         </linearGradient>
+        {/* Static ripple — rasterized once. Motion comes from a composited CSS
+            transform (.flag-animate), which is smooth and won't "boil". */}
         {wave && (
           <filter id={`${id}-wave`}>
-            <feTurbulence baseFrequency="0.011 0.038" numOctaves="2" seed="3" result="turb">
-              {animate && (
-                <animate
-                  attributeName="baseFrequency"
-                  dur="14s"
-                  values="0.011 0.038;0.013 0.046;0.011 0.038"
-                  repeatCount="indefinite"
-                />
-              )}
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="turb" scale="4.5" />
+            <feTurbulence baseFrequency="0.009 0.032" numOctaves="2" seed="3" result="turb" />
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="3.2" />
           </filter>
         )}
         <symbol id={`${id}-star`} viewBox="-10 -10 20 20">

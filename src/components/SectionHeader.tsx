@@ -23,7 +23,7 @@ export default function SectionHeader({
     <header className={`mb-10 ${centered ? 'text-center' : ''}`}>
       {flag && (
         <div className={`mb-5 ${centered ? 'flex justify-center' : ''}`}>
-          <Flag wave className="h-10 w-[76px] rounded-sm shadow-card" />
+          <Flag className="h-10 w-[76px] rounded-sm shadow-card" />
         </div>
       )}
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}

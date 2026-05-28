@@ -38,7 +38,7 @@ export default function Home() {
             wave
             animate={!reducedMotion}
             fit="cover"
-            className="absolute inset-0 w-full h-full opacity-65"
+            className="absolute inset-0 w-full h-full opacity-[0.78]"
           />
           {/* Dark gradient overlay for text legibility. Heavier toward the
               bottom-right where the copy sits; lighter top-left so the canton
@@ -61,7 +61,7 @@ export default function Home() {
         </div>
 
         <div className="container-narrow relative pt-16 pb-16 sm:pt-24 sm:pb-24">
-          <p className="eyebrow mb-5">Serving {c.serviceAreaSummary}</p>
+          <p className="eyebrow mb-5">{c.serviceAreaSummary}</p>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] max-w-3xl">
             Honest, thorough
             <br />

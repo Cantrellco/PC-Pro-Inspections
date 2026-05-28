@@ -22,7 +22,7 @@ export default function About() {
         <div className="grid md:grid-cols-5 gap-10 items-start">
           {/* Bio */}
           <div className="md:col-span-3">
-            <Flag wave className="h-10 w-[76px] rounded-sm shadow-card mb-4" />
+            <Flag className="h-10 w-[76px] rounded-sm shadow-card mb-4" />
             <p className="eyebrow mb-3">About</p>
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
               Built on craft, paid by trust.
