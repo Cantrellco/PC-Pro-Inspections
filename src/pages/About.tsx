@@ -5,6 +5,7 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Flag from '@/components/Flag';
+import FlagRosette from '@/components/FlagRosette';
 
 export default function About() {
   const c = siteConfig;
@@ -58,21 +59,34 @@ export default function About() {
             </div>
           </div>
 
-          {/* Photo placeholder */}
+          {/* Photo — framed as a flag medallion */}
           <div className="md:col-span-2">
-            <div className="aspect-[4/5] rounded-lg overflow-hidden border border-white/10 bg-gradient-to-br from-ink-50 to-ink-200 relative">
-              {/* TODO: owner — drop a real photo at public/inspector-photo.jpg and replace this. */}
-              <div className="absolute inset-0 flex items-center justify-center text-bone-dim text-sm text-center p-6">
-                <span>
-                  Photo placeholder
-                  <br />
-                  <span className="text-xs">
-                    Drop a portrait at <code>/public/inspector-photo.jpg</code>
-                  </span>
-                </span>
+            <div className="relative px-3 pt-3">
+              {/* Stars-and-stripes frame: navy mat with a tri-color top rail */}
+              <div className="relative rounded-lg border border-flag-navyLight/40 bg-flag-navyDeep/40 p-2.5 shadow-card">
+                <div aria-hidden="true" className="absolute -top-px inset-x-0 h-1 stripe rounded-t-lg" />
+                <div className="aspect-[4/5] rounded-md overflow-hidden border border-white/10 bg-gradient-to-br from-ink-50 to-ink-200 relative">
+                  {/* TODO: owner — drop a real photo at public/inspector-photo.jpg and replace this. */}
+                  <div className="absolute inset-0 flex items-center justify-center text-bone-dim text-sm text-center p-6">
+                    <span>
+                      Photo placeholder
+                      <br />
+                      <span className="text-xs">
+                        Drop a portrait at <code>/public/inspector-photo.jpg</code>
+                      </span>
+                    </span>
+                  </div>
+                  {/* Corner stars */}
+                  <span aria-hidden="true" className="absolute top-2 left-2 text-flag-red text-sm">★</span>
+                  <span aria-hidden="true" className="absolute top-2 right-2 text-flag-navyLight text-sm">★</span>
+                  <span aria-hidden="true" className="absolute bottom-2 left-2 text-flag-navyLight text-sm">★</span>
+                  <span aria-hidden="true" className="absolute bottom-2 right-2 text-flag-red text-sm">★</span>
+                </div>
               </div>
+              {/* Rosette medallion overlapping the lower-right corner */}
+              <FlagRosette className="absolute -bottom-5 -right-3 h-24 w-24 drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]" />
             </div>
-            <p className="mt-4 text-sm text-bone-dim italic">
+            <p className="mt-8 text-sm text-bone-dim italic">
               We strongly prefer real photos over stock — inspection is a trust
               business.
             </p>

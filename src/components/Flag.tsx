@@ -1,27 +1,33 @@
 type Props = {
   className?: string;
-  /** Width / height ratio is fixed (19:10) to read as a flag, regardless of size. */
-  /** Render the wavy "flying" version (subtle SVG distortion). */
+  /** Render the wavy "flying" version (SVG turbulence distortion). */
   wave?: boolean;
+  /** Animate the wave (slow ripple). Caller should gate this on reduced-motion. */
+  animate?: boolean;
+  /** 'meet' (whole flag visible, default) or 'cover' (fills container, cropped). */
+  fit?: 'meet' | 'cover';
 };
+
+let uid = 0;
 
 /**
  * Stylized US flag rendered as a single inline SVG.
  *
- * Used as a hero backdrop (with low opacity), as a small badge on page
- * headers, and beside the brand mark. Decorative only — every consumer
- * passes its own aria-hidden=true on the wrapping element.
+ * Used as a hero backdrop (fit="cover" with low opacity), as a small badge on
+ * page headers, and beside the brand mark. Decorative only — consumers pass
+ * aria-hidden on the wrapping element.
  */
-export default function Flag({ className, wave = false }: Props) {
-  // Canton: 40% width × 53.85% height (7/13 stripes tall, 0.76 of canton-height
-  // wide — simplified here as 40% of total flag width which is visually close).
+export default function Flag({ className, wave = false, animate = false, fit = 'meet' }: Props) {
+  // Unique filter/gradient ids so multiple flags on one page don't collide.
+  const id = `flag-${(uid += 1)}`;
+
   const W = 190;
   const H = 100;
   const stripeH = H / 13;
   const cantonW = W * 0.4;
   const cantonH = stripeH * 7;
 
-  // Star scatter inside the canton — 6 rows × 5 cols suggests "many stars".
+  // Star scatter inside the canton — 6 rows × 5 cols reads as "many stars".
   const rows = 6;
   const cols = 5;
   const starSize = 4.2;
@@ -29,10 +35,9 @@ export default function Flag({ className, wave = false }: Props) {
   const padX = cantonW / (cols + 1);
   const padY = cantonH / (rows + 1);
   for (let r = 0; r < rows; r++) {
-    const offset = r % 2 === 0 ? 0 : padX / 2;
     for (let c = 0; c < cols; c++) {
       stars.push({
-        x: padX * (c + 1) + offset - (r % 2 === 0 ? 0 : padX / 4),
+        x: padX * (c + 1) + (r % 2 === 0 ? 0 : -padX / 4),
         y: padY * (r + 1),
       });
     }
@@ -41,27 +46,36 @@ export default function Flag({ className, wave = false }: Props) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
-      preserveAspectRatio="xMidYMid meet"
+      preserveAspectRatio={fit === 'cover' ? 'xMidYMid slice' : 'xMidYMid meet'}
       className={className}
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="canton-fill" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={`${id}-canton`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#1d3a8a" />
           <stop offset="100%" stopColor="#0f234d" />
         </linearGradient>
         {wave && (
-          <filter id="flag-wave">
-            <feTurbulence baseFrequency="0.012 0.04" numOctaves="2" seed="3" />
-            <feDisplacementMap in="SourceGraphic" scale="3" />
+          <filter id={`${id}-wave`}>
+            <feTurbulence baseFrequency="0.011 0.038" numOctaves="2" seed="3" result="turb">
+              {animate && (
+                <animate
+                  attributeName="baseFrequency"
+                  dur="14s"
+                  values="0.011 0.038;0.013 0.046;0.011 0.038"
+                  repeatCount="indefinite"
+                />
+              )}
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="turb" scale="4.5" />
           </filter>
         )}
-        <symbol id="white-star" viewBox="-10 -10 20 20">
+        <symbol id={`${id}-star`} viewBox="-10 -10 20 20">
           <path d="M0 -8.5 L2.5 -2.6 L8.6 -2.6 L3.7 1.0 L5.6 7.0 L0 3.4 L-5.6 7.0 L-3.7 1.0 L-8.6 -2.6 L-2.5 -2.6 Z" fill="#ffffff" />
         </symbol>
       </defs>
 
-      <g filter={wave ? 'url(#flag-wave)' : undefined}>
+      <g filter={wave ? `url(#${id}-wave)` : undefined}>
         {/* 13 alternating stripes — index 0 (top) is red */}
         {Array.from({ length: 13 }).map((_, i) => (
           <rect
@@ -69,19 +83,19 @@ export default function Flag({ className, wave = false }: Props) {
             x="0"
             y={i * stripeH}
             width={W}
-            height={stripeH}
+            height={stripeH + 0.5}
             fill={i % 2 === 0 ? '#d4263a' : '#f5f5f4'}
           />
         ))}
 
         {/* Canton over the top 7 stripes */}
-        <rect x="0" y="0" width={cantonW} height={cantonH} fill="url(#canton-fill)" />
+        <rect x="0" y="0" width={cantonW} height={cantonH} fill={`url(#${id}-canton)`} />
 
         {/* Stars */}
         {stars.map((s, i) => (
           <use
             key={i}
-            href="#white-star"
+            href={`#${id}-star`}
             x={s.x - starSize / 2}
             y={s.y - starSize / 2}
             width={starSize}

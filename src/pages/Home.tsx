@@ -8,13 +8,15 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
-import StripeDivider from '@/components/StripeDivider';
+import Bunting from '@/components/Bunting';
 import Flag from '@/components/Flag';
+import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 export default function Home() {
   const c = siteConfig;
   const showcaseTestimonials = c.testimonials.slice(0, 3);
   const cityForTitle = c.address.city || 'Your Area';
+  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <>
@@ -27,22 +29,25 @@ export default function Home() {
 
       {/* ─── Hero ────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-ink-200">
-        {/* Full stylized flag as the hero backdrop. */}
+        {/* Full stylized flag fills the hero edge-to-edge (cover-fit). */}
         <div
           className="absolute inset-0 pointer-events-none"
           aria-hidden="true"
         >
           <Flag
             wave
-            className="absolute -inset-y-8 inset-x-0 w-full h-[calc(100%+4rem)] opacity-60"
+            animate={!reducedMotion}
+            fit="cover"
+            className="absolute inset-0 w-full h-full opacity-65"
           />
-          {/* Dark gradient overlay for text legibility. Heavier on the right
-              where the H1 sits, lighter on the left to let the canton breathe. */}
+          {/* Dark gradient overlay for text legibility. Heavier toward the
+              bottom-right where the copy sits; lighter top-left so the canton
+              and stars read clearly. */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(95deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.78) 40%, rgba(10,10,10,0.92) 100%)',
+                'linear-gradient(120deg, rgba(10,10,10,0.42) 0%, rgba(10,10,10,0.72) 45%, rgba(10,10,10,0.93) 100%)',
             }}
           />
           {/* Subtle ambient color wash for depth on top */}
@@ -55,7 +60,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="container-narrow relative pt-14 pb-16 sm:pt-20 sm:pb-24">
+        <div className="container-narrow relative pt-16 pb-16 sm:pt-24 sm:pb-24">
           <p className="eyebrow mb-5">Serving {c.serviceAreaSummary}</p>
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] max-w-3xl">
             Honest, thorough
@@ -129,7 +134,8 @@ export default function Home() {
             ))}
           </dl>
         </div>
-        <StripeDivider />
+        {/* Bunting drape at the hero's lower edge */}
+        <Bunting className="relative w-full h-10 sm:h-12 -mb-1" swags={10} />
       </section>
 
       {/* ─── Response Promise ─────────────────────────────────────────── */}
@@ -393,7 +399,8 @@ export default function Home() {
 
       {/* ─── Footer CTA ───────────────────────────────────────────────── */}
       <Section tone="americana">
-        <div className="text-center max-w-3xl mx-auto py-6 sm:py-10 relative">
+        <Bunting className="absolute top-0 inset-x-0 w-full h-10 sm:h-12" swags={12} />
+        <div className="text-center max-w-3xl mx-auto py-6 sm:py-10 pt-12 sm:pt-16 relative">
           <div className="flex items-center justify-center gap-3 mb-5" aria-hidden="true">
             <span className="text-flag-red text-3xl">★</span>
             <span className="text-bone text-3xl">★</span>
