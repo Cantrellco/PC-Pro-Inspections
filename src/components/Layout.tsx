@@ -3,6 +3,7 @@ import Nav from './Nav';
 import Footer from './Footer';
 import StickyCallCTA from './StickyCallCTA';
 import LocalBusinessJsonLd from './LocalBusinessJsonLd';
+import ScrollProgress from './ScrollProgress';
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       >
         Skip to content
       </a>
+      <ScrollProgress />
       <LocalBusinessJsonLd />
       <Nav />
       <main

@@ -14,47 +14,55 @@ export const siteConfig: SiteConfig = {
   tagline: 'Honest, thorough home inspections — so you buy with confidence.',
 
   // ─── Photography ─────────────────────────────────────────────────────────
-  // Paste royalty-free (or your own) image URLs. Blank fields render a
-  // polished gradient placeholder, so the site never looks broken.
-  // Suggested free sources: Unsplash, Pexels, Pixabay (verify each loads).
-  // Prefer your OWN photos before launch — stock hurts trust on a service site.
+  // Royalty-free placeholders (Unsplash) so the site looks finished. SWAP for
+  // your OWN photos before launch — your real work beats stock on a trust-based
+  // service. Blank fields fall back to a polished gradient placeholder.
   images: {
-    hero: '', // TODO: owner — wide home/neighborhood exterior (≥1920px)
-    inspector: '', // TODO: owner — portrait of the inspector (4:5 vertical)
-    services: '', // TODO: owner — inspection in progress (roof, panel, etc.)
-    resources: '', // TODO: owner — clipboard/report or home interior
-    ctaBand: '', // TODO: owner — dusk home exterior for the closing banner
+    hero: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=2000&q=80', // TODO: owner — swap for a local home exterior
+    inspector: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80', // TODO: owner — your real portrait
+    services: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1400&q=80', // TODO: owner — you inspecting
+    resources: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80', // TODO: owner — interior/report
+    ctaBand: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80', // TODO: owner — dusk home exterior
   },
 
   // ─── Contact ─────────────────────────────────────────────────────────────
-  phone: '(555) 123-4567', // TODO: owner to fill
-  phoneHref: '+15551234567', // TODO: owner to fill (E.164, digits only)
-  email: 'hello@pcproinspections.com', // TODO: owner to fill
+  // SAMPLE values (Southern Illinois). 555-01xx is a reserved fictional range.
+  phone: '(618) 555-0147', // TODO: owner to fill with real number
+  phoneHref: '+16185550147', // TODO: owner to fill (E.164, digits only)
+  email: 'office@pcproinspections.com', // TODO: owner to fill
 
   // ─── Address ─────────────────────────────────────────────────────────────
-  // If you operate mobile-only, use a service-area centroid; do not leave blank.
+  // SAMPLE address — replace with your real address or service-area centroid.
   address: {
-    street: '123 Main Street', // TODO: owner to fill
-    city: 'Anytown', // TODO: owner to fill
-    region: 'NY', // TODO: owner to fill
-    postalCode: '10001', // TODO: owner to fill
+    street: '100 Heritage Lane', // TODO: owner to fill (sample)
+    city: 'Marion', // TODO: owner to fill
+    region: 'IL', // TODO: owner to fill
+    postalCode: '62959', // TODO: owner to fill
     country: 'US',
   },
-  geo: undefined, // TODO: owner to fill (optional but boosts local SEO JSON-LD)
+  geo: { latitude: 37.7306, longitude: -88.9269 }, // Marion, IL (sample)
 
   // ─── Service Area ────────────────────────────────────────────────────────
-  serviceAreaSummary: 'Serving the greater metro area and surrounding counties.', // TODO: owner to fill
+  serviceAreaSummary: 'Serving Carbondale, Marion & Southern Illinois', // TODO: owner to confirm
   // Drives the Service Areas page (crawlable text) and on-page local SEO.
   serviceAreaTowns: [
-    // TODO: owner to fill — at least 8-15 towns/cities you actively serve.
-    'Anytown',
-    'Springfield',
-    'Riverside',
-    'Lakeview',
-    'Brookfield',
-    'Maplewood',
-    'Hillcrest',
-    'Fairview',
+    // SAMPLE — real Southern Illinois towns. Adjust to your true coverage.
+    'Carbondale',
+    'Marion',
+    'Herrin',
+    'Carterville',
+    'Murphysboro',
+    'Du Quoin',
+    'Harrisburg',
+    'Mount Vernon',
+    'Benton',
+    'West Frankfort',
+    'Anna',
+    'Pinckneyville',
+    'Chester',
+    'Metropolis',
+    'Vienna',
+    'Johnston City',
   ],
 
   // ─── Hours ───────────────────────────────────────────────────────────────
@@ -131,23 +139,37 @@ export const siteConfig: SiteConfig = {
     // TODO: owner to fill with real testimonials (with permission).
     {
       name: 'Sarah K.',
-      town: 'Brookfield',
+      town: 'Carbondale',
       quote:
         'We had two other inspectors quote us, but the depth of detail in this report was on another level. Caught a roof issue our agent missed. Saved us $8K.',
       rating: 5,
     },
     {
       name: 'Marcus T.',
-      town: 'Riverside',
+      town: 'Herrin',
       quote:
         'Showed up on time, walked us through every finding on-site, then delivered the report the same evening with clear photos. First-time buyers — felt completely supported.',
       rating: 5,
     },
     {
       name: 'Priya & Dev R.',
-      town: 'Maplewood',
+      town: 'Marion',
       quote:
-        'Professional, calm, and honest — even when telling us things we did not want to hear. Exactly who you want in your corner on a $500K purchase.',
+        'Professional, calm, and honest — even when telling us things we did not want to hear. Exactly who you want in your corner on a major purchase.',
+      rating: 5,
+    },
+    {
+      name: 'Bill & Donna H.',
+      town: 'Murphysboro',
+      quote:
+        'Forty years in our last house and we still learned things on the walkthrough. The maintenance summary alone was worth it. Highly recommend to anyone in the area.',
+      rating: 5,
+    },
+    {
+      name: 'Jordan M.',
+      town: 'Mount Vernon',
+      quote:
+        'As a realtor I send every client here. Thorough, fair, and the reports never blow up a deal unnecessarily — just the facts, clearly explained.',
       rating: 5,
     },
   ],
@@ -211,8 +233,12 @@ export const siteConfig: SiteConfig = {
   ],
 
   // ─── Google Reviews ──────────────────────────────────────────────────────
+  // rating + reviewCount drive the rich summary card. Set them to match your
+  // real Google Business Profile, then paste placeUrl (and optionally an embed).
   googleReviews: {
-    placeUrl: '', // TODO: owner to fill — Google Business Profile "share" URL
+    rating: 4.9, // TODO: owner — your real GBP star average
+    reviewCount: 127, // TODO: owner — your real GBP review count
+    placeUrl: '', // TODO: owner — Google Business Profile share/review URL
     embedSrc: '', // TODO: optional — 3rd-party reviews widget iframe src
   },
 

@@ -7,10 +7,13 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import StarRating from '@/components/StarRating';
-import Flag from '@/components/Flag';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
+import CountUp from '@/components/CountUp';
+import Magnetic from '@/components/Magnetic';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
+import HeroImage from '@/components/HeroImage';
+import ServiceAreaMap from '@/components/ServiceAreaMap';
 import {
   IconRoof, IconFoundation, IconPlumbing, IconElectrical, IconHvac,
   IconAttic, IconInterior, IconBasement, IconAddons, IconShield, IconClock, IconDoc, IconPhone,
@@ -37,7 +40,6 @@ const PROCESS = [
 
 export default function Home() {
   const c = siteConfig;
-  const showcaseTestimonials = c.testimonials.slice(0, 3);
   const cityForTitle = c.address.city || 'Your Area';
   const avgRating = (
     c.testimonials.reduce((a, t) => a + t.rating, 0) / Math.max(c.testimonials.length, 1)
@@ -55,11 +57,7 @@ export default function Home() {
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden min-h-[92vh] flex items-center">
         <div className="absolute inset-0 -z-10" aria-hidden="true">
-          {c.images.hero ? (
-            <img src={c.images.hero} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          ) : (
-            <Flag fit="cover" className="absolute inset-0 h-full w-full opacity-[0.6]" />
-          )}
+          <HeroImage src={c.images.hero} kenburns />
           <div
             className="absolute inset-0"
             style={{
@@ -86,32 +84,36 @@ export default function Home() {
               site. The biggest purchase of your life deserves a real inspection.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
-              <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-                Get a Free Quote
-              </Button>
-              <Button
-                as="a"
-                href={`tel:${c.phoneHref}`}
-                variant="secondary"
-                onClick={() => track('tel_click', { location: 'hero' })}
-                className="!px-8 !py-4 !text-base"
-              >
-                Call {c.phone}
-              </Button>
+              <Magnetic>
+                <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
+                  Get a Free Quote
+                </Button>
+              </Magnetic>
+              <Magnetic>
+                <Button
+                  as="a"
+                  href={`tel:${c.phoneHref}`}
+                  variant="secondary"
+                  onClick={() => track('tel_click', { location: 'hero' })}
+                  className="!px-8 !py-4 !text-base"
+                >
+                  Call {c.phone}
+                </Button>
+              </Magnetic>
             </div>
 
             <dl className="mt-16 grid grid-cols-3 gap-5 sm:gap-10 max-w-xl">
               {[
-                [`${c.yearsInBusiness}+`, 'Years experience', null],
-                [`${c.inspectionsCompleted.toLocaleString()}+`, 'Inspections', null],
-                [avgRating, 'Average rating', '★'],
-              ].map(([value, label, suffix]) => (
-                <div key={label as string} className="border-l border-white/15 pl-4">
+                { value: c.yearsInBusiness, suffix: '+', dec: 0, label: 'Years experience', star: false },
+                { value: c.inspectionsCompleted, suffix: '+', dec: 0, label: 'Inspections', star: false },
+                { value: Number(avgRating), suffix: '', dec: 1, label: 'Average rating', star: true },
+              ].map((s) => (
+                <div key={s.label} className="border-l border-white/15 pl-4">
                   <dd className="font-display text-3xl sm:text-5xl font-semibold text-white flex items-baseline gap-1">
-                    {value}
-                    {suffix && <span className="text-flag-red text-2xl">{suffix}</span>}
+                    <CountUp value={s.value} suffix={s.suffix} decimals={s.dec} />
+                    {s.star && <span className="text-flag-red text-2xl">★</span>}
                   </dd>
-                  <dt className="mt-1.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim">{label}</dt>
+                  <dt className="mt-1.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim">{s.label}</dt>
                 </div>
               ))}
             </dl>
@@ -254,38 +256,18 @@ export default function Home() {
             </Link>
           </Reveal>
           <Reveal delay={80}>
-            <ul className="flex flex-wrap gap-2.5">
-              {c.serviceAreaTowns.slice(0, 14).map((town) => (
-                <li
-                  key={town}
-                  className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-bone-muted hover:border-brass/40 hover:text-white transition-colors"
-                >
-                  {town}
-                </li>
-              ))}
-            </ul>
+            <ServiceAreaMap />
           </Reveal>
         </div>
       </Section>
 
       {/* ─── Testimonials ─────────────────────────────────────────────── */}
-      {showcaseTestimonials.length > 0 && (
+      {c.testimonials.length > 0 && (
         <Section>
           <SectionHeader eyebrow="Word From Clients" title="Trusted by buyers and their agents." />
-          <div className="grid md:grid-cols-3 gap-5">
-            {showcaseTestimonials.map((t, i) => (
-              <Reveal key={t.name} delay={i * 80}>
-                <Card className="h-full flex flex-col">
-                  <StarRating rating={t.rating} />
-                  <blockquote className="mt-4 text-bone leading-relaxed flex-1">"{t.quote}"</blockquote>
-                  <footer className="mt-5 pt-5 border-t border-white/10 text-sm">
-                    <span className="text-white font-semibold">{t.name}</span>
-                    <span className="text-bone-dim"> · {t.town}</span>
-                  </footer>
-                </Card>
-              </Reveal>
-            ))}
-          </div>
+          <Reveal>
+            <TestimonialCarousel items={c.testimonials} />
+          </Reveal>
           <div className="mt-12 text-center">
             <Button as="link" to="/reviews" variant="secondary">Read all reviews</Button>
           </div>
@@ -313,11 +295,7 @@ export default function Home() {
       {/* ─── Closing CTA ──────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10" aria-hidden="true">
-          {c.images.ctaBand ? (
-            <img src={c.images.ctaBand} alt="" className="h-full w-full object-cover" />
-          ) : (
-            <Flag fit="cover" className="h-full w-full opacity-[0.28]" />
-          )}
+          <HeroImage src={c.images.ctaBand} flagOpacity={0.28} />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(8,8,9,0.9) 0%, rgba(8,8,9,0.82) 100%)' }} />
           <div className="rule-flag absolute inset-x-0 top-0 h-[3px] opacity-90" />
         </div>

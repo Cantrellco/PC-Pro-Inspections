@@ -29,6 +29,10 @@ export type PrepGuideSection = {
 };
 
 export type GoogleReviewsConfig = {
+  /** Real GBP star average (e.g. 4.9) for the summary card. */
+  rating?: number;
+  /** Real GBP total review count. */
+  reviewCount?: number;
   /** Public Google Maps "place" URL — used as fallback CTA. */
   placeUrl: string;
   /** Embed src for an iframe (e.g. a 3rd-party review embed); optional. */

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
-import StarMark from './StarMark';
+import Brandmark from './Brandmark';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -43,7 +43,7 @@ export default function Nav() {
           className="group flex items-center gap-2.5 text-bone hover:text-white"
           onClick={() => setOpen(false)}
         >
-          <StarMark className="h-8 w-8 text-flag-red transition-transform duration-300 group-hover:scale-105" />
+          <Brandmark className="h-9 w-9 transition-transform duration-300 group-hover:scale-105" />
           <span className="font-display text-lg sm:text-xl font-semibold tracking-tight">
             {siteConfig.businessName}
           </span>

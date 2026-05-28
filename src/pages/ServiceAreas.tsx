@@ -5,6 +5,8 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import Reveal from '@/components/Reveal';
+import ServiceAreaMap from '@/components/ServiceAreaMap';
 
 export default function ServiceAreas() {
   const c = siteConfig;
@@ -22,25 +24,31 @@ export default function ServiceAreas() {
         <SectionHeader
           as="h1"
           eyebrow="Service Areas"
-          title={`Home inspections across ${c.serviceAreaSummary}.`}
-          description={`Based in ${c.address.city || cityForTitle}, ${c.address.region}, we cover the towns and counties listed below. Not sure if your address is in our radius? Give us a quick call.`}
+          title={`${c.serviceAreaSummary}.`}
+          description={`Based in ${c.address.city || cityForTitle}, ${c.address.region}, we cover the towns and counties below — plus surrounding areas on request. Not sure if your address is in our radius? Give us a quick call.`}
         />
 
-        <Card rim className="mb-10">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-4">
-            Towns &amp; Counties Served
-          </h2>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {c.serviceAreaTowns.map((t) => (
-              <li
-                key={t}
-                className="rounded-md border border-white/10 bg-ink-100/60 px-4 py-3 text-bone-muted hover:border-white/25 hover:text-white transition-colors"
-              >
-                {t}
-              </li>
-            ))}
-          </ul>
-        </Card>
+        <div className="grid lg:grid-cols-2 gap-8 items-stretch mb-10">
+          <Reveal className="min-h-[20rem]">
+            <ServiceAreaMap />
+          </Reveal>
+          <Reveal delay={80}>
+            <Card rim className="h-full">
+              <h2 className="eyebrow mb-5">Towns &amp; Counties Served</h2>
+              <ul className="grid grid-cols-2 gap-2.5">
+                {c.serviceAreaTowns.map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-center gap-2 text-bone-muted hover:text-white transition-colors"
+                  >
+                    <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-flag-red" />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          </Reveal>
+        </div>
 
         <Card className="text-center">
           <h3 className="font-display text-2xl text-white mb-2">

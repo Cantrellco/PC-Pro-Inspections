@@ -5,16 +5,18 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
+import Reveal from '@/components/Reveal';
+import GoogleReviewsSummary from '@/components/GoogleReviewsSummary';
+import TestimonialCarousel from '@/components/TestimonialCarousel';
 
 export default function Reviews() {
   const c = siteConfig;
-  const hasGoogle = Boolean(c.googleReviews.placeUrl || c.googleReviews.embedSrc);
 
   return (
     <>
       <SEO
         title={`Reviews | ${c.businessName}`}
-        description={`Read real reviews from buyers we've worked with. ${c.testimonials.length} testimonials and ongoing Google reviews.`}
+        description={`Read real reviews from buyers and agents across ${c.serviceAreaSummary}. ${c.testimonials.length}+ testimonials and ongoing Google reviews.`}
         pathname="/reviews"
       />
 
@@ -22,109 +24,56 @@ export default function Reviews() {
         <SectionHeader
           as="h1"
           eyebrow="Reviews"
-          title="What our clients say."
-          description="A working list of testimonials and live Google reviews. Reviews drive everything in this business — we earn each one."
+          title="Reputation, earned one inspection at a time."
+          description="Reviews are the single biggest reason buyers choose us — and the biggest thing we protect. Here's the unfiltered picture."
         />
 
-        {/* Google Reviews block */}
-        <div className="mb-12">
-          {c.googleReviews.embedSrc ? (
-            <Card>
-              <h2 className="text-lg font-semibold text-white mb-4">
-                Google Reviews
-              </h2>
-              <div className="aspect-video w-full rounded-md overflow-hidden bg-ink-200 border border-white/10">
-                <iframe
-                  src={c.googleReviews.embedSrc}
-                  title="Google Reviews"
-                  className="w-full h-full"
-                  loading="lazy"
-                />
-              </div>
-              {c.googleReviews.placeUrl && (
-                <div className="mt-4 text-center">
-                  <Button
-                    as="a"
-                    href={c.googleReviews.placeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="secondary"
-                  >
-                    See all on Google →
-                  </Button>
-                </div>
-              )}
-            </Card>
-          ) : c.googleReviews.placeUrl ? (
-            <Card rim className="text-center">
-              <h2 className="text-2xl font-display font-semibold text-white mb-3">
-                Read our Google Reviews
-              </h2>
-              <p className="text-bone-muted mb-5 max-w-xl mx-auto">
-                We post every public review to our Google Business Profile.
-                Click through to read them all and leave your own after your
-                inspection.
-              </p>
-              <Button
-                as="a"
-                href={c.googleReviews.placeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open on Google →
-              </Button>
-            </Card>
-          ) : (
-            <Card className="text-center">
-              <p className="text-sm uppercase tracking-wider text-bone-dim mb-2">
-                Google Reviews
-              </p>
-              <p className="text-bone-muted">
-                Live Google review embed coming soon — testimonials below in
-                the meantime.
-              </p>
-            </Card>
-          )}
-        </div>
+        <Reveal className="mb-14">
+          <GoogleReviewsSummary />
+        </Reveal>
 
-        {/* Manual testimonials */}
+        {c.googleReviews.embedSrc && (
+          <Reveal className="mb-14">
+            <Card className="!p-3">
+              <div className="aspect-video w-full rounded-xl overflow-hidden bg-ink-200 border border-white/10">
+                <iframe src={c.googleReviews.embedSrc} title="Google Reviews" className="w-full h-full" loading="lazy" />
+              </div>
+            </Card>
+          </Reveal>
+        )}
+
+        {c.testimonials.length > 0 && (
+          <Reveal className="mb-16">
+            <TestimonialCarousel items={c.testimonials} />
+          </Reveal>
+        )}
+
         {c.testimonials.length > 0 && (
           <>
-            <h2 className="font-display text-2xl sm:text-3xl font-bold text-white mb-6">
-              From recent inspections
-            </h2>
+            <h2 className="display-3 text-white text-center mb-8">Every word from real clients</h2>
             <ul className="grid md:grid-cols-2 gap-5">
-              {c.testimonials.map((t) => (
-                <li key={t.name}>
+              {c.testimonials.map((t, i) => (
+                <Reveal as="li" key={t.name} delay={(i % 2) * 80}>
                   <Card className="h-full">
                     <StarRating rating={t.rating} />
-                    <blockquote className="mt-3 text-bone leading-relaxed">
-                      "{t.quote}"
-                    </blockquote>
-                    <footer className="mt-4 text-sm text-bone-muted">
-                      — {t.name}, {t.town}
+                    <blockquote className="mt-4 text-bone leading-relaxed">{t.quote}</blockquote>
+                    <footer className="mt-5 pt-5 border-t border-white/10 text-sm">
+                      <span className="text-white font-semibold">{t.name}</span>
+                      <span className="text-bone-dim"> · {t.town}</span>
                     </footer>
                   </Card>
-                </li>
+                </Reveal>
               ))}
             </ul>
           </>
         )}
 
-        {/* CTA */}
-        <div className="mt-14 text-center">
-          <p className="text-bone-muted mb-4">
-            Worked with us? We would deeply appreciate a Google review — it is
-            the single biggest thing you can do to help.
+        <div className="mt-16 text-center">
+          <p className="text-bone-muted mb-5">
+            Worked with us? A quick Google review is the single biggest way to help.
           </p>
-          {hasGoogle && c.googleReviews.placeUrl && (
-            <Button
-              as="a"
-              href={c.googleReviews.placeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="secondary"
-            >
+          {c.googleReviews.placeUrl && (
+            <Button as="a" href={c.googleReviews.placeUrl} target="_blank" rel="noopener noreferrer">
               Leave a Google review
             </Button>
           )}
