@@ -20,7 +20,7 @@ export default function Footer() {
           <p className="mt-5 text-bone-dim text-sm">{c.serviceAreaSummary}</p>
           <p className="mt-6 inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.24em] text-brass-soft font-semibold">
             <span aria-hidden="true" className="h-px w-6 bg-brass/70" />
-            Veteran-grade thoroughness · American-owned
+            American-owned &amp; operated
           </p>
         </div>
 
