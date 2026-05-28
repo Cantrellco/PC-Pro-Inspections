@@ -124,27 +124,6 @@
     @apply mx-auto w-full max-w-3xl px-5 sm:px-8;
   }
 
-  @keyframes flag-wave {
-    0% {
-      transform: scale(1.07) translate3d(0, 0, 0) skewY(0deg);
-    }
-    20% {
-      transform: scale(1.07) translate3d(-0.8%, 0.35%, 0) skewY(-0.6deg);
-    }
-    40% {
-      transform: scale(1.07) translate3d(0.5%, -0.25%, 0) skewY(0.45deg);
-    }
-    60% {
-      transform: scale(1.07) translate3d(-0.45%, 0.25%, 0) skewY(-0.35deg);
-    }
-    80% {
-      transform: scale(1.07) translate3d(0.7%, -0.35%, 0) skewY(0.5deg);
-    }
-    100% {
-      transform: scale(1.07) translate3d(0, 0, 0) skewY(0deg);
-    }
-  }
-
   /* Star divider — small SVG-friendly inline motif with a hairline on each side */
   .star-divider {
     @apply flex items-center justify-center gap-3 my-8;
@@ -154,15 +133,6 @@
     content: '';
     @apply flex-1 h-px bg-bone/15;
     max-width: 6rem;
-  }
-
-  /* Smooth flag wave — a composited transform (no per-frame filter recompute,
-     so it never "boils" or stutters). Slightly irregular keyframes read as a
-     natural flutter. The global prefers-reduced-motion rule neutralizes it. */
-  .flag-animate {
-    transform-origin: center;
-    will-change: transform;
-    animation: flag-wave 7s ease-in-out infinite;
   }
 
   /* Editorial eyebrow: a short red rule + a single star + label. Reads as

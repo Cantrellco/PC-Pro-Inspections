@@ -10,13 +10,11 @@ import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
 import Flag from '@/components/Flag';
 import Photo from '@/components/Photo';
-import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
 export default function Home() {
   const c = siteConfig;
   const showcaseTestimonials = c.testimonials.slice(0, 3);
   const cityForTitle = c.address.city || 'Your Area';
-  const reducedMotion = usePrefersReducedMotion();
 
   return (
     <>
@@ -38,12 +36,7 @@ export default function Home() {
               className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
-            <Flag
-              wave
-              animate={!reducedMotion}
-              fit="cover"
-              className="absolute inset-0 w-full h-full opacity-[0.7]"
-            />
+            <Flag fit="cover" className="absolute inset-0 w-full h-full opacity-[0.7]" />
           )}
           {/* Cinematic gradient: deep at the bottom-left where the copy sits. */}
           <div
@@ -388,7 +381,7 @@ export default function Home() {
           {c.images.ctaBand ? (
             <img src={c.images.ctaBand} alt="" className="h-full w-full object-cover" />
           ) : (
-            <Flag wave animate={!reducedMotion} fit="cover" className="h-full w-full opacity-30" />
+            <Flag fit="cover" className="h-full w-full opacity-30" />
           )}
           <div
             className="absolute inset-0"
