@@ -5,6 +5,7 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import ContactForm from '@/components/ContactForm';
+import ServiceAreaMap from '@/components/ServiceAreaMap';
 
 export default function Contact() {
   const c = siteConfig;
@@ -104,10 +105,7 @@ export default function Contact() {
               </p>
             </Card>
 
-            <div className="aspect-video rounded-lg overflow-hidden border border-white/10 bg-gradient-to-br from-flag-navy/20 to-ink-200 flex items-center justify-center text-bone-dim text-sm">
-              {/* TODO: owner — replace with real embedded Google Map iframe */}
-              Map placeholder — service area: {c.serviceAreaSummary}
-            </div>
+            <ServiceAreaMap className="!min-h-[16rem]" />
           </div>
         </div>
       </Section>

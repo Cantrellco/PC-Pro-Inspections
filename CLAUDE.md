@@ -77,6 +77,7 @@ No component changes. No prop refactor. That is the seam.
 | Add or remove a calculator add-on | `src/config/pricing.ts` → `ADD_ONS` array (single block) |
 | Web3Forms access key | `src/config/siteConfig.ts` → `web3FormsAccessKey` |
 | Scheduler URL / embed (Cal.com, Acuity, Calendly, etc.) | `src/config/siteConfig.ts` → `bookingUrl` |
+| Service-area / contact map (keyless OSM, or Google "Embed a map" src) | `src/config/siteConfig.ts` → `mapEmbedSrc` |
 | Analytics provider key | `src/config/siteConfig.ts` → `analytics` |
 | Google reviews embed URL / place ID | `src/config/siteConfig.ts` → `googleReviews` |
 | Sample Report PDF | drop file at `public/sample-report.pdf` (linked from Resources page) |

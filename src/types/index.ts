@@ -101,6 +101,8 @@ export type SiteConfig = {
   web3FormsAccessKey: string;
   /** Scheduler embed URL. Blank → Book Now page shows polished fallback. */
   bookingUrl: string;
+  /** Map embed iframe src (keyless OpenStreetMap or a Google "embed a map" src). */
+  mapEmbedSrc: string;
   analytics: AnalyticsConfig;
   /** Open Graph image, defaults to /og-image.png in public/. */
   ogImage: string;

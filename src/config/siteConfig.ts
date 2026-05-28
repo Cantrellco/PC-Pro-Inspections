@@ -32,38 +32,44 @@ export const siteConfig: SiteConfig = {
   email: 'office@pcproinspections.com', // TODO: owner to fill
 
   // ─── Address ─────────────────────────────────────────────────────────────
-  // SAMPLE address — replace with your real address or service-area centroid.
+  // Based in Fairfield, IL (Wayne County). Replace street with the real one.
   address: {
-    street: '100 Heritage Lane', // TODO: owner to fill (sample)
-    city: 'Marion', // TODO: owner to fill
-    region: 'IL', // TODO: owner to fill
-    postalCode: '62959', // TODO: owner to fill
+    street: '100 Heritage Lane', // TODO: owner to fill (sample street)
+    city: 'Fairfield', // TODO: owner to confirm
+    region: 'IL',
+    postalCode: '62837',
     country: 'US',
   },
-  geo: { latitude: 37.7306, longitude: -88.9269 }, // Marion, IL (sample)
+  geo: { latitude: 38.3786, longitude: -88.3595 }, // Fairfield, IL
 
   // ─── Service Area ────────────────────────────────────────────────────────
-  serviceAreaSummary: 'Serving Carbondale, Marion & Southern Illinois', // TODO: owner to confirm
+  serviceAreaSummary: 'Serving Fairfield & Southern Illinois', // TODO: owner to confirm
   // Drives the Service Areas page (crawlable text) and on-page local SEO.
   serviceAreaTowns: [
-    // SAMPLE — real Southern Illinois towns. Adjust to your true coverage.
-    'Carbondale',
-    'Marion',
-    'Herrin',
-    'Carterville',
-    'Murphysboro',
-    'Du Quoin',
-    'Harrisburg',
+    // Towns within reach of Fairfield, IL — adjust to your true coverage.
+    'Fairfield',
     'Mount Vernon',
+    'Mount Carmel',
+    'Olney',
+    'Flora',
+    'Salem',
+    'Albion',
+    'Carmi',
+    'McLeansboro',
+    'Grayville',
+    'Wayne City',
+    'Cisne',
+    'Centralia',
+    'Norris City',
+    'Enfield',
     'Benton',
-    'West Frankfort',
-    'Anna',
-    'Pinckneyville',
-    'Chester',
-    'Metropolis',
-    'Vienna',
-    'Johnston City',
   ],
+
+  // ─── Map ───────────────────────────────────────────────────────────────
+  // Keyless OpenStreetMap embed centered on Fairfield, IL. To swap: open
+  // Google Maps → Share → "Embed a map" → copy the iframe `src` here.
+  mapEmbedSrc:
+    'https://www.openstreetmap.org/export/embed.html?bbox=-89.7%2C37.6%2C-87.2%2C39.0&layer=mapnik&marker=38.3786%2C-88.3595',
 
   // ─── Hours ───────────────────────────────────────────────────────────────
   hours: [
@@ -139,35 +145,35 @@ export const siteConfig: SiteConfig = {
     // TODO: owner to fill with real testimonials (with permission).
     {
       name: 'Sarah K.',
-      town: 'Carbondale',
+      town: 'Fairfield',
       quote:
         'We had two other inspectors quote us, but the depth of detail in this report was on another level. Caught a roof issue our agent missed. Saved us $8K.',
       rating: 5,
     },
     {
       name: 'Marcus T.',
-      town: 'Herrin',
+      town: 'Mount Vernon',
       quote:
         'Showed up on time, walked us through every finding on-site, then delivered the report the same evening with clear photos. First-time buyers — felt completely supported.',
       rating: 5,
     },
     {
       name: 'Priya & Dev R.',
-      town: 'Marion',
+      town: 'Olney',
       quote:
         'Professional, calm, and honest — even when telling us things we did not want to hear. Exactly who you want in your corner on a major purchase.',
       rating: 5,
     },
     {
       name: 'Bill & Donna H.',
-      town: 'Murphysboro',
+      town: 'Flora',
       quote:
         'Forty years in our last house and we still learned things on the walkthrough. The maintenance summary alone was worth it. Highly recommend to anyone in the area.',
       rating: 5,
     },
     {
       name: 'Jordan M.',
-      town: 'Mount Vernon',
+      town: 'Carmi',
       quote:
         'As a realtor I send every client here. Thorough, fair, and the reports never blow up a deal unnecessarily — just the facts, clearly explained.',
       rating: 5,
