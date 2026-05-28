@@ -58,6 +58,7 @@ export default function BookNow() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Book Now"
           title="Pick a time."
           description={`Online booking ${booking.configured ? 'below' : 'is coming soon — call us for the fastest scheduling'}.`}

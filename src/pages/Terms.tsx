@@ -22,6 +22,7 @@ export default function Terms() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Legal"
           title="Terms of Service"
           description={`Last updated: ${updated}`}

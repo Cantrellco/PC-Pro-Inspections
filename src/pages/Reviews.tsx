@@ -21,6 +21,7 @@ export default function Reviews() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Reviews"
           title="What our clients say."
           description="A working list of testimonials and live Google reviews. Reviews drive everything in this business — we earn each one."

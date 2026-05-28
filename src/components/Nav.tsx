@@ -4,6 +4,7 @@ import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 import StarMark from './StarMark';
 import StripeDivider from './StripeDivider';
+import Flag from './Flag';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -34,6 +35,7 @@ export default function Nav() {
           <span className="font-display text-lg sm:text-xl font-bold tracking-tight">
             {siteConfig.businessName}
           </span>
+          <Flag className="hidden sm:block h-5 w-[38px] rounded-sm ml-1" />
         </Link>
 
         {/* Desktop nav */}

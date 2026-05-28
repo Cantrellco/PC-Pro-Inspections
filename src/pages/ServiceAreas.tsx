@@ -21,6 +21,7 @@ export default function ServiceAreas() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Service Areas"
           title={`Home inspections across ${c.serviceAreaSummary}.`}
           description={`Based in ${c.address.city || cityForTitle}, ${c.address.region}, we cover the towns and counties listed below. Not sure if your address is in our radius? Give us a quick call.`}

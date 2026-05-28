@@ -8,8 +8,8 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
-import StarField from '@/components/StarField';
 import StripeDivider from '@/components/StripeDivider';
+import Flag from '@/components/Flag';
 
 export default function Home() {
   const c = siteConfig;
@@ -26,32 +26,34 @@ export default function Home() {
       />
 
       {/* ─── Hero ────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Canton — a star field anchored top-right, like the flag's union */}
+      <section className="relative overflow-hidden bg-ink-200">
+        {/* Full stylized flag as the hero backdrop. */}
         <div
-          className="absolute -top-12 -right-20 w-[460px] h-[460px] sm:w-[640px] sm:h-[640px] pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           aria-hidden="true"
         >
-          <StarField className="w-full h-full opacity-50" count={48} opacity={0.6} />
+          <Flag
+            wave
+            className="absolute -inset-y-8 inset-x-0 w-full h-[calc(100%+4rem)] opacity-60"
+          />
+          {/* Dark gradient overlay for text legibility. Heavier on the right
+              where the H1 sits, lighter on the left to let the canton breathe. */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(95deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.78) 40%, rgba(10,10,10,0.92) 100%)',
+            }}
+          />
+          {/* Subtle ambient color wash for depth on top */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at 5% 95%, rgba(212,38,58,0.18), transparent 60%)',
+            }}
+          />
         </div>
-        {/* Stripes — soft horizontal bands across the bottom of the hero */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-40 opacity-[0.07] pointer-events-none"
-          aria-hidden="true"
-          style={{
-            backgroundImage:
-              'repeating-linear-gradient(180deg, #d4263a 0 10px, transparent 10px 28px, #f5f5f4 28px 36px, transparent 36px 56px)',
-          }}
-        />
-        {/* Color washes for depth */}
-        <div
-          className="absolute inset-0 opacity-50 pointer-events-none"
-          aria-hidden="true"
-          style={{
-            background:
-              'radial-gradient(ellipse at 95% 8%, rgba(29,58,138,0.45), transparent 55%), radial-gradient(ellipse at 5% 95%, rgba(212,38,58,0.25), transparent 55%)',
-          }}
-        />
 
         <div className="container-narrow relative pt-14 pb-16 sm:pt-20 sm:pb-24">
           <p className="eyebrow mb-5">Serving {c.serviceAreaSummary}</p>

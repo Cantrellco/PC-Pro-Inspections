@@ -1,3 +1,5 @@
+import Flag from './Flag';
+
 type Props = {
   eyebrow?: string;
   title: string;
@@ -5,6 +7,8 @@ type Props = {
   /** Override heading level for nested sections (default h2). */
   as?: 'h1' | 'h2' | 'h3';
   centered?: boolean;
+  /** Show a small stylized flag above the eyebrow. */
+  flag?: boolean;
 };
 
 export default function SectionHeader({
@@ -13,9 +17,15 @@ export default function SectionHeader({
   description,
   as: Heading = 'h2',
   centered = true,
+  flag = false,
 }: Props) {
   return (
     <header className={`mb-10 ${centered ? 'text-center' : ''}`}>
+      {flag && (
+        <div className={`mb-5 ${centered ? 'flex justify-center' : ''}`}>
+          <Flag wave className="h-10 w-[76px] rounded-sm shadow-card" />
+        </div>
+      )}
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
       <Heading className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">
         {title}

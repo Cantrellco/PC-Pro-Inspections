@@ -20,6 +20,7 @@ export default function Contact() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Contact"
           title="Let's talk about your inspection."
           description={`We call back within ${c.responsePromise.callbackHours} business hours. For closings in a hurry, just call — we usually pick up.`}

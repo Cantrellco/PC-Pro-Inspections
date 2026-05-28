@@ -21,6 +21,7 @@ export default function Resources() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Resources"
           title="What to expect — before and after."
           description="A sample of the report you will receive, plus everything you need to prepare for inspection day."

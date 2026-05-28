@@ -22,6 +22,7 @@ export default function Privacy() {
       <Section>
         <SectionHeader
           as="h1"
+          flag
           eyebrow="Legal"
           title="Privacy Policy"
           description={`Last updated: ${updated}`}

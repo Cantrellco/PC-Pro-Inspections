@@ -4,6 +4,7 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import Flag from '@/components/Flag';
 
 export default function About() {
   const c = siteConfig;
@@ -20,9 +21,8 @@ export default function About() {
         <div className="grid md:grid-cols-5 gap-10 items-start">
           {/* Bio */}
           <div className="md:col-span-3">
-            <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
-              About
-            </p>
+            <Flag wave className="h-10 w-[76px] rounded-sm shadow-card mb-4" />
+            <p className="eyebrow mb-3">About</p>
             <h1 className="font-display text-4xl sm:text-5xl font-bold text-white leading-tight mb-5">
               Built on craft, paid by trust.
             </h1>

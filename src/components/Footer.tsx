@@ -3,6 +3,7 @@ import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 import StarMark from './StarMark';
 import StripeDivider from './StripeDivider';
+import Flag from './Flag';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -17,6 +18,7 @@ export default function Footer() {
           <Link to="/" className="flex items-center gap-2.5 text-white">
             <StarMark className="h-8 w-8 text-flag-red" />
             <span className="font-display text-xl font-bold">{siteConfig.businessName}</span>
+            <Flag className="h-5 w-[38px] rounded-sm ml-1" />
           </Link>
           <p className="mt-3 text-bone-muted max-w-md">{siteConfig.tagline}</p>
           <p className="mt-4 text-bone-dim text-sm">
