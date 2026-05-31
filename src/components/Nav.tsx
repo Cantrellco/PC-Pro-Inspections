@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
-import Brandmark from './Brandmark';
+import Logo from './Logo';
 
 const navItems = [
   { to: '/', label: 'Home', end: true },
@@ -40,13 +40,15 @@ export default function Nav() {
       >
         <Link
           to="/"
-          className="group flex items-center gap-2.5 text-bone hover:text-white"
+          className="group flex items-center text-bone hover:text-white"
+          aria-label={`${siteConfig.businessName} — home`}
           onClick={() => setOpen(false)}
         >
-          <Brandmark className="h-9 w-9 transition-transform duration-300 group-hover:scale-105" />
-          <span className="font-display text-lg sm:text-xl font-semibold tracking-tight">
-            {siteConfig.businessName}
-          </span>
+          <Logo
+            variant="full"
+            className="h-9 text-base sm:text-lg [&_svg]:transition-transform [&_svg]:duration-300 group-hover:[&_svg]:scale-105"
+            title={siteConfig.businessName}
+          />
         </Link>
 
         {/* Desktop nav */}

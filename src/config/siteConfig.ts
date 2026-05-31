@@ -106,37 +106,37 @@ export const siteConfig: SiteConfig = {
       name: 'InterNACHI Certified Professional Inspector',
       issuer: 'International Association of Certified Home Inspectors',
       badgeAlt: 'InterNACHI Certified Professional Inspector badge',
-      badgeSrc: '', // TODO: owner to add /certs/internachi.svg
+      badgeSrc: '/certs/internachi.svg',
     },
     {
       name: 'ASHI Member',
       issuer: 'American Society of Home Inspectors',
       badgeAlt: 'ASHI Member badge',
-      badgeSrc: '', // TODO: owner to add /certs/ashi.svg
+      badgeSrc: '/certs/ashi.svg',
     },
     {
       name: 'State-Licensed Home Inspector',
       issuer: 'State Licensing Board', // TODO: owner to fill exact state + license #
       badgeAlt: 'State-Licensed Home Inspector seal',
-      badgeSrc: '',
+      badgeSrc: '/certs/state-licensed.svg',
     },
     {
       name: 'Radon Measurement Certified',
       issuer: 'NRPP / NRSB',
       badgeAlt: 'Radon Measurement Certification badge',
-      badgeSrc: '',
+      badgeSrc: '/certs/radon.svg',
     },
     {
       name: 'Mold Assessment Certified',
       issuer: 'IAC2',
       badgeAlt: 'Mold Assessment Certification badge',
-      badgeSrc: '',
+      badgeSrc: '/certs/mold.svg',
     },
     {
       name: 'Fully Insured — E&O + General Liability',
       issuer: 'Carrier on file; certificate available on request',
       badgeAlt: 'Insurance verified',
-      badgeSrc: '',
+      badgeSrc: '/certs/insured.svg',
     },
   ],
 
@@ -270,7 +270,7 @@ export const siteConfig: SiteConfig = {
   },
 
   // ─── Social Sharing ──────────────────────────────────────────────────────
-  ogImage: '/og-image.png', // TODO: owner to drop 1200×630 PNG at public/og-image.png
+  ogImage: '/og-image.svg', // Branded 1200×630 share card. Some platforms prefer PNG; export og-image.svg → og-image.png and switch this back if needed.
 };
 
 // Helper: returns true when the address has been filled with non-placeholder values.

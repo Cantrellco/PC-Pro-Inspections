@@ -20,7 +20,12 @@ export default function HeroImage({ src, kenburns = false, flagOpacity = 0.6, cl
   const showImg = Boolean(src) && !failed;
 
   return (
-    <div className={`absolute inset-0 overflow-hidden ${className}`} aria-hidden="true">
+    <div
+      className={`absolute inset-0 overflow-hidden ${
+        showImg ? 'photo-graded photo-graded--hero' : ''
+      } ${className}`.trim()}
+      aria-hidden="true"
+    >
       <Flag fit="cover" className="absolute inset-0 h-full w-full" />
       {!showImg && (
         <div className="absolute inset-0 bg-ink-200" style={{ opacity: 1 - flagOpacity }} />
@@ -31,7 +36,7 @@ export default function HeroImage({ src, kenburns = false, flagOpacity = 0.6, cl
           alt=""
           onError={() => setFailed(true)}
           decoding="async"
-          className={`absolute inset-0 h-full w-full object-cover ${kenburns ? 'kenburns' : ''}`}
+          className={`photo-graded-img absolute inset-0 h-full w-full object-cover ${kenburns ? 'kenburns' : ''}`}
         />
       )}
     </div>

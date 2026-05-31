@@ -4,6 +4,7 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import SampleReportShowcase from '@/components/SampleReportShowcase';
 
 const SAMPLE_REPORT_PATH = '/sample-report.pdf';
 
@@ -25,7 +26,12 @@ export default function Resources() {
           title="What to expect — before and after."
           description="A sample of the report you will receive, plus everything you need to prepare for inspection day."
         />
+      </Section>
 
+      {/* Signature sample-report showpiece */}
+      <SampleReportShowcase />
+
+      <Section>
         {/* Sample Report */}
         <Card rim className="mb-12">
           <div className="flex flex-col md:flex-row items-start gap-6">
