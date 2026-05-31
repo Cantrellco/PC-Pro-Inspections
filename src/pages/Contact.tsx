@@ -1,5 +1,6 @@
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
+import { formatTime } from '@/lib/time';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
@@ -82,7 +83,7 @@ export default function Contact() {
                     <span className="text-bone font-medium">
                       {h.open === 'Closed'
                         ? 'Closed'
-                        : `${h.open} – ${h.close}`}
+                        : `${formatTime(h.open)} – ${formatTime(h.close)}`}
                     </span>
                   </li>
                 ))}

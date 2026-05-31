@@ -5,7 +5,6 @@ import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Photo from '@/components/Photo';
-import FlagRosette from '@/components/FlagRosette';
 
 export default function About() {
   const c = siteConfig;
@@ -14,7 +13,7 @@ export default function About() {
     <>
       <SEO
         title={`About — Certifications & Experience | ${c.businessName}`}
-        description={`Meet your inspector — ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Fully certified, licensed, and insured.`}
+        description={`Meet ${c.inspectorName} — ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Fully certified, licensed, and insured.`}
         pathname="/about"
       />
 
@@ -50,6 +49,13 @@ export default function About() {
               </p>
             </div>
 
+            <p className="mt-8 font-display text-2xl text-white leading-tight">
+              {c.inspectorName}
+              <span className="mt-1 block font-sans text-sm tracking-wide text-bone-dim">
+                Owner &amp; Home Inspector · {c.businessName}
+              </span>
+            </p>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Button as="link" to="/services">
                 See pricing
@@ -60,26 +66,26 @@ export default function About() {
             </div>
           </div>
 
-          {/* Photo — framed with a subtle flag medallion accent */}
+          {/* Photo — framed with a restrained crimson hairline accent */}
           <div className="md:col-span-2">
             <div className="relative">
               <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
                 <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
                 <Photo
                   src={c.images.inspector}
-                  alt={`${c.businessName} — your inspector`}
+                  alt={`${c.inspectorName} — ${c.businessName}`}
                   aspectClass="aspect-[4/5]"
                   roundedClass="rounded-xl"
-                  placeholderLabel="Portrait of your inspector"
+                  placeholderLabel={`Portrait of ${c.inspectorName}`}
                 />
               </div>
-              {/* Rosette medallion overlapping the lower-right corner */}
-              <FlagRosette className="absolute -bottom-5 -right-4 h-20 w-20 drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]" />
             </div>
             <p className="mt-8 text-sm text-bone-dim italic">
-              A real photo of your inspector builds trust — drop one in
-              <code className="not-italic"> siteConfig.images.inspector</code>.
+              {c.inspectorName} — {c.businessName}
             </p>
+            {/* TODO: owner — replace the placeholder portrait with a real photo
+                via siteConfig.images.inspector. Your own photo beats stock on a
+                trust-based service. */}
           </div>
         </div>
       </Section>

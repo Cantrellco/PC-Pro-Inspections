@@ -87,10 +87,12 @@ No component changes. No prop refactor. That is the seam.
 
 ## Design System
 
-- **Type:** Fraunces (display serif) + Inter (UI), **self-hosted** under
-  `public/fonts/` (`fonts.css` + woff2). No third-party CDN — fonts always
-  load and there's no render-blocking round trip. To change fonts, replace the
-  woff2 files + `fonts.css`, then update `tailwind.config.js` → `fontFamily`.
+- **Type:** Fraunces (display serif) + Hanken Grotesk (UI/body), **self-hosted**
+  under `public/fonts/` (`fonts.css` + woff2). Hanken is a warm humanist
+  grotesque shipped as one variable file (weights 400–700). No third-party CDN —
+  fonts always load and there's no render-blocking round trip. To change fonts,
+  replace the woff2 files + `fonts.css`, then update `tailwind.config.js` →
+  `fontFamily`.
 - **Palette:** near-black canvas, heritage crimson + navy, a restrained
   antique-brass accent. Tokens live in `tailwind.config.js` → `colors`.
 - **Components:** `Section` (tones: default/elevated/dark/americana), `Card`

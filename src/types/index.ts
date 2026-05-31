@@ -67,6 +67,8 @@ export type SiteImages = {
 export type SiteConfig = {
   businessName: string;
   legalName: string;
+  /** Lead inspector's full name — shown on About and used as JSON-LD `founder`. */
+  inspectorName: string;
   tagline: string;
   /** Royalty-free or owner-supplied photo URLs. Blank → elegant placeholder. */
   images: SiteImages;

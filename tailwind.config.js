@@ -35,7 +35,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        sans: ['"Hanken Grotesk"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         display: ['"Fraunces"', 'Georgia', 'Cambria', 'serif'],
       },
       letterSpacing: {

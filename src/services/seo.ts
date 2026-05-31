@@ -20,6 +20,10 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
     sameAs: c.socials.map((s) => s.href),
   };
 
+  if (c.inspectorName) {
+    data.founder = { '@type': 'Person', name: c.inspectorName };
+  }
+
   if (addressIsComplete()) {
     data.address = {
       '@type': 'PostalAddress',

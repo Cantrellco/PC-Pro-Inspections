@@ -9,8 +9,9 @@ import type { SiteConfig } from '@/types';
  */
 export const siteConfig: SiteConfig = {
   // ─── Identity ────────────────────────────────────────────────────────────
-  businessName: 'PC Pro Inspections', // TODO: owner to fill
-  legalName: 'PC Pro Inspections LLC', // TODO: owner to fill
+  businessName: 'PC Pro Inspections',
+  legalName: 'PC Pro Inspections LLC', // TODO: owner to confirm exact registered entity name
+  inspectorName: 'Paul Cantrell',
   tagline: 'Honest, thorough home inspections — so you buy with confidence.',
 
   // ─── Photography ─────────────────────────────────────────────────────────
@@ -26,16 +27,19 @@ export const siteConfig: SiteConfig = {
   },
 
   // ─── Contact ─────────────────────────────────────────────────────────────
-  // SAMPLE values (Southern Illinois). 555-01xx is a reserved fictional range.
-  phone: '(618) 555-0147', // TODO: owner to fill with real number
-  phoneHref: '+16185550147', // TODO: owner to fill (E.164, digits only)
-  email: 'office@pcproinspections.com', // TODO: owner to fill
+  phone: '(618) 599-4446',
+  phoneHref: '+16185994446', // E.164, digits only
+  email: 'paul@pcproinspections.com',
 
   // ─── Address ─────────────────────────────────────────────────────────────
-  // Based in Fairfield, IL (Wayne County). Replace street with the real one.
+  // Mobile / service-area business based in Fairfield, IL (Wayne County).
+  // Owner works out of Fairfield with no public office, so `street` is blank
+  // by design: the site then shows "Fairfield, IL" and omits PostalAddress
+  // from the JSON-LD (the correct shape for a service-area business). The
+  // `areaServed` town list + geo coordinates still carry the local SEO signal.
   address: {
-    street: '100 Heritage Lane', // TODO: owner to fill (sample street)
-    city: 'Fairfield', // TODO: owner to confirm
+    street: '', // intentionally blank — no public office address
+    city: 'Fairfield',
     region: 'IL',
     postalCode: '62837',
     country: 'US',
@@ -73,13 +77,13 @@ export const siteConfig: SiteConfig = {
 
   // ─── Hours ───────────────────────────────────────────────────────────────
   hours: [
-    { day: 'Monday', open: '08:00', close: '18:00' },
-    { day: 'Tuesday', open: '08:00', close: '18:00' },
-    { day: 'Wednesday', open: '08:00', close: '18:00' },
-    { day: 'Thursday', open: '08:00', close: '18:00' },
-    { day: 'Friday', open: '08:00', close: '18:00' },
-    { day: 'Saturday', open: '09:00', close: '14:00' },
-    { day: 'Sunday', open: 'Closed', close: 'Closed' },
+    { day: 'Monday', open: '07:00', close: '17:00' },
+    { day: 'Tuesday', open: '07:00', close: '17:00' },
+    { day: 'Wednesday', open: '07:00', close: '17:00' },
+    { day: 'Thursday', open: '07:00', close: '17:00' },
+    { day: 'Friday', open: '07:00', close: '17:00' },
+    { day: 'Saturday', open: '07:00', close: '17:00' },
+    { day: 'Sunday', open: '13:00', close: '17:00' },
   ],
 
   // ─── Trust Numbers ───────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ import CountUp from '@/components/CountUp';
 import Magnetic from '@/components/Magnetic';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import HeroImage from '@/components/HeroImage';
+import WavingFlag from '@/components/WavingFlag';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
 import CertStrip from '@/components/CertStrip';
 import {
@@ -42,9 +43,6 @@ const PROCESS = [
 export default function Home() {
   const c = siteConfig;
   const cityForTitle = c.address.city || 'Your Area';
-  const avgRating = (
-    c.testimonials.reduce((a, t) => a + t.rating, 0) / Math.max(c.testimonials.length, 1)
-  ).toFixed(1);
 
   return (
     <>
@@ -58,19 +56,19 @@ export default function Home() {
       {/* ─── Hero ─────────────────────────────────────────────────────── */}
       <section className="relative isolate overflow-hidden min-h-[92vh] flex items-center">
         <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <HeroImage src={c.images.hero} kenburns />
+          <div className="absolute inset-0 bg-ink-200" />
+          <WavingFlag className="absolute inset-0 h-full w-full" />
           <div
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(102deg, rgba(8,8,9,0.95) 0%, rgba(8,8,9,0.8) 38%, rgba(8,8,9,0.5) 72%, rgba(8,8,9,0.35) 100%)',
+                'linear-gradient(102deg, rgba(8,8,9,0.97) 0%, rgba(8,8,9,0.92) 42%, rgba(8,8,9,0.68) 74%, rgba(8,8,9,0.5) 100%)',
             }}
           />
           <div
             className="absolute inset-0"
-            style={{ background: 'linear-gradient(0deg, rgba(8,8,9,0.95) 0%, transparent 38%)' }}
+            style={{ background: 'linear-gradient(0deg, rgba(8,8,9,0.96) 0%, transparent 45%)' }}
           />
-          <div className="rule-flag absolute left-0 top-0 bottom-0 w-[3px] opacity-90" />
         </div>
 
         <div className="container-wide above-grain py-24 sm:py-28">
@@ -103,18 +101,17 @@ export default function Home() {
               </Magnetic>
             </div>
 
-            <dl className="mt-16 grid grid-cols-3 gap-5 sm:gap-10 max-w-xl">
-              {[
-                { value: c.yearsInBusiness, suffix: '+', dec: 0, label: 'Years experience', star: false },
-                { value: c.inspectionsCompleted, suffix: '+', dec: 0, label: 'Inspections', star: false },
-                { value: Number(avgRating), suffix: '', dec: 1, label: 'Average rating', star: true },
-              ].map((s) => (
+            <dl className="mt-14 flex flex-wrap items-start gap-x-4 sm:gap-x-9 gap-y-5">
+              {([
+                { count: 1600, suffix: '+', label: 'Point inspection' },
+                { text: 'Same-Day', label: 'Reports' },
+                { text: 'Insured', label: 'Licensed' },
+              ] as ({ count: number; suffix: string; label: string } | { text: string; label: string })[]).map((s) => (
                 <div key={s.label} className="border-l border-white/15 pl-4">
-                  <dd className="font-display text-3xl sm:text-5xl font-semibold text-white flex items-baseline gap-1">
-                    <CountUp value={s.value} suffix={s.suffix} decimals={s.dec} />
-                    {s.star && <span className="text-flag-red text-2xl">★</span>}
+                  <dd className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-none tracking-tight whitespace-nowrap">
+                    {'count' in s ? <CountUp value={s.count} suffix={s.suffix} /> : s.text}
                   </dd>
-                  <dt className="mt-1.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim">{s.label}</dt>
+                  <dt className="mt-2.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim whitespace-nowrap">{s.label}</dt>
                 </div>
               ))}
             </dl>
@@ -286,7 +283,6 @@ export default function Home() {
         <div className="absolute inset-0 -z-10" aria-hidden="true">
           <HeroImage src={c.images.ctaBand} flagOpacity={0.28} />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(8,8,9,0.9) 0%, rgba(8,8,9,0.82) 100%)' }} />
-          <div className="rule-flag absolute inset-x-0 top-0 h-[3px] opacity-90" />
         </div>
         <div className="container-narrow above-grain py-24 sm:py-32 text-center">
           <Reveal>

@@ -4,6 +4,7 @@ import { siteConfig } from '@/config/siteConfig';
 import { findAddOn } from '@/config/pricing';
 import { getBookingConfig } from '@/services/booking';
 import { track } from '@/services/analytics';
+import { formatTime } from '@/lib/time';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
@@ -164,7 +165,7 @@ export default function BookNow() {
               <p className="mt-6 text-xs text-bone-dim">
                 Hours: most days{' '}
                 {c.hours[0]?.open && c.hours[0]?.close
-                  ? `${c.hours[0].open} – ${c.hours[0].close}`
+                  ? `${formatTime(c.hours[0].open)} – ${formatTime(c.hours[0].close)}`
                   : 'business hours'}
                 .
               </p>

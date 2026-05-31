@@ -33,7 +33,10 @@ export default function Nav() {
           : 'border-b border-transparent bg-gradient-to-b from-ink/70 to-transparent'
       }`}
     >
-      <div className="rule-flag h-[2px] w-full opacity-90" aria-hidden="true" />
+      <div
+        aria-hidden="true"
+        className="h-px w-full bg-gradient-to-r from-transparent via-brass/60 to-transparent"
+      />
       <nav
         className="container-wide flex items-center justify-between py-3.5 sm:py-4"
         aria-label="Primary"
@@ -52,15 +55,17 @@ export default function Nav() {
         </Link>
 
         {/* Desktop nav */}
-        <ul className="hidden lg:flex items-center gap-0.5">
+        <ul className="hidden lg:flex items-center gap-1">
           {navItems.map((item) => (
             <li key={item.to}>
               <NavLink
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `relative px-3.5 py-2 text-sm font-medium rounded-full transition-colors ${
-                    isActive ? 'text-white' : 'text-bone-muted hover:text-white'
+                  `relative px-4 py-2 text-[15px] font-medium tracking-[-0.01em] rounded-full transition-colors duration-200 ${
+                    isActive
+                      ? 'text-white'
+                      : 'text-bone-muted hover:text-white hover:bg-white/[0.05]'
                   }`
                 }
               >
@@ -70,7 +75,7 @@ export default function Nav() {
                     {isActive && (
                       <span
                         aria-hidden="true"
-                        className="absolute inset-x-3.5 -bottom-0.5 h-px bg-flag-red"
+                        className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-flag-red"
                       />
                     )}
                   </>
@@ -82,7 +87,7 @@ export default function Nav() {
             <a
               href={`tel:${siteConfig.phoneHref}`}
               onClick={() => track('tel_click', { location: 'nav' })}
-              className="btn-primary !py-2.5 !px-5 !text-xs"
+              className="btn-primary !py-2.5 !px-5 !text-[13px]"
             >
               {siteConfig.phone}
             </a>
