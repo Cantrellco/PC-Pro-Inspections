@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Mold assessment certification seal">
+  <defs>
+    <radialGradient id="md-face" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="#0c3a72"/>
+      <stop offset="100%" stop-color="#061a33"/>
+    </radialGradient>
+  </defs>
+  <circle cx="36" cy="36" r="34" fill="url(#md-face)" stroke="#c9a227" stroke-width="2.5"/>
+  <circle cx="36" cy="36" r="28.5" fill="none" stroke="#8c6f18" stroke-width="1"/>
+  <!-- droplet -->
+  <path d="M36 19c6 8 10 13 10 19a10 10 0 0 1-20 0c0-6 4-11 10-19z" fill="none" stroke="#e0c469" stroke-width="2" stroke-linejoin="round"/>
+  <!-- check -->
+  <path d="M31 38l4 4 7-7" fill="none" stroke="#ef4a63" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="36" y="60" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="8.5" font-weight="700" letter-spacing="1.4" fill="#e0c469">MOLD</text>
+</svg>

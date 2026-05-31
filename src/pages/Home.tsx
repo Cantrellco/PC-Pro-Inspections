@@ -14,6 +14,7 @@ import Magnetic from '@/components/Magnetic';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import HeroImage from '@/components/HeroImage';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
+import CertStrip from '@/components/CertStrip';
 import {
   IconRoof, IconFoundation, IconPlumbing, IconElectrical, IconHvac,
   IconAttic, IconInterior, IconBasement, IconAddons, IconShield, IconClock, IconDoc, IconPhone,
@@ -122,19 +123,7 @@ export default function Home() {
       </section>
 
       {/* ─── Trust / credentials strip ────────────────────────────────── */}
-      <div className="border-y border-white/10 bg-white/[0.015]">
-        <div className="container-wide above-grain py-7 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center">
-          <span className="text-xs uppercase tracking-[0.24em] text-bone-dim">
-            Certified &amp; insured
-          </span>
-          <span className="hidden sm:inline h-4 w-px bg-white/15" aria-hidden="true" />
-          {c.certifications.slice(0, 5).map((cert) => (
-            <span key={cert.name} className="text-sm text-bone-muted">
-              {cert.name.replace(' Certified Professional Inspector', ' CPI').replace('State-Licensed Home Inspector', 'State-Licensed')}
-            </span>
-          ))}
-        </div>
-      </div>
+      <CertStrip />
 
       {/* ─── Response promise (americana) ─────────────────────────────── */}
       <Section tone="americana">

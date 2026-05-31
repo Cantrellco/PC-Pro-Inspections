@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Fully insured seal">
+  <defs>
+    <linearGradient id="in-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a4112a"/>
+      <stop offset="100%" stop-color="#7a0c20"/>
+    </linearGradient>
+  </defs>
+  <path d="M36 4l26 7v22c0 18-13 28-26 33C23 61 10 51 10 33V11z" fill="url(#in-shield)" stroke="#c9a227" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M36 11l19 5v17c0 13.5-9.6 21.4-19 25-9.4-3.6-19-11.5-19-25V16z" fill="none" stroke="#e0c469" stroke-width="1"/>
+  <!-- big check -->
+  <path d="M26 36l7 7 14-15" fill="none" stroke="#e0c469" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
