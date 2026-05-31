@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
-import Brandmark from './Brandmark';
+import Logo from './Logo';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -12,9 +12,12 @@ export default function Footer() {
       <div className="rule-flag h-px w-full opacity-80" aria-hidden="true" />
       <div className="container-wide above-grain py-16 grid gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
-          <Link to="/" className="flex items-center gap-2.5 text-white">
-            <Brandmark className="h-10 w-10" />
-            <span className="font-display text-xl font-semibold">{c.businessName}</span>
+          <Link
+            to="/"
+            className="flex items-center text-white"
+            aria-label={`${c.businessName} — home`}
+          >
+            <Logo variant="full" className="h-10 text-xl" title={c.businessName} />
           </Link>
           <p className="mt-4 text-bone-muted max-w-sm leading-relaxed">{c.tagline}</p>
           <p className="mt-5 text-bone-dim text-sm">{c.serviceAreaSummary}</p>

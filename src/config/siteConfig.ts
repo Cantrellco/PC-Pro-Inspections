@@ -270,7 +270,7 @@ export const siteConfig: SiteConfig = {
   },
 
   // ─── Social Sharing ──────────────────────────────────────────────────────
-  ogImage: '/og-image.png', // TODO: owner to drop 1200×630 PNG at public/og-image.png
+  ogImage: '/og-image.svg', // Branded 1200×630 share card. Some platforms prefer PNG; export og-image.svg → og-image.png and switch this back if needed.
 };
 
 // Helper: returns true when the address has been filled with non-placeholder values.

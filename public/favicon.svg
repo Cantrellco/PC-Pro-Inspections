@@ -1,9 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="fav-shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0e3a73"/>
+      <stop offset="100%" stop-color="#061a33"/>
+    </linearGradient>
+  </defs>
+  <!-- Dark tile so the seal reads on light browser chrome -->
   <rect width="48" height="48" rx="10" fill="#0a0a0b"/>
-  <path d="M24 5 L40 10 V24 C40 33.5 32.5 40.5 24 43 C15.5 40.5 8 33.5 8 24 V10 Z"
-        fill="#0e3a73" stroke="#c9a227" stroke-width="1.4"/>
-  <path d="M14 27 L24 18 L34 27" fill="none" stroke="#f5f3ee" stroke-width="2.6"
+  <!-- Shield / house body (slightly inset for the favicon tile) -->
+  <path d="M24 5 L39.5 9.8 V23.5 C39.5 32.6 31.9 38.9 24 41.5 C16.1 38.9 8.5 32.6 8.5 23.5 V9.8 Z"
+        fill="url(#fav-shield)" stroke="#c9a227" stroke-width="1.4"/>
+  <!-- "C" protective arc -->
+  <path d="M30.4 17.4 A8.2 8.2 0 1 0 30.4 30.6" fill="none" stroke="#c9a227"
+        stroke-width="2.2" stroke-linecap="round"/>
+  <!-- "P" monogram: stem + bowl (gable wall + eave) -->
+  <path d="M21 17 V32.5" fill="none" stroke="#f5f3ee" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M21 17 H25.9 A3.8 3.8 0 0 1 25.9 24.6 H21" fill="none" stroke="#f5f3ee"
+        stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Roof ridge -->
+  <path d="M17 17 L24 11.6 L31 17" fill="none" stroke="#e0c469" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M21.5 33 V27.5 H26.5 V33" fill="none" stroke="#ef4a63" stroke-width="2" stroke-linecap="round"/>
-  <path d="M24 9.5 L25.1 12.3 L28 12.3 L25.7 14.1 L26.6 16.9 L24 15.2 L21.4 16.9 L22.3 14.1 L20 12.3 L22.9 12.3 Z" fill="#e0c469"/>
+  <!-- Crowning star -->
+  <path d="M24 6.8 L24.8 9 L27.1 9 L25.25 10.4 L25.95 12.6 L24 11.25 L22.05 12.6 L22.75 10.4 L20.9 9 L23.2 9 Z"
+        fill="#e0c469"/>
 </svg>
