@@ -204,6 +204,52 @@
   /* Anchor content above the grain layer. */
   .above-grain { position: relative; z-index: 2; }
 
+  /* ── Cinematic photo grade ──────────────────────────────────────────────
+     Unifies every site photo so the mixed stock looks shot by one
+     photographer in one session: pull saturation back, lift contrast a
+     touch, warm it slightly. A crimson→navy duotone wash (composited via
+     mix-blend-mode) ties the imagery to the heritage palette without
+     reading as a heavy filter.
+
+     Two cooperating pieces:
+       .photo-graded      → wrapper; hosts the tint overlay (::after).
+       .photo-graded-img  → the <img>; carries the colour-correction filter.
+     Splitting them keeps the filter off the tint (so the wash stays a true
+     overlay) and leaves Ken-Burns transforms on the <img> untouched. */
+  .photo-graded {
+    position: relative;
+  }
+  .photo-graded-img {
+    /* Slight desaturation + gentle contrast/brightness lift + a hair of warmth
+       (sepia) blended back. Realistic, not Instagram. */
+    filter: saturate(0.86) contrast(1.06) brightness(0.98) sepia(0.08);
+  }
+  .photo-graded::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    /* Crimson in the highlights/upper-left, navy in the shadows/lower-right —
+       a soft duotone that echoes the flag palette. soft-light keeps it
+       tasteful and never muddies. Low opacity so it reads as tone, not paint. */
+    background: linear-gradient(
+      155deg,
+      rgba(200, 16, 46, 0.16) 0%,
+      rgba(124, 60, 70, 0.05) 42%,
+      rgba(10, 49, 97, 0.20) 100%
+    );
+    mix-blend-mode: soft-light;
+    opacity: 0.85;
+  }
+  /* On full-bleed hero/CTA backdrops the photo already sits under a dark
+     gradient scrim, so dial the wash back to avoid double-darkening to mud
+     and switch to overlay (reads cleaner over the scrim). */
+  .photo-graded--hero::after {
+    mix-blend-mode: overlay;
+    opacity: 0.6;
+  }
+
   /* Slow Ken-Burns drift for hero/CTA photography (composited; mobile-safe). */
   .kenburns {
     animation: kenburns 24s ease-in-out infinite alternate;

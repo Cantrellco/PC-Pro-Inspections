@@ -34,7 +34,9 @@ export default function Photo({
 
   return (
     <div
-      className={`relative overflow-hidden ${roundedClass} ${aspectClass} border border-white/10 ${className}`.trim()}
+      className={`relative overflow-hidden ${roundedClass} ${aspectClass} border border-white/10 ${
+        showImage ? 'photo-graded' : ''
+      } ${className}`.trim()}
     >
       {showImage ? (
         <img
@@ -45,7 +47,7 @@ export default function Photo({
           fetchpriority={priority ? 'high' : undefined}
           decoding="async"
           onError={() => setFailed(true)}
-          className="absolute inset-0 h-full w-full object-cover"
+          className="photo-graded-img absolute inset-0 h-full w-full object-cover"
         />
       ) : (
         <div className="photo-placeholder absolute inset-0 flex items-center justify-center p-6 text-center">
