@@ -83,7 +83,7 @@ export default function SampleReportShowcase() {
       <SectionHeader
         eyebrow="What you actually get"
         title="A photo-rich report you can act on."
-        description="Every finding is documented, color-coded by priority, and paired with the photo that proves it. No jargon dumps — a clear plan you can hand to a contractor or read on your phone."
+        description="Every finding is written up and color-coded by priority, paired with the photo that proves it. No jargon dumps — a clear plan you can hand to a contractor or read on your phone."
       />
 
       <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-16">

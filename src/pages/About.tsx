@@ -13,7 +13,7 @@ export default function About() {
     <>
       <SEO
         title={`About — Certifications & Experience | ${c.businessName}`}
-        description={`Meet ${c.inspectorName} — ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Fully certified, licensed, and insured.`}
+        description={`Meet ${c.inspectorName} — ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Certified in thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home inspection.`}
         pathname="/about"
       />
 
@@ -109,8 +109,8 @@ export default function About() {
       <Section>
         <SectionHeader
           eyebrow="Credentials"
-          title="Certifications & coverage."
-          description="The credentials below are verifiable — ask for documentation any time."
+          title="Specialty certifications."
+          description="Advanced certifications beyond the standard inspection — each is verifiable; ask for documentation any time."
         />
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {c.certifications.map((cert) => (

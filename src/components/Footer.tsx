@@ -17,7 +17,7 @@ export default function Footer() {
             className="flex items-center text-white"
             aria-label={`${c.businessName} — home`}
           >
-            <Logo variant="full" className="h-10 text-xl" title={c.businessName} />
+            <Logo variant="full" className="h-20 text-3xl sm:text-4xl" title={c.businessName} />
           </Link>
           <p className="mt-4 text-bone-muted max-w-sm leading-relaxed">{c.tagline}</p>
           <p className="mt-5 text-bone-dim text-sm">{c.serviceAreaSummary}</p>

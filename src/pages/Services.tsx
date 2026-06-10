@@ -15,7 +15,7 @@ const currency = new Intl.NumberFormat('en-US', {
 const SERVICES = [
   {
     title: 'Standard Home Inspection',
-    body: 'A full visual inspection of all accessible major systems: roof, exterior, structure, plumbing, electrical, HVAC, attic, basement/crawl, and interior. Includes a same-day photo-rich report.',
+    body: 'A full visual inspection of every accessible part of the home: roof, exterior, structure, plumbing, electrical, HVAC, attic, basement/crawl, and interior. Includes a same-day photo-rich report.',
   },
   {
     title: 'New Construction Inspection',
@@ -43,7 +43,7 @@ export default function Services() {
     <>
       <SEO
         title={`Services & Pricing — Home Inspector in ${cityForTitle} | ${c.businessName}`}
-        description="See what we inspect, our add-on options, and get a real-time estimate with our quote calculator. Estimate only — final price confirmed at scheduling."
+        description="See what we inspect, our extra services, and get a real-time estimate with our quote calculator. Estimate only — final price confirmed at scheduling."
         pathname="/services"
       />
 
@@ -52,7 +52,7 @@ export default function Services() {
           as="h1"
           eyebrow="Services & Pricing"
           title="Pick what you need. Pay only for what you pick."
-          description="Pricing is driven by square footage with optional add-ons. Use the calculator below for an itemized estimate in seconds."
+          description="Pricing is driven by square footage with optional extra services. Use the calculator below for an itemized estimate in seconds."
         />
 
         {/* Services list */}
@@ -67,13 +67,45 @@ export default function Services() {
           ))}
         </div>
 
+        {/* Areas of expertise — full inspection coverage */}
+        <div className="mb-16">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
+            Areas of Expertise
+          </h2>
+          <p className="text-bone-muted mb-8 max-w-2xl">
+            Every inspection covers the core systems below. Items marked{' '}
+            <span className="text-brass-soft font-semibold">Specialty</span> are
+            advanced capabilities {c.inspectorName} is certified to inspect —
+            beyond what a standard inspection includes.
+          </p>
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {c.inspectionExpertise.map((area) => (
+              <li key={area.label}>
+                <Card rim={area.specialty} className="h-full">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-semibold text-white">{area.label}</h3>
+                    {area.specialty && (
+                      <span className="flex-shrink-0 rounded-full border border-brass-deep/40 bg-flag-navy/20 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brass-soft">
+                        Specialty
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-1.5 text-sm text-bone-muted leading-relaxed">
+                    {area.blurb}
+                  </p>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         {/* Calculator */}
         <div>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-2">
             Quote Calculator
           </h2>
           <p className="text-bone-muted mb-8 max-w-2xl">
-            Move the slider, toggle the add-ons. The breakdown updates live.
+            Move the slider, toggle the extra services. The breakdown updates live.
             When you are ready, send us the quote — or jump straight to booking.
           </p>
           <QuoteCalculator />
@@ -107,7 +139,7 @@ export default function Services() {
           </Card>
           <Card>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
-              Add-on options
+              Extra services
             </h3>
             <ul className="space-y-2 text-sm">
               {ADD_ONS.map((a) => (

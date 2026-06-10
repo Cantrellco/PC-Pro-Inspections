@@ -87,6 +87,7 @@ export default function WavingFlag({ className = '' }: Props) {
 
     let raf = 0;
     let t = 0;
+    let visible = true; // tracks whether the hero canvas is in the viewport
     const SPEED = 0.01; // phase advance per frame — slow, but noticeable
     const waveLen = 2.1; // waves across the flag
 
@@ -147,27 +148,54 @@ export default function WavingFlag({ className = '' }: Props) {
       ctx.drawImage(waved, -dw / 2, -dh / 2, dw, dh);
       ctx.restore();
 
-      if (!reduce) {
+      // Only keep the loop alive while the hero is on-screen and the tab is
+      // visible — otherwise this burns the main thread for an invisible canvas.
+      if (!reduce && visible && !document.hidden) {
         t += 1;
         raf = requestAnimationFrame(render);
+      } else {
+        raf = 0; // mark stopped so start() can safely re-arm
       }
+    };
+
+    // Single funnel for (re)starting the loop. Guards against double-scheduling
+    // (which would spawn parallel rAF loops and double the cost) by only arming
+    // when no frame is pending.
+    const start = () => {
+      if (reduce || !visible || document.hidden) return;
+      if (!raf) raf = requestAnimationFrame(render);
+    };
+    const stop = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
     };
 
     resize();
     render();
     window.addEventListener('resize', resize);
 
+    // Pause when the hero scrolls out of view (a small rootMargin resumes it
+    // just before it re-enters, so there's no visible snap). `t` is preserved,
+    // so the wave continues seamlessly from where it left off.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) start();
+        else stop();
+      },
+      { threshold: 0, rootMargin: '200px' },
+    );
+    io.observe(canvas);
+
     const onVis = () => {
-      if (document.hidden) {
-        cancelAnimationFrame(raf);
-      } else if (!reduce) {
-        raf = requestAnimationFrame(render);
-      }
+      if (document.hidden) stop();
+      else start();
     };
     document.addEventListener('visibilitychange', onVis);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
+      io.disconnect();
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', onVis);
     };

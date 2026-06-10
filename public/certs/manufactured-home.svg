@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Manufactured and mobile home certification seal">
+  <defs>
+    <radialGradient id="mh-face" cx="50%" cy="35%" r="72%">
+      <stop offset="0" stop-color="#123f6c"/>
+      <stop offset="0.7" stop-color="#0a2647"/>
+      <stop offset="1" stop-color="#04162c"/>
+    </radialGradient>
+    <linearGradient id="mh-brass" x1="0" y1="6" x2="0" y2="66" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4e1a0"/>
+      <stop offset="0.5" stop-color="#cda531"/>
+      <stop offset="1" stop-color="#9a7414"/>
+    </linearGradient>
+  </defs>
+  <circle cx="36" cy="36" r="33.5" fill="url(#mh-face)" stroke="url(#mh-brass)" stroke-width="2.6"/>
+  <circle cx="36" cy="36" r="28.5" fill="none" stroke="url(#mh-brass)" stroke-width="0.9" opacity="0.55"/>
+  <g transform="translate(36 36) scale(.8) translate(-36 -36)">
+    <!-- roof -->
+    <path d="M19 34 36 21.5 53 34Z" fill="#e23b53"/>
+    <!-- body -->
+    <rect x="26" y="34" width="20" height="12.5" rx="2" fill="none" stroke="url(#mh-brass)" stroke-width="2.9"/>
+    <!-- door -->
+    <path d="M33 46.5v-5a3 3 0 0 1 6 0v5" fill="none" stroke="url(#mh-brass)" stroke-width="2.3" stroke-linejoin="round"/>
+    <!-- wheels -->
+    <circle cx="31" cy="49" r="2.8" fill="url(#mh-brass)"/>
+    <circle cx="41" cy="49" r="2.8" fill="url(#mh-brass)"/>
+  </g>
+</svg>

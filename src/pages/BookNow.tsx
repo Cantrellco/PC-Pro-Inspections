@@ -84,7 +84,7 @@ export default function BookNow() {
               {handoff.addOnLabels.length > 0 && (
                 <li>
                   <span className="block text-bone-dim text-xs uppercase tracking-wider">
-                    Add-ons
+                    Extra services
                   </span>
                   <span className="text-white">{handoff.addOnLabels.join(', ')}</span>
                 </li>

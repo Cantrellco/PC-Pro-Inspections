@@ -25,13 +25,6 @@ export const SQFT_TIERS: SqftTier[] = [
  */
 export const ADD_ONS: AddOn[] = [
   {
-    id: 'radon',
-    label: 'Radon Testing',
-    description:
-      'Continuous monitor; 48-hour test. Recommended for almost all purchases in radon-prone regions.',
-    price: 175,
-  },
-  {
     id: 'mold',
     label: 'Mold Assessment',
     description:

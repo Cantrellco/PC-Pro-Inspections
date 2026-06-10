@@ -4,7 +4,7 @@ import { track } from '@/services/analytics';
 export default function StickyCallCTA() {
   return (
     <div
-      className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-white/10 bg-ink/95 backdrop-blur-md p-3"
+      className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-white/10 bg-ink/95 p-3"
       style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom, 0px))' }}
     >
       <a

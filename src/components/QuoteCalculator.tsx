@@ -166,7 +166,7 @@ export default function QuoteCalculator() {
         </div>
 
         <fieldset>
-          <legend className="field-label">Optional add-ons</legend>
+          <legend className="field-label">Optional extra services</legend>
           <ul className="grid sm:grid-cols-2 gap-2.5">
             {ADD_ONS.map((a) => {
               const checked = selectedAddOns.includes(a.id);

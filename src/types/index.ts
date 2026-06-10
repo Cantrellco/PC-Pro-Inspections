@@ -7,8 +7,17 @@ export type Certification = {
   name: string;
   issuer: string;
   badgeAlt: string;
-  /** Path under /public, e.g. "/certs/internachi.svg". Leave blank for text-only fallback. */
+  /** Path under /public, e.g. "/certs/mold.svg". Leave blank for text-only fallback. */
   badgeSrc?: string;
+};
+
+export type ExpertiseArea = {
+  /** Short display name, e.g. "Thermal Imaging". */
+  label: string;
+  /** One-line description of what's covered. */
+  blurb: string;
+  /** Marks an advanced/specialty capability (vs. a standard home system). */
+  specialty?: boolean;
 };
 
 export type Testimonial = {
@@ -95,6 +104,8 @@ export type SiteConfig = {
   responsePromise: ResponsePromise;
   socials: SocialLink[];
   certifications: Certification[];
+  /** Full scope of what the inspector covers — drives the "Areas of Expertise" grid. */
+  inspectionExpertise: ExpertiseArea[];
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];

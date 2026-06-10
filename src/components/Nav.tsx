@@ -1,155 +1,244 @@
-import { useEffect, useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 import Logo from './Logo';
-
-const navItems = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/services', label: 'Services' },
-  { to: '/about', label: 'About' },
-  { to: '/reviews', label: 'Reviews' },
-  { to: '/resources', label: 'Resources' },
-  { to: '/service-areas', label: 'Areas' },
-  { to: '/contact', label: 'Contact' },
-];
+import MobileMenu from './nav/MobileMenu';
+import CommandPalette from './nav/CommandPalette';
+import { NAV_ITEMS, type NavItem } from './nav/navItems';
+import { useMagnetic, useReducedMotion } from './nav/hooks';
+import { MenuIcon, PhoneIcon, SearchIcon } from './nav/icons';
 
 export default function Nav() {
-  const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const bookRef = useMagnetic<HTMLAnchorElement>();
 
+  // Scroll → condensed state (hysteresis dead-band so the morph can't flip-flop)
+  // + a compositor-friendly scroll-progress variable for the top rule.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    let raf = 0;
+    const root = document.documentElement;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const y = window.scrollY;
+        setScrolled((prev) => (prev ? y > 20 : y > 44));
+        const max = root.scrollHeight - window.innerHeight;
+        root.style.setProperty('--nav-progress', max > 0 ? String(Math.min(1, y / max)) : '0');
+      });
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      cancelAnimationFrame(raf);
+    };
   }, []);
 
+  // ⌘K / Ctrl+K toggles the command palette.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setPaletteOpen((o) => {
+          if (!o) track('command_palette_open', { source: 'hotkey' });
+          return !o;
+        });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const openPalette = () => {
+    track('command_palette_open', { source: 'button' });
+    setPaletteOpen(true);
+  };
+
   return (
-    <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? 'border-b border-white/10 bg-ink/80 backdrop-blur-xl'
-          : 'border-b border-transparent bg-gradient-to-b from-ink/70 to-transparent'
-      }`}
-    >
-      <div
-        aria-hidden="true"
-        className="h-px w-full bg-gradient-to-r from-transparent via-brass/60 to-transparent"
-      />
-      <nav
-        className="container-wide flex items-center justify-between py-3.5 sm:py-4"
-        aria-label="Primary"
-      >
-        <Link
-          to="/"
-          className="group flex items-center text-bone hover:text-white"
-          aria-label={`${siteConfig.businessName} — home`}
-          onClick={() => setOpen(false)}
-        >
-          <Logo
-            variant="full"
-            className="h-9 text-base sm:text-lg [&_svg]:transition-transform [&_svg]:duration-300 group-hover:[&_svg]:scale-105"
-            title={siteConfig.businessName}
-          />
-        </Link>
+    <>
+      {/* Constant-height band: the inner pill morphs, so the page never reflows
+          on scroll (this is what killed the earlier shrink "glitch"). */}
+      <header className="sticky top-0 z-50 h-20 sm:h-24">
+        {/* Hairline + scroll-progress rule */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brass/35 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="nav-progress nav-progress--auto absolute inset-x-0 top-0 h-[2px] origin-left bg-gradient-to-r from-flag-red via-brass to-flag-navy"
+        />
 
-        {/* Desktop nav */}
-        <ul className="hidden lg:flex items-center gap-1">
-          {navItems.map((item) => (
-            <li key={item.to}>
-              <NavLink
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `relative px-4 py-2 text-[15px] font-medium tracking-[-0.01em] rounded-full transition-colors duration-200 ${
-                    isActive
-                      ? 'text-white'
-                      : 'text-bone-muted hover:text-white hover:bg-white/[0.05]'
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    {item.label}
-                    {isActive && (
-                      <span
-                        aria-hidden="true"
-                        className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-flag-red"
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
-            </li>
-          ))}
-          <li className="ml-3">
-            <a
-              href={`tel:${siteConfig.phoneHref}`}
-              onClick={() => track('tel_click', { location: 'nav' })}
-              className="btn-primary !py-2.5 !px-5 !text-[13px]"
+        <div className="px-3 pt-2 sm:px-5 sm:pt-3">
+          <nav
+            aria-label="Primary"
+            className={`mx-auto flex items-center justify-between gap-2 rounded-2xl transition-all duration-500 ease-smooth motion-reduce:transition-none ${
+              scrolled
+                ? 'h-12 max-w-6xl bg-ink-100/85 px-2.5 shadow-[0_12px_44px_-16px_rgba(0,0,0,0.75)] ring-1 ring-brass/15 backdrop-blur-md sm:h-14 sm:px-3'
+                : 'h-14 max-w-7xl bg-transparent px-1.5 ring-1 ring-transparent sm:h-16 sm:px-2'
+            }`}
+          >
+            {/* Logo */}
+            <Link
+              to="/"
+              className="group flex shrink-0 items-center text-bone hover:text-white"
+              aria-label={`${siteConfig.businessName} — home`}
+              onClick={() => setMenuOpen(false)}
             >
-              {siteConfig.phone}
-            </a>
-          </li>
-        </ul>
+              <Logo
+                variant="full"
+                className={`transition-all duration-500 ease-smooth motion-reduce:transition-none [&>span:first-child]:transition-transform [&>span:first-child]:duration-300 [&>span:first-child]:ease-smooth group-hover:[&>span:first-child]:scale-[1.04] ${
+                  scrolled ? 'h-9 text-base sm:h-10 sm:text-lg' : 'h-11 text-lg sm:h-14 sm:text-xl'
+                }`}
+                title={siteConfig.businessName}
+              />
+            </Link>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          className="lg:hidden p-2 -mr-2 text-bone"
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-            {open ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
-            )}
-          </svg>
-        </button>
-      </nav>
+            {/* Center rail with sliding active indicator (desktop) */}
+            <NavRail />
 
-      {open && (
-        <div id="mobile-menu" className="lg:hidden border-t border-white/10 bg-ink-100/95 backdrop-blur-xl">
-          <ul className="container-wide py-4 flex flex-col gap-0.5">
-            {navItems.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.end}
-                  onClick={() => setOpen(false)}
-                  className={({ isActive }) =>
-                    `block px-3 py-3 text-base font-medium rounded-lg ${
-                      isActive ? 'text-white bg-white/[0.06]' : 'text-bone-muted hover:text-white hover:bg-white/[0.04]'
-                    }`
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-            <li className="pt-3 grid grid-cols-2 gap-2.5">
-              <Link to="/book" className="btn-secondary" onClick={() => setOpen(false)}>
-                Book Now
-              </Link>
+            {/* Actions */}
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              {/* Command palette trigger (desktop) */}
+              <button
+                type="button"
+                onClick={openPalette}
+                aria-label="Open quick search (Command-K)"
+                className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] py-2 pl-3 pr-2 text-[13px] text-bone-muted transition-colors hover:border-white/20 hover:text-white lg:inline-flex"
+              >
+                <SearchIcon className="h-4 w-4" />
+                <span className="hidden xl:inline">Search</span>
+                <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-bone-dim">
+                  ⌘K
+                </kbd>
+              </button>
+
+              {/* Phone (desktop) */}
               <a
                 href={`tel:${siteConfig.phoneHref}`}
-                onClick={() => {
-                  track('tel_click', { location: 'mobile_nav' });
-                  setOpen(false);
-                }}
-                className="btn-primary"
+                onClick={() => track('tel_click', { location: 'nav' })}
+                className="hidden items-center gap-2 rounded-full px-3 py-2 text-[13.5px] font-medium text-bone-muted transition-colors hover:text-white lg:inline-flex"
               >
-                Call Now
+                <PhoneIcon className="h-4 w-4 text-brass-soft" />
+                <span className="hidden xl:inline">{siteConfig.phone}</span>
               </a>
-            </li>
-          </ul>
+
+              {/* Primary CTA (desktop) — subtly magnetic */}
+              <Link
+                ref={bookRef}
+                to="/book"
+                onClick={() => track('book_now_click', { location: 'nav' })}
+                className="btn-primary hidden !px-5 !py-2.5 !text-[13px] lg:inline-flex"
+              >
+                Book Now
+              </Link>
+
+              {/* Hamburger (mobile / tablet) */}
+              <button
+                type="button"
+                onClick={() => setMenuOpen(true)}
+                aria-label="Open menu"
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-bone transition-colors hover:bg-white/[0.07] hover:text-white lg:hidden"
+              >
+                <MenuIcon className="h-5 w-5" />
+              </button>
+            </div>
+          </nav>
         </div>
-      )}
-    </header>
+      </header>
+
+      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+    </>
+  );
+}
+
+/**
+ * Desktop rail with a single FLIP indicator that slides between items. The pill
+ * follows hover/focus and settles back onto the active route. It's decorative
+ * (aria-hidden); NavLink carries aria-current for semantics.
+ */
+function NavRail() {
+  const railRef = useRef<HTMLUListElement>(null);
+  const { pathname } = useLocation();
+  const reduced = useReducedMotion();
+  const [box, setBox] = useState<{ x: number; w: number } | null>(null);
+
+  const moveTo = useCallback((el: HTMLElement | null) => {
+    const rail = railRef.current;
+    if (!el || !rail) return;
+    const r = el.getBoundingClientRect();
+    const pr = rail.getBoundingClientRect();
+    setBox({ x: r.left - pr.left, w: r.width });
+  }, []);
+
+  const settle = useCallback(() => {
+    const el = railRef.current?.querySelector<HTMLElement>('[data-active="true"]') ?? null;
+    moveTo(el);
+  }, [moveTo]);
+
+  // Snap to the active item on route change (layout effect → no first-paint flash).
+  useLayoutEffect(() => {
+    settle();
+  }, [settle, pathname]);
+
+  // Re-measure on resize and after webfonts swap in (they change link widths).
+  useEffect(() => {
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(settle);
+    };
+    const ro = new ResizeObserver(onResize);
+    if (railRef.current) ro.observe(railRef.current);
+    document.fonts?.ready.then(() => settle()).catch(() => {});
+    window.addEventListener('resize', onResize);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', onResize);
+      cancelAnimationFrame(raf);
+    };
+  }, [settle]);
+
+  const isItemActive = (it: NavItem) =>
+    it.end ? pathname === it.to : pathname === it.to || pathname.startsWith(`${it.to}/`);
+
+  return (
+    <ul ref={railRef} onMouseLeave={settle} className="relative hidden items-center gap-0.5 lg:flex">
+      <span
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-y-1.5 left-0 rounded-full bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-brass/25 ${
+          reduced ? '' : 'transition-[transform,width] duration-300 ease-smooth'
+        }`}
+        style={{ transform: `translateX(${box?.x ?? 0}px)`, width: box?.w ?? 0, opacity: box ? 1 : 0 }}
+      />
+      {NAV_ITEMS.map((it) => {
+        const activeItem = isItemActive(it);
+        return (
+          <li key={it.to}>
+            <NavLink
+              to={it.to}
+              end={it.end}
+              data-active={activeItem}
+              onMouseEnter={(e) => moveTo(e.currentTarget)}
+              onFocus={(e) => moveTo(e.currentTarget)}
+              className={`relative z-10 inline-flex items-center rounded-full px-3.5 py-2 text-[13.5px] font-medium tracking-[-0.01em] transition-colors duration-200 ${
+                activeItem ? 'text-white' : 'text-bone-muted hover:text-white'
+              }`}
+            >
+              {it.label}
+            </NavLink>
+          </li>
+        );
+      })}
+    </ul>
   );
 }

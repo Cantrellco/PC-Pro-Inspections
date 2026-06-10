@@ -82,7 +82,8 @@ No component changes. No prop refactor. That is the seam.
 | Google reviews embed URL / place ID | `src/config/siteConfig.ts` → `googleReviews` |
 | Sample Report PDF | drop file at `public/sample-report.pdf` (linked from Resources page) |
 | Open Graph preview image | drop file at `public/og-image.png` (1200×630) |
-| Favicon | replace `public/favicon.svg` |
+| Favicon / touch icon | replace `public/favicon-32.png`, `favicon-16.png`, `apple-touch-icon.png` |
+| Logo emblem (nav, footer) | master at `src/assets/PC Pro Logo.png`; web asset at `public/brand/logo-mark.png` (transparent PNG) |
 | Site photography (hero, inspector, services, resources, CTA) | `src/config/siteConfig.ts` → `images` (paste URLs; blank → elegant placeholder) |
 
 ## Design System
@@ -138,11 +139,11 @@ components**:
 ### Calculator → Booking Hand-off
 
 The calculator's **"Book This Inspection"** button routes to
-`/book?sqft=2400&addons=radon,mold&estimate=625`. The Book Now page reads
+`/book?sqft=2400&addons=mold,termite-wdo&estimate=600`. The Book Now page reads
 these URL params and:
 
-1. Surfaces them on screen ("We have your inputs ready: 2,400 sqft, Radon
-   + Mold, estimate $625"), so the user feels seen.
+1. Surfaces them on screen ("We have your inputs ready: 2,400 sqft, Mold
+   + Termite, estimate $600"), so the user feels seen.
 2. Will eventually pass them to the scheduler as **prefill params**.
 
 ### Mapping Calculator Inputs to Your Scheduler's Prefill
@@ -279,7 +280,7 @@ Open `src/config/siteConfig.ts` and resolve every `// TODO: owner to fill`.
 - [ ] Site photography — fill `siteConfig.images` (hero, inspector, services, resources, ctaBand)
 - [ ] Sample Report PDF dropped at `public/sample-report.pdf`
 - [ ] Open Graph preview image at `public/og-image.png` (1200×630)
-- [ ] Favicon at `public/favicon.svg`
+- [x] Favicon + touch icon (`public/favicon-32.png`, `favicon-16.png`, `apple-touch-icon.png`) — generated from the brand logo
 - [ ] Real photos uploaded (no stock photos)
 - [ ] Legal pages reviewed with counsel
 - [ ] Custom domain configured at host (Netlify/Vercel/CFP)

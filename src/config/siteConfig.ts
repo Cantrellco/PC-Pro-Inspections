@@ -104,44 +104,62 @@ export const siteConfig: SiteConfig = {
   ],
 
   // ─── Certifications ──────────────────────────────────────────────────────
-  // Drop badge images into public/certs/ and reference them with badgeSrc.
+  // The specialty certifications the inspector actually holds. Each `issuer`
+  // line is a neutral placeholder — owner should replace it with the exact
+  // issuing body + cert/license number (documentation is referenced on the
+  // About page). Drop badge images into public/certs/ and reference via badgeSrc.
   certifications: [
     {
-      name: 'InterNACHI Certified Professional Inspector',
-      issuer: 'International Association of Certified Home Inspectors',
-      badgeAlt: 'InterNACHI Certified Professional Inspector badge',
-      badgeSrc: '/certs/internachi.svg',
-    },
-    {
-      name: 'ASHI Member',
-      issuer: 'American Society of Home Inspectors',
-      badgeAlt: 'ASHI Member badge',
-      badgeSrc: '/certs/ashi.svg',
-    },
-    {
-      name: 'State-Licensed Home Inspector',
-      issuer: 'State Licensing Board', // TODO: owner to fill exact state + license #
-      badgeAlt: 'State-Licensed Home Inspector seal',
-      badgeSrc: '/certs/state-licensed.svg',
-    },
-    {
-      name: 'Radon Measurement Certified',
-      issuer: 'NRPP / NRSB',
-      badgeAlt: 'Radon Measurement Certification badge',
-      badgeSrc: '/certs/radon.svg',
+      name: 'Thermal Imaging Certified',
+      issuer: 'Certified thermographer — documentation on request', // TODO: owner — exact issuing body + cert #
+      badgeAlt: 'Thermal imaging / infrared certification seal',
+      badgeSrc: '/certs/thermal-imaging.svg',
     },
     {
       name: 'Mold Assessment Certified',
-      issuer: 'IAC2',
-      badgeAlt: 'Mold Assessment Certification badge',
+      issuer: 'Certified mold assessor — documentation on request', // TODO: owner — exact issuing body + cert #
+      badgeAlt: 'Mold assessment certification seal',
       badgeSrc: '/certs/mold.svg',
     },
     {
-      name: 'Fully Insured — E&O + General Liability',
-      issuer: 'Carrier on file; certificate available on request',
-      badgeAlt: 'Insurance verified',
-      badgeSrc: '/certs/insured.svg',
+      name: 'Termite / WDO Certified',
+      issuer: 'Licensed WDO inspector — documentation on request', // TODO: owner — exact issuing body + license #
+      badgeAlt: 'Termite / wood-destroying organism certification seal',
+      badgeSrc: '/certs/termite.svg',
     },
+    {
+      name: 'Pool & Spa Inspection Certified',
+      issuer: 'Certified pool & spa inspector — documentation on request', // TODO: owner — exact issuing body + cert #
+      badgeAlt: 'Pool and spa inspection certification seal',
+      badgeSrc: '/certs/pool-spa.svg',
+    },
+    {
+      name: 'Manufactured & Mobile Home Certified',
+      issuer: 'Manufactured & mobile home certified — documentation on request', // TODO: owner — exact issuing body + cert #
+      badgeAlt: 'Manufactured and mobile home certification seal',
+      badgeSrc: '/certs/manufactured-home.svg',
+    },
+  ],
+
+  // ─── Areas of Expertise ──────────────────────────────────────────────────
+  // The full scope of what the inspector covers. `specialty: true` items are
+  // advanced/extra capabilities highlighted apart from the standard systems.
+  // Drives the "Areas of Expertise" grid on the Services page.
+  inspectionExpertise: [
+    { label: 'Roofs', blurb: 'Covering, flashing, penetrations, drainage, and visible wear.' },
+    { label: 'Electrical', blurb: 'Service entrance, panel, breakers, GFCI/AFCI, wiring, and outlets.' },
+    { label: 'HVAC', blurb: 'Heating and cooling condition, distribution, controls, age, and lifespan.' },
+    { label: 'Plumbing', blurb: 'Supply lines, drains, fixtures, water heater, and visible leaks.' },
+    { label: 'Decks', blurb: 'Ledger attachment, framing, fasteners, railings, and stair safety.' },
+    { label: 'Attic', blurb: 'Insulation depth, ventilation, framing, and moisture or pest indicators.' },
+    { label: 'Crawl Spaces', blurb: 'Structure, vapor barriers, moisture, drainage, and pest activity.' },
+    { label: 'Moisture Intrusion', blurb: 'Meter and infrared scanning for hidden leaks and damp.' },
+    { label: 'Pools & Spas', blurb: 'Equipment, finish, decking, bonding, and safety features.', specialty: true },
+    { label: 'Mold', blurb: 'Visual assessment with optional accredited-lab air sampling.', specialty: true },
+    { label: 'Termite / WDO', blurb: 'Wood-destroying organism evaluation for lenders and buyers.', specialty: true },
+    { label: 'Thermal Imaging', blurb: 'Infrared camera reveals what the naked eye cannot.', specialty: true },
+    { label: 'Manufactured Homes', blurb: 'HUD-tagged housing — tie-downs, skirting, supports, and systems.', specialty: true },
+    { label: 'Mobile Homes', blurb: 'Single- and double-wide setup, blocking, and connected systems.', specialty: true },
   ],
 
   // ─── Testimonials ────────────────────────────────────────────────────────
@@ -189,7 +207,7 @@ export const siteConfig: SiteConfig = {
     {
       question: 'How much does a home inspection cost?',
       answer:
-        'Pricing is driven by square footage, with optional add-ons like radon, mold, sewer scope, pool/spa, and termite. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
+        'Pricing is driven by square footage, with optional extra services like mold, sewer scope, pool/spa, and termite. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
     },
     {
       question: 'How long does an inspection take?',
@@ -202,9 +220,9 @@ export const siteConfig: SiteConfig = {
         'Roof, exterior, structure, attic, insulation, ventilation, plumbing, electrical, HVAC, interior, doors and windows, foundation, and visible drainage. You receive a photo-rich digital report, typically the same evening.',
     },
     {
-      question: 'Do I need radon and mold testing?',
+      question: 'Do I need mold testing?',
       answer:
-        'Radon testing is recommended in most regions — radon is the second-leading cause of lung cancer and the only way to know your level is to test. Mold testing is recommended when there is visible growth, a moisture history, or symptoms in occupants. Both are quick add-ons at the time of inspection.',
+        'Mold testing is recommended when there is visible growth, a moisture history, or symptoms in occupants. It pairs naturally with thermal-imaging and moisture scanning, which are part of how we find hidden damp in the first place. It is a quick extra service at the time of inspection.',
     },
     {
       question: 'How soon can I get on the schedule?',
@@ -214,7 +232,7 @@ export const siteConfig: SiteConfig = {
     {
       question: 'When do I get the report?',
       answer:
-        'Same day for most inspections — usually the same evening. The report is delivered as a shareable digital document with embedded photos and a summary of priority items.',
+        'Same day for most inspections — usually the same evening. It is delivered as a shareable digital report with photos and a summary of priority items.',
     },
   ],
 

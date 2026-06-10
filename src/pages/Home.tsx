@@ -7,12 +7,10 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
 import CountUp from '@/components/CountUp';
 import Magnetic from '@/components/Magnetic';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
-import HeroImage from '@/components/HeroImage';
 import WavingFlag from '@/components/WavingFlag';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
 import CertStrip from '@/components/CertStrip';
@@ -30,7 +28,7 @@ const SERVICES = [
   [IconAttic, 'Attic & Ventilation', 'Insulation depth, ventilation, moisture and pest indicators.'],
   [IconInterior, 'Interior', 'Walls, ceilings, floors, doors, windows, stairs, safety hazards.'],
   [IconBasement, 'Basement / Crawl', 'Moisture, sump pumps, vapor barriers, structural concerns.'],
-  [IconAddons, 'Optional Add-ons', 'Radon, mold, sewer scope, pool/spa, termite, well water.'],
+  [IconAddons, 'Specialty Inspections', 'Pools & spas, mold, termite/WDO, thermal imaging, manufactured & mobile homes.'],
 ] as const;
 
 const PROCESS = [
@@ -105,7 +103,7 @@ export default function Home() {
               {([
                 { count: 1600, suffix: '+', label: 'Point inspection' },
                 { text: 'Same-Day', label: 'Reports' },
-                { text: 'Insured', label: 'Licensed' },
+                { count: 14, suffix: '', label: 'Areas of expertise' },
               ] as ({ count: number; suffix: string; label: string } | { text: string; label: string })[]).map((s) => (
                 <div key={s.label} className="border-l border-white/15 pl-4">
                   <dd className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-none tracking-tight whitespace-nowrap">
@@ -158,31 +156,8 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ─── Services feature + grid ──────────────────────────────────── */}
+      {/* ─── What we inspect — services grid ──────────────────────────── */}
       <Section tone="elevated">
-        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center mb-16">
-          <Reveal>
-            <Photo
-              src={c.images.services}
-              alt="A certified inspector documenting a home's systems"
-              aspectClass="aspect-[5/4]"
-              placeholderLabel="Inspection in progress"
-            />
-          </Reveal>
-          <Reveal delay={80}>
-            <p className="eyebrow mb-4">What We Inspect</p>
-            <h2 className="display-2 text-white">A full-systems inspection — nothing skipped.</h2>
-            <p className="lede mt-5">
-              Every visible major system, documented with photos and a clear
-              priority summary. Optional add-ons go deeper where the property
-              warrants it.
-            </p>
-            <div className="mt-7">
-              <Button as="link" to="/services" variant="secondary">See pricing &amp; calculator</Button>
-            </div>
-          </Reveal>
-        </div>
-
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SERVICES.map(([Icon, title, desc], i) => (
             <Reveal key={title} delay={(i % 3) * 70}>
@@ -277,37 +252,6 @@ export default function Home() {
           </div>
         </Section>
       )}
-
-      {/* ─── Closing CTA ──────────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <HeroImage src={c.images.ctaBand} flagOpacity={0.28} />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(8,8,9,0.9) 0%, rgba(8,8,9,0.82) 100%)' }} />
-        </div>
-        <div className="container-narrow above-grain py-24 sm:py-32 text-center">
-          <Reveal>
-            <p className="eyebrow mb-5">Ready when you are</p>
-            <h2 className="display-1 text-white max-w-3xl mx-auto">
-              Inspect with confidence.
-            </h2>
-            <p className="lede mt-6 max-w-xl mx-auto">
-              Get a free, itemized quote in seconds — or call now and we'll pick up.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3 justify-center">
-              <Button as="link" to="/services" className="!px-8 !py-4 !text-base">Get a Free Quote</Button>
-              <Button
-                as="a"
-                href={`tel:${c.phoneHref}`}
-                variant="secondary"
-                onClick={() => track('tel_click', { location: 'home_footer_cta' })}
-                className="!px-8 !py-4 !text-base"
-              >
-                Call {c.phone}
-              </Button>
-            </div>
-          </Reveal>
-        </div>
-      </section>
     </>
   );
 }

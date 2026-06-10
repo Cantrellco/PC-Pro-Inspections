@@ -3,11 +3,11 @@ import { siteConfig } from '@/config/siteConfig';
 /** Condense a full certification name into a short, scannable badge label. */
 function shortLabel(name: string): string {
   return name
-    .replace('InterNACHI Certified Professional Inspector', 'InterNACHI CPI')
-    .replace('State-Licensed Home Inspector', 'State-Licensed')
-    .replace('Radon Measurement Certified', 'Radon Certified')
+    .replace('Thermal Imaging Certified', 'Thermal Imaging')
     .replace('Mold Assessment Certified', 'Mold Certified')
-    .replace('Fully Insured — E&O + General Liability', 'Fully Insured');
+    .replace('Termite / WDO Certified', 'Termite / WDO')
+    .replace('Pool & Spa Inspection Certified', 'Pool & Spa')
+    .replace('Manufactured & Mobile Home Certified', 'Mfd. & Mobile Homes');
 }
 
 type Props = {
@@ -28,7 +28,7 @@ export default function CertStrip({ className = '' }: Props) {
     <div className={`border-y border-white/10 bg-white/[0.015] ${className}`.trim()}>
       <div className="container-wide above-grain py-7">
         <p className="text-center text-[11px] uppercase tracking-[0.28em] text-bone-dim">
-          Certified &amp; insured
+          Specialty certifications
         </p>
         <div className="hairline mx-auto mt-4 mb-6 max-w-[10rem]" aria-hidden="true" />
         <ul className="flex flex-wrap items-center justify-center gap-x-3 gap-y-5 sm:gap-x-5">

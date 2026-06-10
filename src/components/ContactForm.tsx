@@ -140,7 +140,7 @@ export default function ContactForm() {
           value={form.message}
           onChange={(e) => update('message', e.target.value)}
           error={errors.message}
-          hint="A closing date, address, and which add-ons (if any) speeds up our reply."
+          hint="A closing date, address, and which extra services (if any) speeds up our reply."
         />
       </div>
 

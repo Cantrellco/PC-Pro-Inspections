@@ -7,13 +7,18 @@
     color-scheme: dark;
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* Reserve the scrollbar gutter so locking body scroll (menu/palette open)
+       never shifts the layout. */
+    scrollbar-gutter: stable;
   }
   body {
     @apply bg-ink text-bone font-sans antialiased;
     background-image:
       radial-gradient(at 88% -5%, rgba(10, 49, 97, 0.22) 0px, transparent 55%),
       radial-gradient(at 4% 102%, rgba(200, 16, 46, 0.10) 0px, transparent 50%);
-    background-attachment: fixed;
+    /* No `background-attachment: fixed`: viewport-anchored backgrounds can't be
+       scroll-cached, forcing a full-viewport repaint each scroll frame. These
+       soft, low-opacity gradients look identical scrolling with the page. */
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss01';
     text-rendering: optimizeLegibility;
   }
@@ -25,8 +30,10 @@
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    opacity: 0.04;
-    mix-blend-mode: overlay;
+    /* Plain alpha compositing (no mix-blend-mode) so the grain stays on the GPU
+       fast path instead of forcing a per-frame backdrop re-blend over the
+       animated hero canvas. Opacity nudged up a hair to match the old overlay read. */
+    opacity: 0.05;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
@@ -118,8 +125,12 @@
       rgba(255, 255, 255, 0.012) 38%,
       rgba(0, 0, 0, 0.14) 100%
     );
-    background-color: rgba(18, 18, 21, 0.6);
-    backdrop-filter: blur(6px);
+    /* A near-opaque fill reads as a frosted panel on the near-black canvas
+       without a backdrop-filter — which, applied to every card sitewide, forced
+       the compositor to re-blur each card on every scroll frame (18+ on the
+       Services page). The solid fill is visually near-identical here at a tiny
+       fraction of the paint cost. */
+    background-color: rgba(18, 18, 21, 0.78);
   }
   .card-hover:hover {
     @apply -translate-y-1 border-white/20 shadow-lift;
@@ -194,7 +205,10 @@
     transition:
       opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
       transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
+    /* No persistent `will-change`: the fade runs once (Reveal unobserves after
+       the first intersection), so a permanent hint would pin every revealed
+       block to its own compositor layer for the page's whole life. The browser
+       promotes transiently during the transition on its own. */
   }
   .reveal.in-view {
     opacity: 1;
@@ -203,6 +217,33 @@
 
   /* Anchor content above the grain layer. */
   .above-grain { position: relative; z-index: 2; }
+
+  /* ── Nav scroll-progress rule ───────────────────────────────────────────
+     The bar fills as the page scrolls. Preferred path is a native, compositor-
+     driven scroll-timeline (no main-thread JS). Where unsupported (Firefox in
+     2026), it falls back to a transform fed by the --nav-progress variable that
+     Nav.tsx writes from a rAF-throttled scroll handler. */
+  .nav-progress {
+    transform: scaleX(var(--nav-progress, 0));
+  }
+  @supports (animation-timeline: scroll()) {
+    .nav-progress--auto {
+      transform: scaleX(0);
+      animation: nav-progress-grow linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+  @keyframes nav-progress-grow {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nav-progress,
+    .nav-progress--auto {
+      animation: none !important;
+      transform: scaleX(0) !important;
+    }
+  }
 
   /* ── Cinematic photo grade ──────────────────────────────────────────────
      Unifies every site photo so the mixed stock looks shot by one
