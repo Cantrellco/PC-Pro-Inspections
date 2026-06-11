@@ -55,7 +55,7 @@ export function LogoMark({ className, title }: { className?: string; title?: str
 export function LogoSeal({ className, title }: { className?: string; title?: string }) {
   return (
     <span
-      className={`inline-flex h-full items-center justify-center rounded-[10px] bg-gradient-to-b from-white to-[#f3f0e8] p-[3px] shadow-[0_1px_2px_rgba(0,0,0,0.45),0_6px_16px_-8px_rgba(0,0,0,0.7)] ring-1 ring-brass/45 ${className ?? ''}`}
+      className={`inline-flex h-full items-center justify-center rounded-xl bg-gradient-to-b from-white to-[#f3f0e8] p-1 shadow-[0_1px_2px_rgba(0,0,0,0.5),0_10px_24px_-10px_rgba(0,0,0,0.8),0_0_24px_-6px_rgba(201,162,39,0.45)] ring-1 ring-brass/60 ${className ?? ''}`}
     >
       <LogoMark className="h-full w-auto" title={title} />
     </span>

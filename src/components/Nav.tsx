@@ -84,7 +84,9 @@ export default function Nav() {
                 : 'h-14 max-w-7xl bg-transparent px-1.5 ring-1 ring-transparent sm:h-16 sm:px-2'
             }`}
           >
-            {/* Logo */}
+            {/* Logo — the seal is deliberately taller than the pill: it overhangs
+                into the band's spare height (band is h-20/h-24, pill h-12..h-16)
+                so the crest reads at badge size without growing the header. */}
             <Link
               to="/"
               className="group flex shrink-0 items-center text-bone hover:text-white"
@@ -94,7 +96,7 @@ export default function Nav() {
               <Logo
                 variant="full"
                 className={`transition-all duration-500 ease-smooth motion-reduce:transition-none [&>span:first-child]:transition-transform [&>span:first-child]:duration-300 [&>span:first-child]:ease-smooth group-hover:[&>span:first-child]:scale-[1.04] ${
-                  scrolled ? 'h-9 text-base sm:h-10 sm:text-lg' : 'h-11 text-lg sm:h-14 sm:text-xl'
+                  scrolled ? 'h-14 text-base sm:h-16 sm:text-lg' : 'h-16 text-lg sm:h-20 sm:text-xl'
                 }`}
                 title={siteConfig.businessName}
               />
