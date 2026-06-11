@@ -62,8 +62,7 @@ export default function Nav() {
 
   return (
     <>
-      {/* Constant-height band: the inner pill morphs, so the page never reflows
-          on scroll (this is what killed the earlier shrink "glitch"). */}
+      {/* Constant-height band: the page never reflows on scroll. */}
       <header className="sticky top-0 z-50 h-20 sm:h-24">
         {/* Hairline + scroll-progress rule */}
         <div
@@ -76,27 +75,33 @@ export default function Nav() {
         />
 
         <div className="px-3 pt-2 sm:px-5 sm:pt-3">
+          {/* The pill's geometry is constant — the condensed state only fades in
+              the frosted chrome and scales the logo down (both compositor-only),
+              so nothing re-lays-out mid-scroll and the morph can't stutter. */}
           <nav
             aria-label="Primary"
-            className={`mx-auto flex items-center justify-between gap-2 rounded-2xl transition-all duration-500 ease-smooth motion-reduce:transition-none ${
-              scrolled
-                ? 'h-12 max-w-6xl bg-ink-100/85 px-2.5 shadow-[0_12px_44px_-16px_rgba(0,0,0,0.75)] ring-1 ring-brass/15 backdrop-blur-md sm:h-14 sm:px-3'
-                : 'h-14 max-w-7xl bg-transparent px-1.5 ring-1 ring-transparent sm:h-16 sm:px-2'
-            }`}
+            className="relative mx-auto flex h-14 max-w-7xl items-center justify-between gap-2 rounded-2xl px-2 sm:h-16 sm:px-2.5"
           >
-            {/* Logo — the seal is deliberately taller than the pill: it overhangs
-                into the band's spare height (band is h-20/h-24, pill h-12..h-16)
-                so the crest reads at badge size without growing the header. */}
+            <div
+              aria-hidden="true"
+              className={`pointer-events-none absolute inset-0 rounded-2xl bg-ink-100/85 shadow-[0_12px_44px_-16px_rgba(0,0,0,0.75)] ring-1 ring-brass/15 backdrop-blur-md transition-opacity duration-500 ease-smooth motion-reduce:transition-none ${
+                scrolled ? 'opacity-100' : 'opacity-0'
+              }`}
+            />
+
+            {/* Logo — at rest the seal overhangs the (invisible) pill into the
+                band's spare height so the crest reads at badge size; condensed,
+                it scales down to sit fully inside the visible capsule. */}
             <Link
               to="/"
-              className="group flex shrink-0 items-center text-bone hover:text-white"
+              className="group relative flex shrink-0 items-center text-bone hover:text-white"
               aria-label={`${siteConfig.businessName} — home`}
               onClick={() => setMenuOpen(false)}
             >
               <Logo
                 variant="full"
-                className={`transition-all duration-500 ease-smooth motion-reduce:transition-none [&>span:first-child]:transition-transform [&>span:first-child]:duration-300 [&>span:first-child]:ease-smooth group-hover:[&>span:first-child]:scale-[1.04] ${
-                  scrolled ? 'h-14 text-base sm:h-16 sm:text-lg' : 'h-16 text-lg sm:h-20 sm:text-xl'
+                className={`h-16 origin-left text-lg transition-transform duration-500 ease-smooth motion-reduce:transition-none sm:h-20 sm:text-xl [&>span:first-child]:transition-transform [&>span:first-child]:duration-300 [&>span:first-child]:ease-smooth group-hover:[&>span:first-child]:scale-[1.04] ${
+                  scrolled ? 'scale-[0.78] sm:scale-[0.7]' : ''
                 }`}
                 title={siteConfig.businessName}
               />
@@ -106,7 +111,7 @@ export default function Nav() {
             <NavRail />
 
             {/* Actions */}
-            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <div className="relative flex shrink-0 items-center gap-1.5 sm:gap-2">
               {/* Command palette trigger (desktop) */}
               <button
                 type="button"
