@@ -10,6 +10,10 @@
     /* Reserve the scrollbar gutter so locking body scroll (menu/palette open)
        never shifts the layout. */
     scrollbar-gutter: stable;
+    /* Safety net for decorative bleeds (carousel arrows, blur glows, aurora).
+       `clip` — not `hidden` — so it never creates a scroll container that would
+       break the sticky nav, and it leaves the fixed film-grain overlay intact. */
+    overflow-x: clip;
   }
   body {
     @apply bg-ink text-bone font-sans antialiased;
@@ -41,6 +45,32 @@
     @apply outline-none ring-2 ring-flag-redSoft ring-offset-2 ring-offset-ink rounded-sm;
   }
 
+  /* Heritage text selection + tamed mobile tap flash. */
+  ::selection {
+    background: rgba(200, 16, 46, 0.32);
+    color: #fff;
+  }
+  body { -webkit-tap-highlight-color: transparent; }
+
+  /* Slim brass-tinted scrollbar that belongs to the dark canvas. */
+  @media (pointer: fine) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(201, 162, 39, 0.32) transparent;
+    }
+    *::-webkit-scrollbar { width: 11px; height: 11px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb {
+      border-radius: 9999px;
+      border: 3px solid transparent;
+      background-clip: content-box;
+      background-color: rgba(201, 162, 39, 0.28);
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(201, 162, 39, 0.5);
+    }
+  }
+
   h1, h2, h3, h4 {
     @apply font-display;
     font-optical-sizing: auto;
@@ -63,6 +93,9 @@
       transition-duration: 0.001ms !important;
     }
     .reveal { opacity: 1 !important; transform: none !important; }
+    .route-enter { animation: none !important; }
+    .kenburns { animation: none !important; }
+    .aurora::before, .aurora::after { animation: none !important; }
   }
 }
 
@@ -160,7 +193,8 @@
   .field-input {
     @apply w-full rounded-xl border border-white/10 bg-ink-200/70 px-4 py-3
            text-bone placeholder:text-bone-dim transition-all duration-200
-           focus:border-flag-redSoft focus:bg-ink-100 focus:ring-1 focus:ring-flag-redSoft/40;
+           hover:border-white/20
+           focus:border-flag-redSoft focus:bg-ink-100 focus:ring-2 focus:ring-flag-redSoft/30;
   }
   .field-error { @apply text-flag-redSoft text-sm mt-1.5; }
 
@@ -300,5 +334,258 @@
   @keyframes kenburns {
     0% { transform: scale(1.04) translate3d(0, 0, 0); }
     100% { transform: scale(1.14) translate3d(-1.5%, -1%, 0); }
+  }
+
+  /* ── Photo / map placeholder ─────────────────────────────────────────────
+     Empty image slots and unconfigured maps render this so the layout never
+     looks broken: a quiet diagonal weave of the heritage tones. */
+  .photo-placeholder {
+    background-color: theme('colors.ink.200');
+    background-image:
+      radial-gradient(120% 120% at 12% 0%, rgba(10, 49, 97, 0.30) 0%, transparent 55%),
+      radial-gradient(120% 120% at 100% 100%, rgba(156, 15, 38, 0.16) 0%, transparent 55%),
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.022) 0 2px, transparent 2px 22px);
+  }
+
+  /* ── Star divider ────────────────────────────────────────────────────────
+     A single brass-flanked star, used between major content blocks. */
+  .star-divider {
+    @apply my-16 flex items-center justify-center gap-4;
+  }
+  .star-divider::before,
+  .star-divider::after {
+    content: '';
+    @apply h-px w-16 sm:w-28;
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.45));
+  }
+  .star-divider::after { transform: scaleX(-1); }
+
+  /* ── Headline accent gradients ───────────────────────────────────────────
+     For one or two emphasized words inside a display heading. */
+  .text-gradient-brass {
+    background-image: linear-gradient(100deg, theme('colors.brass.soft'), theme('colors.brass.DEFAULT') 55%, #f4e4ad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-flag {
+    background-image: linear-gradient(100deg, theme('colors.flag.redSoft'), theme('colors.flag.red'));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ── Animated link underline ──────────────────────────────────────────────
+     A hairline that wipes in from the left on hover/focus. */
+  .link-underline {
+    @apply relative inline-flex items-center;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1.5px;
+  }
+
+  /* ── Interactive spotlight on premium cards ───────────────────────────────
+     A soft brass glow tracks the pointer (driven by --spot-x/--spot-y, written
+     by a per-card pointermove handler that only runs while hovering one card).
+     Fine-pointer only; the glow simply never fades in on touch. */
+  /* Establish the positioning context for the spotlight ::after. `.card` itself
+     is static and only `.card-rim` happens to set position:relative, so glow
+     cards used without a rim (most of them) would otherwise anchor the overlay
+     to the wrong ancestor. */
+  .card-glow { position: relative; }
+  .card-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    background: radial-gradient(
+      16rem 16rem at var(--spot-x, 50%) var(--spot-y, -20%),
+      rgba(224, 196, 105, 0.13),
+      transparent 62%
+    );
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .card-glow:hover::after { opacity: 1; }
+  }
+  /* Keep real card content above the glow layer. */
+  .card-glow > * { position: relative; z-index: 1; }
+
+  /* ── Sheen sweep for primary CTAs ─────────────────────────────────────────
+     A single diagonal highlight glides across the button on hover. */
+  .btn-primary { overflow: hidden; }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    height: 100%;
+    width: 45%;
+    pointer-events: none;
+    transform: skewX(-18deg);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.28),
+      transparent
+    );
+    opacity: 0;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover::after {
+      animation: btn-sheen 0.85s ease;
+    }
+  }
+  @keyframes btn-sheen {
+    0% { left: -60%; opacity: 0; }
+    12% { opacity: 1; }
+    100% { left: 130%; opacity: 0; }
+  }
+
+  /* ── Blueprint grid motif ─────────────────────────────────────────────────
+     A faint architectural grid — the visual signature of an inspection.
+     Used as a low-contrast backdrop accent behind feature sections. */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(rgba(58, 95, 168, 0.10) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(58, 95, 168, 0.10) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 80%);
+    mask-image: radial-gradient(120% 90% at 50% 0%, #000 30%, transparent 80%);
+  }
+
+  /* ── Aurora light-leak ────────────────────────────────────────────────────
+     Slow, soft heritage-tone glows drifting behind dark feature bands. */
+  .aurora {
+    position: relative;
+    isolation: isolate;
+    /* Off-screen aurora bands skip rendering entirely, so their blurred,
+       infinitely-animating compositor layers cost nothing until scrolled into
+       view — the same "pause when off-screen" intent the hero canvas uses. Safe
+       because every .aurora container is overflow-hidden (the blurred pseudo-
+       elements never bleed out); the intrinsic-size hint avoids scroll jumps. */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 600px;
+  }
+  .aurora::before,
+  .aurora::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    border-radius: 9999px;
+    filter: blur(64px);
+    opacity: 0.5;
+  }
+  .aurora::before {
+    width: 42rem; height: 42rem;
+    top: -16rem; left: -10rem;
+    background: radial-gradient(circle, rgba(10, 49, 97, 0.6), transparent 65%);
+    animation: aurora-drift-a 22s ease-in-out infinite alternate;
+  }
+  .aurora::after {
+    width: 36rem; height: 36rem;
+    bottom: -18rem; right: -8rem;
+    background: radial-gradient(circle, rgba(156, 15, 38, 0.42), transparent 65%);
+    animation: aurora-drift-b 26s ease-in-out infinite alternate;
+  }
+  @keyframes aurora-drift-a {
+    0% { transform: translate3d(0, 0, 0) scale(1); }
+    100% { transform: translate3d(6%, 8%, 0) scale(1.12); }
+  }
+  @keyframes aurora-drift-b {
+    0% { transform: translate3d(0, 0, 0) scale(1.05); }
+    100% { transform: translate3d(-7%, -6%, 0) scale(1); }
+  }
+
+  /* ── Route enter ─────────────────────────────────────────────────────────
+     Each page settles in with a soft rise + clearing blur on navigation.
+     Replayed by remounting the wrapper (keyed on pathname). */
+  .route-enter {
+    animation: page-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  /* Opacity + transform only — both run on the compositor, so the settle stays
+     buttery even on very tall pages (a filter:blur here would force a costly
+     full-page offscreen buffer each navigation). */
+  @keyframes page-in {
+    0% { opacity: 0; transform: translate3d(0, 12px, 0); }
+    100% { opacity: 1; transform: translate3d(0, 0, 0); }
+  }
+
+  /* ── Skeleton shimmer ─────────────────────────────────────────────────────
+     For async content (iframes/embeds) so space is reserved and the wait
+     reads as intentional, not broken. */
+  .skeleton {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+    animation: skeleton-shimmer 1.6s infinite;
+  }
+  @keyframes skeleton-shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  /* ── Premium range slider (quote calculator) ──────────────────────────────
+     A brass-capped crimson thumb on a thin track — replaces the bare
+     accent-color input with something that reads designed. */
+  .range-pro {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      90deg,
+      theme('colors.flag.red') 0%,
+      theme('colors.flag.red') var(--range-fill, 50%),
+      rgba(255, 255, 255, 0.10) var(--range-fill, 50%),
+      rgba(255, 255, 255, 0.10) 100%
+    );
+    outline: none;
+    cursor: pointer;
+  }
+  .range-pro::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 22px;
+    width: 22px;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #f0d488 28%, theme('colors.brass.DEFAULT') 75%);
+    border: 2px solid theme('colors.flag.redDeep');
+    box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.7), 0 0 0 4px rgba(200, 16, 46, 0.18);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .range-pro::-webkit-slider-thumb:hover { transform: scale(1.08); }
+  .range-pro:active::-webkit-slider-thumb {
+    box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.7), 0 0 0 7px rgba(200, 16, 46, 0.24);
+  }
+  .range-pro::-moz-range-thumb {
+    height: 22px;
+    width: 22px;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #f0d488 28%, theme('colors.brass.DEFAULT') 75%);
+    border: 2px solid theme('colors.flag.redDeep');
+    box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.7), 0 0 0 4px rgba(200, 16, 46, 0.18);
+  }
+  .range-pro::-moz-range-track {
+    height: 6px;
+    border-radius: 9999px;
+    background: transparent;
   }
 }

@@ -9,6 +9,10 @@ type Props = {
   ariaLabel?: string;
   /** Use the wider container. */
   wide?: boolean;
+  /** Drifting heritage light-leaks behind the content. */
+  aurora?: boolean;
+  /** Faint architectural blueprint grid behind the content. */
+  blueprint?: boolean;
 };
 
 export default function Section({
@@ -18,6 +22,8 @@ export default function Section({
   id,
   ariaLabel,
   wide = false,
+  aurora = false,
+  blueprint = false,
 }: Props) {
   const toneClass =
     tone === 'elevated'
@@ -27,12 +33,20 @@ export default function Section({
         : tone === 'americana'
           ? 'relative overflow-hidden'
           : '';
+
+  const needsClip = tone === 'americana' || aurora || blueprint;
+
   return (
     <section
       id={id}
       aria-label={ariaLabel}
-      className={`relative py-20 sm:py-28 ${toneClass} ${className}`.trim()}
+      className={`relative py-20 sm:py-28 ${needsClip ? 'overflow-hidden' : ''} ${
+        aurora ? 'aurora' : ''
+      } ${toneClass} ${className}`.trim()}
     >
+      {blueprint && (
+        <div aria-hidden="true" className="blueprint-grid absolute inset-0 pointer-events-none" />
+      )}
       {tone === 'americana' && (
         <>
           <div

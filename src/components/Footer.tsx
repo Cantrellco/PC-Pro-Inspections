@@ -73,7 +73,7 @@ export default function Footer() {
               ['/contact', 'Contact'],
             ].map(([to, label]) => (
               <li key={to}>
-                <Link to={to} className="text-bone-muted hover:text-white transition-colors">
+                <Link to={to} className="link-underline text-bone-muted hover:text-white">
                   {label}
                 </Link>
               </li>
@@ -86,10 +86,10 @@ export default function Footer() {
         <div className="container-wide above-grain py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-bone-dim">
           <p>© {year} {c.legalName || c.businessName}. All rights reserved.</p>
           <div className="flex flex-wrap gap-5">
-            <Link to="/privacy" className="hover:text-white">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-white">Terms of Service</Link>
+            <Link to="/privacy" className="link-underline hover:text-white">Privacy Policy</Link>
+            <Link to="/terms" className="link-underline hover:text-white">Terms of Service</Link>
             {c.socials.map((s) => (
-              <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+              <a key={s.href} href={s.href} target="_blank" rel="noopener noreferrer" className="link-underline hover:text-white">
                 {s.label}
               </a>
             ))}

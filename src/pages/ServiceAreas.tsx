@@ -5,7 +5,9 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import Magnetic from '@/components/Magnetic';
 import Reveal from '@/components/Reveal';
+import CTABand from '@/components/CTABand';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
 
 export default function ServiceAreas() {
@@ -33,7 +35,7 @@ export default function ServiceAreas() {
             <ServiceAreaMap />
           </Reveal>
           <Reveal delay={80}>
-            <Card rim className="h-full">
+            <Card rim glow className="h-full">
               <h2 className="eyebrow mb-5">Towns &amp; Counties Served</h2>
               <ul className="grid grid-cols-2 gap-2.5">
                 {c.serviceAreaTowns.map((t) => (
@@ -50,28 +52,33 @@ export default function ServiceAreas() {
           </Reveal>
         </div>
 
-        <Card className="text-center">
-          <h3 className="font-display text-2xl text-white mb-2">
-            Don't see your town?
-          </h3>
-          <p className="text-bone-muted max-w-xl mx-auto mb-5">
-            We frequently inspect outside this list. Call us — if it is in
-            range, we will get you on the schedule.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
+      </Section>
+
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="Beyond the List"
+          title={
+            <>
+              Don't see your <span className="italic text-gradient-brass">town?</span>
+            </>
+          }
+          description="We frequently inspect outside this list. Call us — if it's in range, we'll get you on the schedule."
+        >
+          <Magnetic>
             <Button
               as="a"
               href={`tel:${c.phoneHref}`}
               onClick={() => track('tel_click', { location: 'service_areas_page' })}
+              className="!px-8 !py-4 !text-base"
             >
               Call {c.phone}
             </Button>
-            <Button as="link" to="/contact" variant="secondary">
-              Send a message
-            </Button>
-          </div>
-        </Card>
-      </Section>
+          </Magnetic>
+          <Button as="link" to="/contact" variant="secondary" className="!px-8 !py-4 !text-base">
+            Send a message
+          </Button>
+        </CTABand>
+      </div>
     </>
   );
 }

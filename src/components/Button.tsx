@@ -17,6 +17,8 @@ type CommonProps = {
 
 type ButtonAsButton = CommonProps & ButtonHTMLAttributes<HTMLButtonElement> & {
   as?: 'button';
+  /** Shows a spinner and blocks input during async work. */
+  loading?: boolean;
 };
 type ButtonAsLink = CommonProps & {
   as: 'link';
@@ -29,6 +31,26 @@ type ButtonAsAnchor = CommonProps &
   };
 
 type Props = ButtonAsButton | ButtonAsLink | ButtonAsAnchor;
+
+function Spinner() {
+  return (
+    <svg
+      className="h-4 w-4 animate-spin"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle className="opacity-25" cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" />
+      <path
+        className="opacity-90"
+        d="M21 12a9 9 0 0 0-9-9"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
 
 export default function Button(props: Props) {
   const variant = props.variant ?? 'primary';
@@ -49,9 +71,15 @@ export default function Button(props: Props) {
       </a>
     );
   }
-  const { as: _a, variant: _v, className: _c, children, ...rest } = props;
+  const { as: _a, variant: _v, className: _c, children, loading, disabled, ...rest } = props;
   return (
-    <button {...rest} className={cls}>
+    <button
+      {...rest}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      className={cls}
+    >
+      {loading && <Spinner />}
       {children}
     </button>
   );

@@ -1,9 +1,13 @@
 import { siteConfig } from '@/config/siteConfig';
+import { track } from '@/services/analytics';
 import { ADD_ONS, SQFT_TIERS } from '@/config/pricing';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
+import Button from '@/components/Button';
+import Magnetic from '@/components/Magnetic';
+import CTABand from '@/components/CTABand';
 import QuoteCalculator from '@/components/QuoteCalculator';
 
 const currency = new Intl.NumberFormat('en-US', {
@@ -58,7 +62,7 @@ export default function Services() {
         {/* Services list */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
           {SERVICES.map((s) => (
-            <Card key={s.title}>
+            <Card key={s.title} hover glow className="h-full">
               <h2 className="font-semibold text-lg text-white mb-1.5">
                 {s.title}
               </h2>
@@ -81,7 +85,7 @@ export default function Services() {
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {c.inspectionExpertise.map((area) => (
               <li key={area.label}>
-                <Card rim={area.specialty} className="h-full">
+                <Card rim={area.specialty} glow className="h-full">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="font-semibold text-white">{area.label}</h3>
                     {area.specialty && (
@@ -119,7 +123,7 @@ export default function Services() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-6">
-          <Card>
+          <Card glow>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
               Base pricing by sqft
             </h3>
@@ -137,7 +141,7 @@ export default function Services() {
               ))}
             </ul>
           </Card>
-          <Card>
+          <Card glow>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
               Extra services
             </h3>
@@ -162,6 +166,33 @@ export default function Services() {
           actual property and services chosen.
         </p>
       </Section>
+
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="Lock It In"
+          title={
+            <>
+              Like your number? <span className="italic text-gradient-brass">Book it.</span>
+            </>
+          }
+          description="Your quote carries straight over to scheduling — square footage, extras, and all."
+        >
+          <Magnetic>
+            <Button as="link" to="/book" className="!px-8 !py-4 !text-base">
+              Book Your Inspection
+            </Button>
+          </Magnetic>
+          <Button
+            as="a"
+            href={`tel:${c.phoneHref}`}
+            variant="secondary"
+            onClick={() => track('tel_click', { location: 'services_cta_band' })}
+            className="!px-8 !py-4 !text-base"
+          >
+            Call {c.phone}
+          </Button>
+        </CTABand>
+      </div>
     </>
   );
 }

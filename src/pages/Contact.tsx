@@ -29,13 +29,13 @@ export default function Contact() {
 
         <div className="grid lg:grid-cols-5 gap-8">
           {/* Form */}
-          <Card className="lg:col-span-3">
+          <Card glow className="lg:col-span-3">
             <ContactForm />
           </Card>
 
           {/* Sidebar */}
           <div className="lg:col-span-2 space-y-5">
-            <Card rim>
+            <Card rim glow>
               <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
                 Reach us directly
               </h2>
@@ -72,7 +72,7 @@ export default function Contact() {
               </ul>
             </Card>
 
-            <Card>
+            <Card glow>
               <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
                 Hours
               </h2>
@@ -90,7 +90,7 @@ export default function Contact() {
               </ul>
             </Card>
 
-            <Card>
+            <Card glow>
               <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
                 Our Response Promise
               </h2>

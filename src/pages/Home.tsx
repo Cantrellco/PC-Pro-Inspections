@@ -14,6 +14,8 @@ import TestimonialCarousel from '@/components/TestimonialCarousel';
 import WavingFlag from '@/components/WavingFlag';
 import ServiceAreaMap from '@/components/ServiceAreaMap';
 import CertStrip from '@/components/CertStrip';
+import CTABand from '@/components/CTABand';
+import FaqAccordion from '@/components/FaqAccordion';
 import {
   IconRoof, IconFoundation, IconPlumbing, IconElectrical, IconHvac,
   IconAttic, IconInterior, IconBasement, IconAddons, IconShield, IconClock, IconDoc, IconPhone,
@@ -71,10 +73,16 @@ export default function Home() {
 
         <div className="container-wide above-grain py-24 sm:py-28">
           <div className="max-w-3xl animate-fade-up">
-            <p className="eyebrow mb-6">{c.serviceAreaSummary}</p>
+            <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] py-1.5 pl-2.5 pr-4 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flag-redSoft opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-flag-red" />
+              </span>
+              Now booking across {c.serviceAreaSummary}
+            </p>
             <h1 className="display-1 text-white">
               Buy your home with{' '}
-              <span className="italic text-flag-redSoft">eyes wide open.</span>
+              <span className="italic text-gradient-flag">eyes wide open.</span>
             </h1>
             <p className="lede mt-6 max-w-2xl">
               {c.tagline} Same-day, photo-rich reports — walked through with you on
@@ -115,6 +123,17 @@ export default function Home() {
             </dl>
           </div>
         </div>
+
+        {/* Scroll cue */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-bone-dim motion-reduce:hidden sm:flex"
+        >
+          <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+          <span className="relative flex h-9 w-5 justify-center rounded-full border border-white/20">
+            <span className="mt-1.5 h-1.5 w-1 animate-bounce rounded-full bg-brass-soft" />
+          </span>
+        </div>
       </section>
 
       {/* ─── Trust / credentials strip ────────────────────────────────── */}
@@ -133,7 +152,7 @@ export default function Home() {
           </Reveal>
           <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
             <Reveal delay={60}>
-              <Card rim className="h-full">
+              <Card rim glow className="h-full">
                 <IconPhone className="h-7 w-7 text-flag-redSoft" />
                 <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
                   {c.responsePromise.callbackHours}
@@ -143,7 +162,7 @@ export default function Home() {
               </Card>
             </Reveal>
             <Reveal delay={140}>
-              <Card rim className="h-full">
+              <Card rim glow className="h-full">
                 <IconClock className="h-7 w-7 text-brass-soft" />
                 <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
                   {c.responsePromise.inspectionDays}
@@ -158,11 +177,16 @@ export default function Home() {
 
       {/* ─── What we inspect — services grid ──────────────────────────── */}
       <Section tone="elevated">
+        <SectionHeader
+          eyebrow="What We Inspect"
+          title="Every system, head to foundation."
+          description="One thorough visual inspection covers the whole house — and a roster of specialty certifications covers the rest."
+        />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SERVICES.map(([Icon, title, desc], i) => (
             <Reveal key={title} delay={(i % 3) * 70}>
-              <Card hover className="h-full">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-flag-navy/20 text-brass-soft">
+              <Card hover glow className="group h-full">
+                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-flag-navy/20 text-brass-soft transition-colors duration-300 group-hover:border-brass/40 group-hover:text-brass-soft">
                   <Icon className="h-5 w-5" />
                 </span>
                 <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
@@ -174,18 +198,25 @@ export default function Home() {
       </Section>
 
       {/* ─── Process timeline ─────────────────────────────────────────── */}
-      <Section>
+      <Section blueprint>
         <SectionHeader eyebrow="How It Works" title="Four steps, zero friction." />
-        <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <ol className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* Connector rail behind the cards (desktop) */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 right-0 top-[3.15rem] hidden h-px bg-gradient-to-r from-transparent via-brass/30 to-transparent lg:block"
+          />
           {PROCESS.map(([Icon, title, desc], i) => (
             <Reveal as="li" key={title} delay={i * 80} className="relative">
-              <Card className="h-full">
+              <Card glow className="h-full">
                 <div className="flex items-center gap-3">
-                  <span className="font-display text-2xl font-semibold text-flag-red">
+                  <span className="font-display text-3xl font-semibold text-gradient-flag leading-none">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className="flex-1 hairline" aria-hidden="true" />
-                  <Icon className="h-5 w-5 text-bone-dim" />
+                  <span className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-ink-100/70 text-bone-dim">
+                    <Icon className="h-4 w-4" />
+                  </span>
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
                 <p className="mt-2 text-sm text-bone-muted leading-relaxed">{desc}</p>
@@ -212,8 +243,12 @@ export default function Home() {
                 Give us a call.
               </a>
             </p>
-            <Link to="/service-areas" className="mt-6 inline-flex items-center gap-1.5 text-flag-redSoft font-semibold hover:gap-2.5 transition-all">
-              See all service areas <span aria-hidden="true">→</span>
+            <Link
+              to="/service-areas"
+              className="group mt-6 inline-flex items-center gap-1.5 font-semibold text-flag-redSoft"
+            >
+              <span className="link-underline">See all service areas</span>
+              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
             </Link>
           </Reveal>
           <Reveal delay={80}>
@@ -239,19 +274,40 @@ export default function Home() {
       {c.faqs.length > 0 && (
         <Section tone="elevated">
           <SectionHeader eyebrow="Common Questions" title="Answers, before you ask." />
-          <div className="max-w-3xl mx-auto divide-y divide-white/10 border-y border-white/10">
-            {c.faqs.map((f, i) => (
-              <details key={f.question} className="group" open={i === 0}>
-                <summary className="cursor-pointer list-none py-5 flex justify-between items-center gap-4 hover:text-white">
-                  <h3 className="font-display text-lg font-medium text-white">{f.question}</h3>
-                  <span aria-hidden="true" className="text-brass-soft text-2xl leading-none transition-transform duration-300 group-open:rotate-45">+</span>
-                </summary>
-                <div className="pb-6 -mt-1 text-bone-muted leading-relaxed max-w-2xl">{f.answer}</div>
-              </details>
-            ))}
-          </div>
+          <Reveal>
+            <FaqAccordion items={c.faqs} />
+          </Reveal>
         </Section>
       )}
+
+      {/* ─── Closing CTA ──────────────────────────────────────────────── */}
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="Ready When You Are"
+          title={
+            <>
+              Let's get you a real{' '}
+              <span className="italic text-gradient-brass">inspection.</span>
+            </>
+          }
+          description="Free quote in seconds. A callback within hours. A report you can actually act on."
+        >
+          <Magnetic>
+            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
+              Get a Free Quote
+            </Button>
+          </Magnetic>
+          <Button
+            as="a"
+            href={`tel:${c.phoneHref}`}
+            variant="secondary"
+            onClick={() => track('tel_click', { location: 'home_cta_band' })}
+            className="!px-8 !py-4 !text-base"
+          >
+            Call {c.phone}
+          </Button>
+        </CTABand>
+      </div>
     </>
   );
 }

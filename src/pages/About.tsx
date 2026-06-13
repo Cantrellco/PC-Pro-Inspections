@@ -1,13 +1,24 @@
 import { siteConfig } from '@/config/siteConfig';
+import { track } from '@/services/analytics';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import Magnetic from '@/components/Magnetic';
 import Photo from '@/components/Photo';
+import Reveal from '@/components/Reveal';
+import CountUp from '@/components/CountUp';
+import CTABand from '@/components/CTABand';
 
 export default function About() {
   const c = siteConfig;
+
+  const stats = [
+    { value: c.yearsInBusiness, suffix: '+', label: 'Years inspecting' },
+    { value: c.inspectionsCompleted, suffix: '+', label: 'Inspections completed' },
+    { value: c.certifications.length, suffix: '', label: 'Specialty certifications' },
+  ];
 
   return (
     <>
@@ -68,7 +79,11 @@ export default function About() {
 
           {/* Photo — framed with a restrained crimson hairline accent */}
           <div className="md:col-span-2">
-            <div className="relative">
+            <div className="group relative">
+              <div
+                aria-hidden="true"
+                className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+              />
               <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
                 <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
                 <Photo
@@ -87,6 +102,22 @@ export default function About() {
                 via siteConfig.images.inspector. Your own photo beats stock on a
                 trust-based service. */}
           </div>
+        </div>
+
+        {/* Credentials at a glance */}
+        <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {stats.map((s, i) => (
+            <Reveal key={s.label} delay={i * 90}>
+              <Card rim glow className="h-full text-center sm:text-left">
+                <p className="font-display text-5xl font-semibold leading-none text-white">
+                  <CountUp value={s.value} suffix={s.suffix} />
+                </p>
+                <p className="mt-3 text-sm uppercase tracking-[0.16em] text-bone-dim">
+                  {s.label}
+                </p>
+              </Card>
+            </Reveal>
+          ))}
         </div>
       </Section>
 
@@ -115,7 +146,7 @@ export default function About() {
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {c.certifications.map((cert) => (
             <li key={cert.name}>
-              <Card rim className="h-full">
+              <Card rim glow hover className="h-full">
                 <div className="flex items-start gap-4">
                   {cert.badgeSrc ? (
                     <img
@@ -150,6 +181,33 @@ export default function About() {
           ))}
         </ul>
       </Section>
+
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="Work With Us"
+          title={
+            <>
+              The same care, on <span className="italic text-gradient-brass">your</span> home.
+            </>
+          }
+          description="See transparent pricing, or reach out and we'll take it from there."
+        >
+          <Magnetic>
+            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
+              See pricing
+            </Button>
+          </Magnetic>
+          <Button
+            as="a"
+            href={`tel:${c.phoneHref}`}
+            variant="secondary"
+            onClick={() => track('tel_click', { location: 'about_cta_band' })}
+            className="!px-8 !py-4 !text-base"
+          >
+            Call {c.phone}
+          </Button>
+        </CTABand>
+      </div>
     </>
   );
 }

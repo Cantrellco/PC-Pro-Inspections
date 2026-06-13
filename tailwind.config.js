@@ -51,9 +51,12 @@ export default {
         lift: '0 1px 0 rgba(255,255,255,0.07) inset, 0 28px 60px -20px rgba(0,0,0,0.75)',
         red: '0 10px 30px -10px rgba(200,16,46,0.55)',
         brass: '0 0 0 1px rgba(201,162,39,0.35)',
+        glow: '0 0 44px -10px rgba(224,196,105,0.4)',
+        deep: '0 40px 80px -24px rgba(0,0,0,0.85)',
       },
       transitionTimingFunction: {
         smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
         'fade-up': {

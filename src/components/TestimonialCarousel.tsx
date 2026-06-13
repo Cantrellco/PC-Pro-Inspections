@@ -49,8 +49,8 @@ export default function TestimonialCarousel({ items, interval = 6000 }: Props) {
       aria-label="Client testimonials"
     >
       <div className="card card-rim p-8 sm:p-12 text-center min-h-[18rem] flex flex-col items-center justify-center">
-        <span aria-hidden="true" className="font-display text-7xl leading-none text-brass/40 mb-2">“</span>
-        <div key={index} className="animate-fade-in">
+        <span aria-hidden="true" className="font-display text-7xl leading-none text-gradient-brass mb-2">“</span>
+        <div key={index} className="animate-fade-up">
           <StarRating rating={t.rating} className="justify-center mb-5" />
           <blockquote className="font-display text-xl sm:text-2xl text-bone leading-relaxed">
             {t.quote}

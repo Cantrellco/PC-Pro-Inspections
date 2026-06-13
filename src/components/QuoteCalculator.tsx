@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ADD_ONS,
@@ -50,6 +50,9 @@ export default function QuoteCalculator() {
     () => calculateQuote({ sqft, addOnIds: selectedAddOns }),
     [sqft, selectedAddOns],
   );
+
+  // Fill percentage drives the slider's gradient track (see .range-pro).
+  const rangeFill = ((sqft - SQFT_MIN) / (SQFT_MAX - SQFT_MIN)) * 100;
 
   // Debounced "quote_calculated" event
   useEffect(() => {
@@ -139,14 +142,15 @@ export default function QuoteCalculator() {
   return (
     <div className="grid lg:grid-cols-5 gap-6">
       {/* Left: inputs */}
-      <Card className="lg:col-span-3 space-y-7">
+      <Card glow className="lg:col-span-3 space-y-8">
         <div>
-          <div className="flex items-baseline justify-between mb-2">
+          <div className="flex items-baseline justify-between mb-3">
             <label htmlFor="sqft" className="field-label !mb-0">
               Square footage
             </label>
-            <span className="text-white font-semibold text-lg">
-              {sqft.toLocaleString()} sqft
+            <span className="font-display text-2xl font-semibold text-white">
+              {sqft.toLocaleString()}
+              <span className="ml-1 text-sm font-sans font-normal text-bone-dim">sqft</span>
             </span>
           </div>
           <input
@@ -157,12 +161,17 @@ export default function QuoteCalculator() {
             step={SQFT_STEP}
             value={sqft}
             onChange={(e) => setSqft(Number(e.target.value))}
-            className="w-full accent-flag-red"
+            className="range-pro"
+            style={{ '--range-fill': `${rangeFill}%` } as CSSProperties}
             aria-describedby="sqft-tier"
           />
-          <p id="sqft-tier" className="mt-1 text-xs text-bone-dim">
-            Tier: <span className="text-bone-muted">{quote.tier.label}</span>
-          </p>
+          <div className="mt-2 flex items-center justify-between text-xs text-bone-dim">
+            <span>{SQFT_MIN.toLocaleString()} sqft</span>
+            <span id="sqft-tier">
+              Tier: <span className="font-medium text-brass-soft">{quote.tier.label}</span>
+            </span>
+            <span>{SQFT_MAX.toLocaleString()}+ sqft</span>
+          </div>
         </div>
 
         <fieldset>
@@ -173,29 +182,41 @@ export default function QuoteCalculator() {
               return (
                 <li key={a.id}>
                   <label
-                    className={`flex gap-3 cursor-pointer rounded-md border p-3 transition-colors ${
+                    className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
                       checked
-                        ? 'border-flag-redSoft bg-flag-red/10'
-                        : 'border-white/10 bg-ink-100/60 hover:border-white/20'
+                        ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
+                        : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
                     }`}
                   >
                     <input
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleAddOn(a.id)}
-                      className="mt-1 accent-flag-red"
+                      className="peer sr-only"
                       aria-describedby={`addon-${a.id}-desc`}
                     />
+                    <span
+                      aria-hidden="true"
+                      className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
+                        checked
+                          ? 'border-flag-red bg-flag-red text-white'
+                          : 'border-white/25 text-transparent'
+                      }`}
+                    >
+                      <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
                     <span className="flex-1">
                       <span className="flex items-baseline justify-between gap-2">
                         <span className="font-semibold text-white">{a.label}</span>
-                        <span className="text-flag-redSoft font-semibold whitespace-nowrap">
+                        <span className="font-semibold whitespace-nowrap text-flag-redSoft">
                           +{currency.format(a.price)}
                         </span>
                       </span>
                       <span
                         id={`addon-${a.id}-desc`}
-                        className="block text-xs text-bone-muted mt-1"
+                        className="mt-1 block text-xs leading-relaxed text-bone-muted"
                       >
                         {a.description}
                       </span>
@@ -208,35 +229,36 @@ export default function QuoteCalculator() {
         </fieldset>
       </Card>
 
-      {/* Right: itemized breakdown */}
-      <Card rim className="lg:col-span-2 flex flex-col gap-5">
+      {/* Right: itemized breakdown (sticky on desktop) */}
+      <Card rim className="lg:col-span-2 flex flex-col gap-5 lg:sticky lg:top-28 lg:self-start">
         <div>
-          <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-bone-muted">
             Your Estimate
           </h3>
           <ul className="space-y-2.5 text-sm">
             <li className="flex justify-between gap-3">
               <span className="text-bone">{quote.baseLineItem.label}</span>
-              <span className="text-white font-semibold whitespace-nowrap">
+              <span className="font-semibold whitespace-nowrap text-white">
                 {currency.format(quote.baseLineItem.amount)}
               </span>
             </li>
             {quote.addOnLineItems.map((li) => (
-              <li key={li.id} className="flex justify-between gap-3 animate-fade-up">
+              <li key={li.id} className="flex animate-fade-up justify-between gap-3">
                 <span className="text-bone">{li.label}</span>
-                <span className="text-white font-semibold whitespace-nowrap">
+                <span className="font-semibold whitespace-nowrap text-white">
                   +{currency.format(li.amount)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="border-t border-white/10 mt-4 pt-4 flex items-baseline justify-between">
-            <span className="text-bone-muted text-sm uppercase tracking-wider">
+          <div className="mt-4 flex items-baseline justify-between border-t border-white/10 pt-4">
+            <span className="text-sm uppercase tracking-wider text-bone-muted">
               Estimated Total
             </span>
             <span
-              className="text-4xl font-bold text-white font-display"
+              className="font-display text-4xl font-bold text-gradient-brass"
               aria-live="polite"
+              aria-label={`Estimated total ${currency.format(quote.total)}`}
             >
               {currency.format(quote.total)}
             </span>
@@ -246,7 +268,7 @@ export default function QuoteCalculator() {
           Estimate only — final price confirmed at scheduling.
         </p>
 
-        <div className="grid sm:grid-cols-2 gap-3">
+        <div className="grid gap-3 sm:grid-cols-2">
           <Button onClick={goToBooking} className="!py-3">
             Book This Inspection
           </Button>
@@ -264,14 +286,11 @@ export default function QuoteCalculator() {
 
       {/* Lead form */}
       {formOpen && (
-        <Card
-          rim
-          className="lg:col-span-5 animate-fade-up"
-        >
-          <h3 className="font-display text-2xl text-white mb-1">
+        <Card rim className="animate-fade-up lg:col-span-5">
+          <h3 className="mb-1 font-display text-2xl text-white">
             Send us this quote
           </h3>
-          <p className="text-bone-muted mb-6">
+          <p className="mb-6 text-bone-muted">
             We will confirm scheduling and answer any questions within a few
             business hours.
           </p>
@@ -281,7 +300,7 @@ export default function QuoteCalculator() {
               role="status"
               className="rounded-md border border-flag-navyLight/40 bg-flag-navy/15 p-5 text-bone"
             >
-              <p className="font-semibold text-white mb-1">
+              <p className="mb-1 font-semibold text-white">
                 Thanks — we got it.
               </p>
               <p className="text-sm text-bone-muted">
@@ -294,7 +313,7 @@ export default function QuoteCalculator() {
               id="quote-request-form"
               onSubmit={handleSubmit}
               noValidate
-              className="grid sm:grid-cols-2 gap-5"
+              className="grid gap-5 sm:grid-cols-2"
             >
               <Field
                 id="qf-name"
@@ -346,14 +365,14 @@ export default function QuoteCalculator() {
               {submitError && (
                 <div
                   role="alert"
-                  className="sm:col-span-2 rounded-md border border-flag-redSoft/40 bg-flag-red/10 p-4 text-sm text-bone"
+                  className="rounded-md border border-flag-redSoft/40 bg-flag-red/10 p-4 text-sm text-bone sm:col-span-2"
                 >
                   {submitError}
                 </div>
               )}
 
-              <div className="sm:col-span-2 flex items-center justify-end">
-                <Button type="submit" disabled={submitting}>
+              <div className="flex items-center justify-end sm:col-span-2">
+                <Button type="submit" loading={submitting}>
                   {submitting ? 'Sending…' : 'Send My Quote Request'}
                 </Button>
               </div>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { findAddOn } from '@/config/pricing';
@@ -21,6 +21,7 @@ export default function BookNow() {
   const c = siteConfig;
   const booking = getBookingConfig();
   const [params] = useSearchParams();
+  const [embedLoaded, setEmbedLoaded] = useState(false);
 
   const handoff = useMemo(() => {
     const sqftRaw = params.get('sqft');
@@ -66,7 +67,7 @@ export default function BookNow() {
 
         {/* Hand-off summary */}
         {handoff.hasAny && (
-          <Card rim className="mb-8">
+          <Card rim glow className="mb-8">
             <p className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-2">
               We have your quote ready
             </p>
@@ -110,20 +111,25 @@ export default function BookNow() {
         {booking.configured ? (
           // ─── Configured: render the scheduler embed ──────────────────
           <Card className="!p-2 sm:!p-3">
-            <div className="rounded-md overflow-hidden border border-white/10 bg-ink-200">
+            <div
+              className={`rounded-md overflow-hidden border border-white/10 bg-ink-200 ${
+                embedLoaded ? '' : 'skeleton'
+              }`}
+            >
               <iframe
                 src={embedUrl}
                 title={`${c.businessName} online booking`}
-                className="w-full"
+                className="relative z-10 w-full"
                 style={{ minHeight: '720px', border: 0 }}
                 loading="lazy"
+                onLoad={() => setEmbedLoaded(true)}
                 allow="payment; geolocation; camera"
               />
             </div>
           </Card>
         ) : (
           // ─── Not configured: graceful fallback ───────────────────────
-          <Card rim>
+          <Card rim glow>
             <div className="max-w-2xl mx-auto text-center py-6">
               <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-flag-navy/30 border border-flag-navyLight/40 text-flag-redSoft mb-5">
                 <svg

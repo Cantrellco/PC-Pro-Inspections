@@ -8,6 +8,7 @@ import StarRating from '@/components/StarRating';
 import Reveal from '@/components/Reveal';
 import GoogleReviewsSummary from '@/components/GoogleReviewsSummary';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
+import CTABand from '@/components/CTABand';
 
 export default function Reviews() {
   const c = siteConfig;
@@ -54,7 +55,7 @@ export default function Reviews() {
             <ul className="grid md:grid-cols-2 gap-5">
               {c.testimonials.map((t, i) => (
                 <Reveal as="li" key={t.name} delay={(i % 2) * 80}>
-                  <Card className="h-full">
+                  <Card glow hover className="h-full">
                     <StarRating rating={t.rating} />
                     <blockquote className="mt-4 text-bone leading-relaxed">{t.quote}</blockquote>
                     <footer className="mt-5 pt-5 border-t border-white/10 text-sm">
@@ -68,17 +69,34 @@ export default function Reviews() {
           </>
         )}
 
-        <div className="mt-16 text-center">
-          <p className="text-bone-muted mb-5">
-            Worked with us? A quick Google review is the single biggest way to help.
-          </p>
-          {c.googleReviews.placeUrl && (
-            <Button as="a" href={c.googleReviews.placeUrl} target="_blank" rel="noopener noreferrer">
-              Leave a Google review
+      </Section>
+
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="Help the Next Buyer"
+          title={
+            <>
+              Worked with us? <span className="italic text-gradient-brass">Say so.</span>
+            </>
+          }
+          description="A quick Google review is the single biggest way to help — and it takes a minute."
+        >
+          {c.googleReviews.placeUrl ? (
+            <>
+              <Button as="a" href={c.googleReviews.placeUrl} target="_blank" rel="noopener noreferrer" className="!px-8 !py-4 !text-base">
+                Leave a Google review
+              </Button>
+              <Button as="link" to="/book" variant="secondary" className="!px-8 !py-4 !text-base">
+                Book an inspection
+              </Button>
+            </>
+          ) : (
+            <Button as="link" to="/book" className="!px-8 !py-4 !text-base">
+              Book an inspection
             </Button>
           )}
-        </div>
-      </Section>
+        </CTABand>
+      </div>
     </>
   );
 }

@@ -4,6 +4,9 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
+import Magnetic from '@/components/Magnetic';
+import CTABand from '@/components/CTABand';
+import { track } from '@/services/analytics';
 import SampleReportShowcase from '@/components/SampleReportShowcase';
 
 const SAMPLE_REPORT_PATH = '/sample-report.pdf';
@@ -33,7 +36,7 @@ export default function Resources() {
 
       <Section>
         {/* Sample Report */}
-        <Card rim className="mb-12">
+        <Card rim glow className="mb-12">
           <div className="flex flex-col md:flex-row items-start gap-6">
             <div className="flex-shrink-0 h-28 w-20 rounded border border-white/10 bg-gradient-to-br from-flag-navy/30 to-ink-200 flex items-center justify-center text-flag-redSoft">
               <svg
@@ -102,7 +105,7 @@ export default function Resources() {
           <ul className="md:col-span-2 space-y-4">
             {c.prepGuide.map((s) => (
               <li key={s.heading}>
-                <Card>
+                <Card glow hover>
                   <h3 className="text-lg font-semibold text-white mb-2">
                     {s.heading}
                   </h3>
@@ -113,6 +116,33 @@ export default function Resources() {
           </ul>
         </div>
       </Section>
+
+      <div className="pb-20 sm:pb-28">
+        <CTABand
+          eyebrow="When You're Ready"
+          title={
+            <>
+              Know what to expect? <span className="italic text-gradient-brass">Let's schedule.</span>
+            </>
+          }
+          description="Get a free quote in seconds, or call and we'll find you a slot."
+        >
+          <Magnetic>
+            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
+              Get a Free Quote
+            </Button>
+          </Magnetic>
+          <Button
+            as="a"
+            href={`tel:${c.phoneHref}`}
+            variant="secondary"
+            onClick={() => track('tel_click', { location: 'resources_cta_band' })}
+            className="!px-8 !py-4 !text-base"
+          >
+            Call {c.phone}
+          </Button>
+        </CTABand>
+      </div>
     </>
   );
 }
