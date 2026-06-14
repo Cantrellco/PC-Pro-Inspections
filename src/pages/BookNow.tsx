@@ -5,6 +5,7 @@ import { findAddOn } from '@/config/pricing';
 import { getBookingConfig } from '@/services/booking';
 import { track } from '@/services/analytics';
 import { formatTime } from '@/lib/time';
+import type { PropertyType } from '@/types';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
@@ -27,25 +28,34 @@ export default function BookNow() {
     const sqftRaw = params.get('sqft');
     const estimateRaw = params.get('estimate');
     const addonsRaw = params.get('addons') ?? '';
+    const typeRaw = params.get('type');
+    const oldRaw = params.get('old');
 
     const sqft = sqftRaw ? Number(sqftRaw) : undefined;
     const estimate = estimateRaw ? Number(estimateRaw) : undefined;
     const addOnIds = addonsRaw ? addonsRaw.split(',').filter(Boolean) : [];
+    const propertyType: PropertyType =
+      typeRaw === 'commercial' ? 'commercial' : 'residential';
+    const builtBefore1940 = oldRaw === '1';
 
     return {
+      propertyType,
+      builtBefore1940,
       sqft: Number.isFinite(sqft) ? sqft : undefined,
       estimate: Number.isFinite(estimate) ? estimate : undefined,
       addOnIds,
       addOnLabels: addOnIds.map((id) => findAddOn(id)?.label).filter(Boolean) as string[],
-      hasAny: Boolean(sqftRaw || estimateRaw || addonsRaw),
+      hasAny: Boolean(sqftRaw || estimateRaw || addonsRaw || typeRaw),
     };
   }, [params]);
 
   const embedUrl = booking.configured
     ? booking.prefillUrl({
+        propertyType: handoff.propertyType,
         sqft: handoff.sqft,
         addOnIds: handoff.addOnIds,
         estimate: handoff.estimate,
+        builtBefore1940: handoff.builtBefore1940,
       })
     : '';
 
@@ -72,6 +82,12 @@ export default function BookNow() {
               We have your quote ready
             </p>
             <ul className="grid sm:grid-cols-3 gap-4 text-sm">
+              <li>
+                <span className="block text-bone-dim text-xs uppercase tracking-wider">
+                  Property type
+                </span>
+                <span className="text-white capitalize">{handoff.propertyType}</span>
+              </li>
               {handoff.sqft !== undefined && (
                 <li>
                   <span className="block text-bone-dim text-xs uppercase tracking-wider">
@@ -82,12 +98,17 @@ export default function BookNow() {
                   </span>
                 </li>
               )}
-              {handoff.addOnLabels.length > 0 && (
+              {(handoff.addOnLabels.length > 0 || handoff.builtBefore1940) && (
                 <li>
                   <span className="block text-bone-dim text-xs uppercase tracking-wider">
                     Extra services
                   </span>
-                  <span className="text-white">{handoff.addOnLabels.join(', ')}</span>
+                  <span className="text-white">
+                    {[
+                      ...(handoff.builtBefore1940 ? ['Pre-1940 home'] : []),
+                      ...handoff.addOnLabels,
+                    ].join(', ')}
+                  </span>
                 </li>
               )}
               {handoff.estimate !== undefined && (

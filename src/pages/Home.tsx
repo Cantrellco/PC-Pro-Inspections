@@ -36,7 +36,7 @@ const SERVICES = [
 const PROCESS = [
   [IconDoc, 'Get a quote', 'Use the live calculator or call. We confirm availability fast — usually same day.'],
   [IconClock, 'Book your slot', 'Online or by phone. We coordinate with your agent and the seller for you.'],
-  [IconShield, 'On-site walkthrough', 'Two to three hours. Join us for the last 45 minutes — we tour the home together.'],
+  [IconShield, 'On-site walkthrough', 'A few hours, depending on size. Join us for the last 45 minutes — we tour the home together.'],
   [IconDoc, 'Same-day report', 'A photo-rich digital report with a prioritized summary, typically that evening.'],
 ] as const;
 

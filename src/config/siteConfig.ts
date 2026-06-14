@@ -70,10 +70,12 @@ export const siteConfig: SiteConfig = {
   ],
 
   // ─── Map ───────────────────────────────────────────────────────────────
-  // Keyless OpenStreetMap embed centered on Fairfield, IL. To swap: open
-  // Google Maps → Share → "Embed a map" → copy the iframe `src` here.
-  mapEmbedSrc:
-    'https://www.openstreetmap.org/export/embed.html?bbox=-89.7%2C37.6%2C-87.2%2C39.0&layer=mapnik&marker=38.3786%2C-88.3595',
+  // Leave blank: the site renders a reliable, keyless dark-tile locator map
+  // centered on `geo` above (CARTO basemap — paints correctly on the dark
+  // theme, unlike OpenStreetMap's `export/embed.html` iframe, whose tiles go
+  // black when framed). To override with a different provider, paste an iframe
+  // `src` here — e.g. Google Maps → Share → "Embed a map".
+  mapEmbedSrc: '',
 
   // ─── Hours ───────────────────────────────────────────────────────────────
   hours: [
@@ -152,7 +154,7 @@ export const siteConfig: SiteConfig = {
     { label: 'Plumbing', blurb: 'Supply lines, drains, fixtures, water heater, and visible leaks.' },
     { label: 'Decks', blurb: 'Ledger attachment, framing, fasteners, railings, and stair safety.' },
     { label: 'Attic', blurb: 'Insulation depth, ventilation, framing, and moisture or pest indicators.' },
-    { label: 'Crawl Spaces', blurb: 'Structure, vapor barriers, moisture, drainage, and pest activity.' },
+    { label: 'Crawl Spaces', blurb: 'Structure, vapor barriers, moisture, drainage, and pest activity — reached by our robotic crawler when access is tight or unsafe.' },
     { label: 'Moisture Intrusion', blurb: 'Meter and infrared scanning for hidden leaks and damp.' },
     { label: 'Pools & Spas', blurb: 'Equipment, finish, decking, bonding, and safety features.', specialty: true },
     { label: 'Mold', blurb: 'Visual assessment with optional accredited-lab air sampling.', specialty: true },
@@ -162,42 +164,85 @@ export const siteConfig: SiteConfig = {
     { label: 'Mobile Homes', blurb: 'Single- and double-wide setup, blocking, and connected systems.', specialty: true },
   ],
 
+  // ─── Featured Equipment ──────────────────────────────────────────────────
+  // Showcased on the About page. Remove this block (or leave it off) and the
+  // section hides itself. Image lives at public/equipment/.
+  equipment: {
+    eyebrow: 'The Technology',
+    name: 'Wombat Inspection Crawler',
+    maker: 'UplinkRobotics',
+    productUrl: 'https://uplinkroboticsstore.com/products/wombat-inspection-crawler',
+    image: '/equipment/wombat-crawler.jpg',
+    imageAlt:
+      'The Wombat robotic inspection crawler — an all-terrain camera robot used to inspect crawl spaces',
+    headline: 'Some crawl spaces are too tight to enter. We send in a robot.',
+    body:
+      'Crawl spaces are where the costliest problems hide — moisture, rot, failing piers, pest damage — and they are often too low, too wet, or too unsafe to fully reach. So we deploy the Wombat: a rugged, remote-controlled inspection crawler that goes where a person cannot, streaming sharp, well-lit video of every inch beneath your home. Nothing gets skipped just because it was hard to get to.',
+    features: [
+      {
+        label: '4K-capable camera',
+        detail:
+          'A gimbal-stabilized Sony camera streams crisp, live video of joists, piers, ducts, and vapor barriers.',
+      },
+      {
+        label: '1,000+ lumens of light',
+        detail:
+          'Bright, dimmable LEDs turn the darkest crawl space into daylight, so nothing hides in the shadows.',
+      },
+      {
+        label: 'Goes anywhere',
+        detail:
+          'All-terrain tires crawl over debris, mud, and standing water — and keep driving even when flipped.',
+      },
+      {
+        label: 'Documented for your report',
+        detail:
+          'Findings are captured as photos and video on the spot — proof you can see, not just our word for it.',
+      },
+    ],
+  },
+
   // ─── Testimonials ────────────────────────────────────────────────────────
   testimonials: [
-    // TODO: owner to fill with real testimonials (with permission).
+    // Real verified reviews (Spectora). Add new ones here as they come in.
     {
-      name: 'Sarah K.',
-      town: 'Fairfield',
+      name: 'Larry B.',
+      role: 'Client',
       quote:
-        'We had two other inspectors quote us, but the depth of detail in this report was on another level. Caught a roof issue our agent missed. Saved us $8K.',
+        'Great, thorough job! Explained everything well and was very courteous. We will gladly recommend your service to anyone needing or wanting a home inspection.',
       rating: 5,
     },
     {
-      name: 'Marcus T.',
-      town: 'Mount Vernon',
+      name: 'Melissa J.',
+      role: 'Real estate agent',
       quote:
-        'Showed up on time, walked us through every finding on-site, then delivered the report the same evening with clear photos. First-time buyers — felt completely supported.',
+        'Love working with Paul! He answers his phone and communicates well with the buyers and the agents!',
       rating: 5,
     },
     {
-      name: 'Priya & Dev R.',
-      town: 'Olney',
+      name: 'Cody H.',
+      role: 'Client',
       quote:
-        'Professional, calm, and honest — even when telling us things we did not want to hear. Exactly who you want in your corner on a major purchase.',
+        'Extremely thorough! Answered all of our questions and explained everything to us. Highly recommend PC Pro to anybody looking for their new home!',
       rating: 5,
     },
     {
-      name: 'Bill & Donna H.',
-      town: 'Flora',
+      name: 'Missy W.',
+      role: 'Client',
       quote:
-        'Forty years in our last house and we still learned things on the walkthrough. The maintenance summary alone was worth it. Highly recommend to anyone in the area.',
+        'Paul was great and very thorough and explained everything to us.',
       rating: 5,
     },
     {
-      name: 'Jordan M.',
-      town: 'Carmi',
-      quote:
-        'As a realtor I send every client here. Thorough, fair, and the reports never blow up a deal unnecessarily — just the facts, clearly explained.',
+      name: 'Jakob & Bailey S.',
+      role: 'Client',
+      quote: 'Very detailed and well put together.',
+      rating: 5,
+    },
+    {
+      name: 'Sandy S.',
+      role: 'Client',
+      quote: 'Clearly explained what he observed and the condition of the property.',
       rating: 5,
     },
   ],
@@ -207,12 +252,12 @@ export const siteConfig: SiteConfig = {
     {
       question: 'How much does a home inspection cost?',
       answer:
-        'Pricing is driven by square footage, with optional extra services like mold, sewer scope, pool/spa, and termite. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
+        'Residential pricing is a flat rate set by the home’s square footage, with an optional termite inspection and a small surcharge for homes built before 1940. Commercial buildings are priced per square foot. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
     },
     {
       question: 'How long does an inspection take?',
       answer:
-        'Most single-family homes take two to three hours on-site. You are welcome to attend — we encourage it, especially for first-time buyers, so we can walk you through findings in person.',
+        'On-site time scales with the property — roughly 2.5 hours for a smaller home up to 6 hours for a large one, and longer for commercial buildings. You are welcome to attend — we encourage it, especially for first-time buyers, so we can walk you through findings in person.',
     },
     {
       question: 'What is included in a standard inspection?',
@@ -222,7 +267,7 @@ export const siteConfig: SiteConfig = {
     {
       question: 'Do I need mold testing?',
       answer:
-        'Mold testing is recommended when there is visible growth, a moisture history, or symptoms in occupants. It pairs naturally with thermal-imaging and moisture scanning, which are part of how we find hidden damp in the first place. It is a quick extra service at the time of inspection.',
+        'Mold testing is recommended when there is visible growth, a moisture history, or symptoms in occupants. It pairs naturally with the thermal-imaging and moisture scanning that are part of how we find hidden damp in the first place. Mold assessment is available as a separate service — just ask us for a quote.',
     },
     {
       question: 'How soon can I get on the schedule?',
@@ -256,7 +301,7 @@ export const siteConfig: SiteConfig = {
     },
     {
       heading: 'On the Day',
-      body: 'Plan two to three hours for a typical single-family home. We start with the roof and exterior, then work inside top-to-bottom. The full digital report — with photos and a priority summary — is typically delivered the same evening.',
+      body: 'Plan roughly 2.5 to 6 hours depending on the size of the home. We start with the roof and exterior, then work inside top-to-bottom. The full digital report — with photos and a priority summary — is typically delivered the same evening.',
     },
   ],
 

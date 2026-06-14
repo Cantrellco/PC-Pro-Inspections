@@ -34,7 +34,7 @@ export default function Contact() {
           </Card>
 
           {/* Sidebar */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 flex flex-col gap-5">
             <Card rim glow>
               <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
                 Reach us directly
@@ -106,7 +106,9 @@ export default function Contact() {
               </p>
             </Card>
 
-            <ServiceAreaMap className="!min-h-[16rem]" />
+            {/* Fills the remaining sidebar height so it bottom-aligns with the
+                form; min-height keeps it tidy when the column is short. */}
+            <ServiceAreaMap className="flex-1 !h-auto !min-h-[16rem]" />
           </div>
         </div>
       </Section>

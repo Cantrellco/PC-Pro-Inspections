@@ -57,7 +57,7 @@ export default function TestimonialCarousel({ items, interval = 6000 }: Props) {
           </blockquote>
           <footer className="mt-6 text-sm">
             <span className="text-white font-semibold">{t.name}</span>
-            <span className="text-bone-dim"> · {t.town}</span>
+            <span className="text-bone-dim"> · {t.role}</span>
           </footer>
         </div>
       </div>

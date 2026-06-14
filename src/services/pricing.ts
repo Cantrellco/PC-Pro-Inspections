@@ -1,18 +1,39 @@
 import {
   ADD_ONS,
+  COMMERCIAL_TIERS,
+  OLD_HOME_SURCHARGE,
   SQFT_TIERS,
   findAddOn,
 } from '@/config/pricing';
-import type { QuoteInputs, QuoteResult, SqftTier } from '@/types';
+import type {
+  CommercialTier,
+  QuoteInputs,
+  QuoteLineItem,
+  QuoteResult,
+  SqftTier,
+} from '@/types';
 
-const resolveTier = (sqft: number): SqftTier => {
+const resolveResidentialTier = (sqft: number): SqftTier => {
   const found = SQFT_TIERS.find(
     (t) => sqft >= t.min && (t.max === null || sqft <= t.max),
   );
-  if (found) return found;
-  // Fallback: smallest tier if sqft below 0 (defensive).
-  return SQFT_TIERS[0];
+  // Fallback: smallest tier if sqft below the first tier (defensive).
+  return found ?? SQFT_TIERS[0];
 };
+
+const resolveCommercialTier = (sqft: number): CommercialTier => {
+  const found = COMMERCIAL_TIERS.find(
+    (t) => sqft >= t.min && (t.max === null || sqft <= t.max),
+  );
+  return found ?? COMMERCIAL_TIERS[0];
+};
+
+/** Display a per-sqft rate as "$0.15" / "$0.20" / "$0.225". */
+export function formatPricePerSqft(rate: number): string {
+  const trimmed = rate.toFixed(3).replace(/0+$/, '').replace(/\.$/, '');
+  const [int, dec = ''] = trimmed.split('.');
+  return `$${int}.${dec.padEnd(2, '0')}`;
+}
 
 /**
  * Pure function. Given inputs, returns the full quote breakdown.
@@ -21,13 +42,28 @@ const resolveTier = (sqft: number): SqftTier => {
  * server endpoint later by changing only this function's body.
  */
 export function calculateQuote(inputs: QuoteInputs): QuoteResult {
-  const tier = resolveTier(inputs.sqft);
+  return inputs.propertyType === 'commercial'
+    ? commercialQuote(inputs)
+    : residentialQuote(inputs);
+}
 
-  const baseLineItem = {
+function residentialQuote(inputs: QuoteInputs): QuoteResult {
+  const tier = resolveResidentialTier(inputs.sqft);
+
+  const baseLineItem: QuoteLineItem = {
     id: 'base',
-    label: `Base inspection — ${tier.label}`,
+    label: `Residential inspection — ${tier.label}`,
     amount: tier.price,
   };
+
+  const modifierLineItems: QuoteLineItem[] = [];
+  if (inputs.builtBefore1940) {
+    modifierLineItems.push({
+      id: OLD_HOME_SURCHARGE.id,
+      label: OLD_HOME_SURCHARGE.label,
+      amount: OLD_HOME_SURCHARGE.price,
+    });
+  }
 
   const addOnLineItems = inputs.addOnIds
     .map((id) => findAddOn(id))
@@ -36,14 +72,40 @@ export function calculateQuote(inputs: QuoteInputs): QuoteResult {
 
   const total =
     baseLineItem.amount +
+    modifierLineItems.reduce((sum, li) => sum + li.amount, 0) +
     addOnLineItems.reduce((sum, li) => sum + li.amount, 0);
 
   return {
     inputs,
     tier,
     baseLineItem,
+    modifierLineItems,
     addOnLineItems,
     total,
+    durationLabel: tier.durationLabel,
+  };
+}
+
+function commercialQuote(inputs: QuoteInputs): QuoteResult {
+  const tier = resolveCommercialTier(inputs.sqft);
+  const amount = Math.round(inputs.sqft * tier.pricePerSqft);
+
+  const baseLineItem: QuoteLineItem = {
+    id: 'base',
+    label: `Commercial — ${inputs.sqft.toLocaleString()} sqft @ ${formatPricePerSqft(
+      tier.pricePerSqft,
+    )}/sqft`,
+    amount,
+  };
+
+  return {
+    inputs,
+    tier,
+    baseLineItem,
+    modifierLineItems: [],
+    addOnLineItems: [],
+    total: amount,
+    durationLabel: tier.durationLabel,
   };
 }
 

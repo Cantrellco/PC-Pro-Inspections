@@ -1,6 +1,13 @@
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
-import { ADD_ONS, SQFT_TIERS } from '@/config/pricing';
+import {
+  ADD_ONS,
+  COMMERCIAL_TIERS,
+  OLD_HOME_SURCHARGE,
+  PRICING_NOTE,
+  SQFT_TIERS,
+} from '@/config/pricing';
+import { formatPricePerSqft } from '@/services/pricing';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
@@ -122,10 +129,10 @@ export default function Services() {
           </svg>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card glow>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
-              Base pricing by sqft
+              Residential — base by sqft
             </h3>
             <ul className="space-y-2 text-sm">
               {SQFT_TIERS.map((t) => (
@@ -133,26 +140,62 @@ export default function Services() {
                   key={t.label}
                   className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
                 >
-                  <span className="text-bone">{t.label}</span>
-                  <span className="text-white font-semibold">
+                  <span className="text-bone">
+                    {t.label}
+                    {t.durationLabel && (
+                      <span className="block text-xs text-bone-dim">{t.durationLabel} on-site</span>
+                    )}
+                  </span>
+                  <span className="text-white font-semibold whitespace-nowrap">
                     {currency.format(t.price)}
                   </span>
                 </li>
               ))}
             </ul>
           </Card>
+
           <Card glow>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
-              Extra services
+              Commercial — per sqft
             </h3>
             <ul className="space-y-2 text-sm">
+              {COMMERCIAL_TIERS.map((t) => (
+                <li
+                  key={t.label}
+                  className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
+                >
+                  <span className="text-bone">
+                    {t.label}
+                    {t.durationLabel && (
+                      <span className="block text-xs text-bone-dim">{t.durationLabel} on-site</span>
+                    )}
+                  </span>
+                  <span className="text-white font-semibold whitespace-nowrap">
+                    {formatPricePerSqft(t.pricePerSqft)}/sqft
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
+          <Card glow>
+            <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
+              Extra services & modifiers
+            </h3>
+            <ul className="space-y-2 text-sm">
+              <li className="flex justify-between gap-3 border-b border-white/5 pb-2">
+                <span className="text-bone">{OLD_HOME_SURCHARGE.label}</span>
+                <span className="text-flag-redSoft font-semibold whitespace-nowrap">
+                  +{currency.format(OLD_HOME_SURCHARGE.price)}
+                </span>
+              </li>
               {ADD_ONS.map((a) => (
                 <li
                   key={a.id}
                   className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
                 >
                   <span className="text-bone">{a.label}</span>
-                  <span className="text-flag-redSoft font-semibold">
+                  <span className="text-flag-redSoft font-semibold whitespace-nowrap">
                     +{currency.format(a.price)}
                   </span>
                 </li>
@@ -162,8 +205,8 @@ export default function Services() {
         </div>
 
         <p className="mt-6 text-xs text-bone-dim text-center">
-          Estimate only — final price confirmed at scheduling based on the
-          actual property and services chosen.
+          {PRICING_NOTE} Estimate only — final price confirmed at scheduling
+          based on the actual property and services chosen.
         </p>
       </Section>
 

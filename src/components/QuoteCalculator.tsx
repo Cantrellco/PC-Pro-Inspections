@@ -2,7 +2,13 @@ import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ADD_ONS,
+  COMMERCIAL_SQFT_MAX,
+  COMMERCIAL_SQFT_MIN,
+  COMMERCIAL_SQFT_STEP,
+  DEFAULT_COMMERCIAL_SQFT,
   DEFAULT_SQFT,
+  OLD_HOME_SURCHARGE,
+  PRICING_NOTE,
   SQFT_MAX,
   SQFT_MIN,
   SQFT_STEP,
@@ -13,7 +19,7 @@ import { track } from '@/services/analytics';
 import Card from './Card';
 import Field from './Field';
 import Button from './Button';
-import type { LeadPayload, QuoteResult } from '@/types';
+import type { LeadPayload, PropertyType, QuoteResult } from '@/types';
 
 const currency = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -39,32 +45,61 @@ const initialForm: FormState = {
   message: '',
 };
 
+const PROPERTY_TYPES: { id: PropertyType; label: string }[] = [
+  { id: 'residential', label: 'Residential' },
+  { id: 'commercial', label: 'Commercial' },
+];
+
 export default function QuoteCalculator() {
   const navigate = useNavigate();
 
   // ─── Calculator state ──────────────────────────────────────────────────
+  const [propertyType, setPropertyType] = useState<PropertyType>('residential');
   const [sqft, setSqft] = useState<number>(DEFAULT_SQFT);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
+  const [builtBefore1940, setBuiltBefore1940] = useState(false);
+
+  const isCommercial = propertyType === 'commercial';
+  const sliderMin = isCommercial ? COMMERCIAL_SQFT_MIN : SQFT_MIN;
+  const sliderMax = isCommercial ? COMMERCIAL_SQFT_MAX : SQFT_MAX;
+  const sliderStep = isCommercial ? COMMERCIAL_SQFT_STEP : SQFT_STEP;
 
   const quote: QuoteResult = useMemo(
-    () => calculateQuote({ sqft, addOnIds: selectedAddOns }),
-    [sqft, selectedAddOns],
+    () =>
+      calculateQuote({
+        propertyType,
+        sqft,
+        addOnIds: isCommercial ? [] : selectedAddOns,
+        builtBefore1940: isCommercial ? false : builtBefore1940,
+      }),
+    [propertyType, sqft, selectedAddOns, builtBefore1940, isCommercial],
   );
 
   // Fill percentage drives the slider's gradient track (see .range-pro).
-  const rangeFill = ((sqft - SQFT_MIN) / (SQFT_MAX - SQFT_MIN)) * 100;
+  const rangeFill = ((sqft - sliderMin) / (sliderMax - sliderMin)) * 100;
+
+  // Switching property type resets sqft to that mode's sensible default.
+  const switchType = (t: PropertyType) => {
+    if (t === propertyType) return;
+    setPropertyType(t);
+    setSqft(t === 'commercial' ? DEFAULT_COMMERCIAL_SQFT : DEFAULT_SQFT);
+  };
 
   // Debounced "quote_calculated" event
   useEffect(() => {
     const id = window.setTimeout(() => {
       track('quote_calculated', {
+        propertyType,
         sqft,
-        addons: selectedAddOns.join(',') || 'none',
+        addons:
+          propertyType === 'commercial'
+            ? 'none'
+            : selectedAddOns.join(',') || 'none',
         total: quote.total,
       });
     }, 600);
     return () => window.clearTimeout(id);
-  }, [sqft, selectedAddOns, quote.total]);
+  }, [propertyType, sqft, selectedAddOns, quote.total]);
 
   // ─── Lead form state ──────────────────────────────────────────────────
   const [form, setForm] = useState<FormState>(initialForm);
@@ -129,11 +164,15 @@ export default function QuoteCalculator() {
   const goToBooking = () => {
     track('book_now_click', { location: 'calculator' });
     const params = new URLSearchParams({
+      type: propertyType,
       sqft: String(sqft),
       estimate: String(quote.total),
     });
-    if (selectedAddOns.length > 0) {
+    if (!isCommercial && selectedAddOns.length > 0) {
       params.set('addons', selectedAddOns.join(','));
+    }
+    if (!isCommercial && builtBefore1940) {
+      params.set('old', '1');
     }
     navigate(`/book?${params.toString()}`);
   };
@@ -143,6 +182,37 @@ export default function QuoteCalculator() {
     <div className="grid lg:grid-cols-5 gap-6">
       {/* Left: inputs */}
       <Card glow className="lg:col-span-3 space-y-8">
+        {/* Property type toggle */}
+        <div>
+          <span className="field-label">Property type</span>
+          <div
+            role="radiogroup"
+            aria-label="Property type"
+            className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-ink-100/60 p-1.5"
+          >
+            {PROPERTY_TYPES.map((pt) => {
+              const active = pt.id === propertyType;
+              return (
+                <button
+                  key={pt.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => switchType(pt.id)}
+                  className={`rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flag-redSoft focus-visible:ring-offset-2 focus-visible:ring-offset-ink ${
+                    active
+                      ? 'bg-flag-red text-white shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]'
+                      : 'text-bone-muted hover:text-white'
+                  }`}
+                >
+                  {pt.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Square footage slider */}
         <div>
           <div className="flex items-baseline justify-between mb-3">
             <label htmlFor="sqft" className="field-label !mb-0">
@@ -156,9 +226,9 @@ export default function QuoteCalculator() {
           <input
             id="sqft"
             type="range"
-            min={SQFT_MIN}
-            max={SQFT_MAX}
-            step={SQFT_STEP}
+            min={sliderMin}
+            max={sliderMax}
+            step={sliderStep}
             value={sqft}
             onChange={(e) => setSqft(Number(e.target.value))}
             className="range-pro"
@@ -166,67 +236,127 @@ export default function QuoteCalculator() {
             aria-describedby="sqft-tier"
           />
           <div className="mt-2 flex items-center justify-between text-xs text-bone-dim">
-            <span>{SQFT_MIN.toLocaleString()} sqft</span>
+            <span>{sliderMin.toLocaleString()} sqft</span>
             <span id="sqft-tier">
               Tier: <span className="font-medium text-brass-soft">{quote.tier.label}</span>
+              {quote.durationLabel && (
+                <span className="text-bone-dim"> · {quote.durationLabel} on-site</span>
+              )}
             </span>
-            <span>{SQFT_MAX.toLocaleString()}+ sqft</span>
+            <span>{sliderMax.toLocaleString()}+ sqft</span>
           </div>
         </div>
 
-        <fieldset>
-          <legend className="field-label">Optional extra services</legend>
-          <ul className="grid sm:grid-cols-2 gap-2.5">
-            {ADD_ONS.map((a) => {
-              const checked = selectedAddOns.includes(a.id);
-              return (
-                <li key={a.id}>
-                  <label
-                    className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
-                      checked
-                        ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
-                        : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
-                    }`}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      onChange={() => toggleAddOn(a.id)}
-                      className="peer sr-only"
-                      aria-describedby={`addon-${a.id}-desc`}
-                    />
-                    <span
-                      aria-hidden="true"
-                      className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
-                        checked
-                          ? 'border-flag-red bg-flag-red text-white'
-                          : 'border-white/25 text-transparent'
-                      }`}
-                    >
-                      <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+        {/* Residential-only inputs */}
+        {!isCommercial && (
+          <>
+            {/* Older-home surcharge */}
+            <div>
+              <span className="field-label">Home age</span>
+              <label
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+                  builtBefore1940
+                    ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
+                    : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={builtBefore1940}
+                  onChange={(e) => setBuiltBefore1940(e.target.checked)}
+                  className="peer sr-only"
+                  aria-describedby="old-home-desc"
+                />
+                <span
+                  aria-hidden="true"
+                  className={`grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
+                    builtBefore1940
+                      ? 'border-flag-red bg-flag-red text-white'
+                      : 'border-white/25 text-transparent'
+                  }`}
+                >
+                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="flex flex-1 items-baseline justify-between gap-2">
+                  <span>
+                    <span className="font-semibold text-white">Built before 1940</span>
+                    <span id="old-home-desc" className="mt-0.5 block text-xs text-bone-muted">
+                      Older homes take extra time and care to inspect thoroughly.
                     </span>
-                    <span className="flex-1">
-                      <span className="flex items-baseline justify-between gap-2">
-                        <span className="font-semibold text-white">{a.label}</span>
-                        <span className="font-semibold whitespace-nowrap text-flag-redSoft">
-                          +{currency.format(a.price)}
-                        </span>
-                      </span>
-                      <span
-                        id={`addon-${a.id}-desc`}
-                        className="mt-1 block text-xs leading-relaxed text-bone-muted"
+                  </span>
+                  <span className="font-semibold whitespace-nowrap text-flag-redSoft">
+                    +{currency.format(OLD_HOME_SURCHARGE.price)}
+                  </span>
+                </span>
+              </label>
+            </div>
+
+            {/* Optional add-ons */}
+            <fieldset>
+              <legend className="field-label">Optional extra services</legend>
+              <ul className="grid sm:grid-cols-2 gap-2.5">
+                {ADD_ONS.map((a) => {
+                  const checked = selectedAddOns.includes(a.id);
+                  return (
+                    <li key={a.id}>
+                      <label
+                        className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+                          checked
+                            ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
+                            : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
+                        }`}
                       >
-                        {a.description}
-                      </span>
-                    </span>
-                  </label>
-                </li>
-              );
-            })}
-          </ul>
-        </fieldset>
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggleAddOn(a.id)}
+                          className="peer sr-only"
+                          aria-describedby={`addon-${a.id}-desc`}
+                        />
+                        <span
+                          aria-hidden="true"
+                          className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
+                            checked
+                              ? 'border-flag-red bg-flag-red text-white'
+                              : 'border-white/25 text-transparent'
+                          }`}
+                        >
+                          <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                        <span className="flex-1">
+                          <span className="flex items-baseline justify-between gap-2">
+                            <span className="font-semibold text-white">{a.label}</span>
+                            <span className="font-semibold whitespace-nowrap text-flag-redSoft">
+                              +{currency.format(a.price)}
+                            </span>
+                          </span>
+                          <span
+                            id={`addon-${a.id}-desc`}
+                            className="mt-1 block text-xs leading-relaxed text-bone-muted"
+                          >
+                            {a.description}
+                          </span>
+                        </span>
+                      </label>
+                    </li>
+                  );
+                })}
+              </ul>
+            </fieldset>
+          </>
+        )}
+
+        {isCommercial && (
+          <p className="rounded-xl border border-white/10 bg-ink-100/60 p-3.5 text-xs leading-relaxed text-bone-muted">
+            Commercial inspections are priced per square foot and scale with the
+            building. For multi-structure properties or specialty add-ons, call
+            us for a tailored quote.
+          </p>
+        )}
       </Card>
 
       {/* Right: itemized breakdown (sticky on desktop) */}
@@ -242,6 +372,14 @@ export default function QuoteCalculator() {
                 {currency.format(quote.baseLineItem.amount)}
               </span>
             </li>
+            {quote.modifierLineItems.map((li) => (
+              <li key={li.id} className="flex animate-fade-up justify-between gap-3">
+                <span className="text-bone">{li.label}</span>
+                <span className="font-semibold whitespace-nowrap text-white">
+                  +{currency.format(li.amount)}
+                </span>
+              </li>
+            ))}
             {quote.addOnLineItems.map((li) => (
               <li key={li.id} className="flex animate-fade-up justify-between gap-3">
                 <span className="text-bone">{li.label}</span>
@@ -263,9 +401,15 @@ export default function QuoteCalculator() {
               {currency.format(quote.total)}
             </span>
           </div>
+          {quote.durationLabel && (
+            <div className="mt-2 flex items-center justify-between text-xs text-bone-dim">
+              <span>Estimated on-site time</span>
+              <span className="font-medium text-bone">{quote.durationLabel}</span>
+            </div>
+          )}
         </div>
         <p className="text-xs text-bone-dim">
-          Estimate only — final price confirmed at scheduling.
+          Estimate only — final price confirmed at scheduling. {PRICING_NOTE}
         </p>
 
         <div className="grid gap-3 sm:grid-cols-2">

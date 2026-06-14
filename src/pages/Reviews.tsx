@@ -60,7 +60,7 @@ export default function Reviews() {
                     <blockquote className="mt-4 text-bone leading-relaxed">{t.quote}</blockquote>
                     <footer className="mt-5 pt-5 border-t border-white/10 text-sm">
                       <span className="text-white font-semibold">{t.name}</span>
-                      <span className="text-bone-dim"> · {t.town}</span>
+                      <span className="text-bone-dim"> · {t.role}</span>
                     </footer>
                   </Card>
                 </Reveal>

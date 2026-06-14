@@ -13,11 +13,12 @@ import CTABand from '@/components/CTABand';
 
 export default function About() {
   const c = siteConfig;
+  const eq = c.equipment;
 
-  const stats = [
-    { value: c.yearsInBusiness, suffix: '+', label: 'Years inspecting' },
-    { value: c.inspectionsCompleted, suffix: '+', label: 'Inspections completed' },
-    { value: c.certifications.length, suffix: '', label: 'Specialty certifications' },
+  const stats: { value?: number; suffix?: string; text?: string; label: string }[] = [
+    { value: 1600, suffix: '+', label: 'Point inspection' },
+    { text: 'Same-Day', label: 'Reports' },
+    { value: 14, label: 'Areas of expertise' },
   ];
 
   return (
@@ -110,7 +111,7 @@ export default function About() {
             <Reveal key={s.label} delay={i * 90}>
               <Card rim glow className="h-full text-center sm:text-left">
                 <p className="font-display text-5xl font-semibold leading-none text-white">
-                  <CountUp value={s.value} suffix={s.suffix} />
+                  {s.text ? s.text : <CountUp value={s.value ?? 0} suffix={s.suffix} />}
                 </p>
                 <p className="mt-3 text-sm uppercase tracking-[0.16em] text-bone-dim">
                   {s.label}
@@ -121,8 +122,115 @@ export default function About() {
         </div>
       </Section>
 
+      {/* Featured equipment — robotic crawl-space crawler */}
+      {eq && (
+        <Section tone="elevated">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+            {/* Product image — dark-framed studio plate; a vignette melts the
+                light studio backdrop into the frame so it reads on the dark theme. */}
+            <Reveal>
+              <figure className="group relative">
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+                />
+                <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
+                  <div
+                    aria-hidden="true"
+                    className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent"
+                  />
+                  <div className="relative aspect-square overflow-hidden rounded-xl">
+                    <img
+                      src={eq.image}
+                      alt={eq.imageAlt}
+                      width={1182}
+                      height={1117}
+                      loading="lazy"
+                      decoding="async"
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          'radial-gradient(115% 100% at 50% 42%, transparent 36%, rgba(8,11,18,0.80) 100%)',
+                      }}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-gradient-to-br from-flag-navy/15 via-transparent to-flag-red/10 mix-blend-soft-light"
+                    />
+                  </div>
+                </div>
+                <figcaption className="mt-4 text-sm italic text-bone-dim">
+                  The {eq.name} — built by {eq.maker}.
+                </figcaption>
+              </figure>
+            </Reveal>
+
+            {/* Copy + capabilities */}
+            <div>
+              <p className="eyebrow mb-3">{eq.eyebrow}</p>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold text-white leading-[1.1] mb-5">
+                {eq.headline}
+              </h2>
+              <p className="text-bone-muted text-lg leading-relaxed mb-8">
+                {eq.body}
+              </p>
+
+              <ul className="space-y-4">
+                {eq.features.map((f) => (
+                  <li key={f.label} className="flex items-start gap-3.5">
+                    <span
+                      aria-hidden="true"
+                      className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-brass-deep/40 bg-flag-navy/20 text-flag-redSoft"
+                    >
+                      <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor">
+                        <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
+                      </svg>
+                    </span>
+                    <span className="leading-relaxed">
+                      <span className="font-semibold text-white">{f.label}</span>
+                      <span className="text-bone-muted"> — {f.detail}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              {eq.productUrl && (
+                <p className="mt-8 text-sm text-bone-dim">
+                  <a
+                    href={eq.productUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 border-b border-transparent text-bone-muted transition-colors hover:border-flag-red/60 hover:text-white"
+                  >
+                    See the {eq.name} by {eq.maker}
+                    <svg
+                      viewBox="0 0 20 20"
+                      className="h-3.5 w-3.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.6"
+                      aria-hidden="true"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M7 13l6-6m0 0H8m5 0v5"
+                      />
+                    </svg>
+                  </a>
+                </p>
+              )}
+            </div>
+          </div>
+        </Section>
+      )}
+
       {/* Mission */}
-      <Section tone="elevated">
+      <Section>
         <div className="max-w-3xl mx-auto text-center">
           <p className="eyebrow mb-3">Our Mission</p>
           <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-5">

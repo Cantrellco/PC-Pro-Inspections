@@ -46,11 +46,17 @@ function buildPrefillUrl(baseUrl: string, params: BookingPrefillParams): string 
     return baseUrl;
   }
 
+  if (params.propertyType) {
+    url.searchParams.set('type', params.propertyType);
+  }
   if (typeof params.sqft === 'number') {
     url.searchParams.set('sqft', String(params.sqft));
   }
   if (params.addOnIds && params.addOnIds.length > 0) {
     url.searchParams.set('addons', params.addOnIds.join(','));
+  }
+  if (params.builtBefore1940) {
+    url.searchParams.set('old', '1');
   }
   if (typeof params.estimate === 'number') {
     url.searchParams.set('estimate', String(params.estimate));

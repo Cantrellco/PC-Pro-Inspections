@@ -20,9 +20,41 @@ export type ExpertiseArea = {
   specialty?: boolean;
 };
 
+export type EquipmentFeature = {
+  /** Short capability label, e.g. "4K-capable camera". */
+  label: string;
+  /** One-line benefit explaining why it matters. */
+  detail: string;
+};
+
+/**
+ * A featured piece of specialty equipment (e.g. a robotic crawler) shown in a
+ * showcase block. Optional on SiteConfig — the section hides itself when unset.
+ */
+export type EquipmentShowcase = {
+  /** Small label above the headline, e.g. "The Technology". */
+  eyebrow: string;
+  /** Product name, e.g. "Wombat Inspection Crawler". */
+  name: string;
+  /** Manufacturer name, e.g. "UplinkRobotics". */
+  maker: string;
+  /** Link to the product/maker page; opens in a new tab. Optional. */
+  productUrl?: string;
+  /** Image path under /public, e.g. "/equipment/wombat-crawler.jpg". */
+  image: string;
+  imageAlt: string;
+  /** Section headline. */
+  headline: string;
+  /** Supporting paragraph. */
+  body: string;
+  /** Key capability bullets. */
+  features: EquipmentFeature[];
+};
+
 export type Testimonial = {
   name: string;
-  town: string;
+  /** Secondary attribution shown after the name (e.g. role or town). */
+  role: string;
   quote: string;
   rating: 1 | 2 | 3 | 4 | 5;
 };
@@ -106,6 +138,8 @@ export type SiteConfig = {
   certifications: Certification[];
   /** Full scope of what the inspector covers — drives the "Areas of Expertise" grid. */
   inspectionExpertise: ExpertiseArea[];
+  /** Featured specialty equipment showcase (About page). Optional — hides when unset. */
+  equipment?: EquipmentShowcase;
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];
@@ -131,19 +165,40 @@ export type AddOn = {
   price: number;
 };
 
+/** Residential vs. commercial — the two pricing models on the price sheet. */
+export type PropertyType = 'residential' | 'commercial';
+
 export type SqftTier = {
   /** Inclusive lower bound (sqft). */
   min: number;
   /** Inclusive upper bound, or null for "and up". */
   max: number | null;
-  /** Base price USD. */
+  /** Base price USD (flat, residential). */
   price: number;
   label: string;
+  /** Approximate on-site time, e.g. "~4 hrs" or "7+ hrs". */
+  durationLabel?: string;
+};
+
+/** Commercial tier — priced PER SQUARE FOOT (base = sqft × pricePerSqft). */
+export type CommercialTier = {
+  /** Inclusive lower bound (sqft). */
+  min: number;
+  /** Inclusive upper bound, or null for "and up". */
+  max: number | null;
+  /** Price per square foot USD. */
+  pricePerSqft: number;
+  label: string;
+  /** Approximate on-site time, e.g. "~4 hrs" or "9+ hrs". */
+  durationLabel?: string;
 };
 
 export type QuoteInputs = {
+  propertyType: PropertyType;
   sqft: number;
   addOnIds: string[];
+  /** Residential only — applies the pre-1940 surcharge when true. */
+  builtBefore1940?: boolean;
 };
 
 export type QuoteLineItem = {
@@ -154,10 +209,14 @@ export type QuoteLineItem = {
 
 export type QuoteResult = {
   inputs: QuoteInputs;
-  tier: SqftTier;
+  tier: SqftTier | CommercialTier;
   baseLineItem: QuoteLineItem;
+  /** Price modifiers (e.g. pre-1940 surcharge). Separate from optional add-ons. */
+  modifierLineItems: QuoteLineItem[];
   addOnLineItems: QuoteLineItem[];
   total: number;
+  /** Approximate on-site time for the resolved tier. */
+  durationLabel?: string;
 };
 
 export type LeadSource = 'contact_form' | 'quote_form';
@@ -187,7 +246,10 @@ export type BookingConfig = {
 };
 
 export type BookingPrefillParams = {
+  propertyType?: PropertyType;
   sqft?: number;
   addOnIds?: string[];
   estimate?: number;
+  /** Residential only — pre-1940 surcharge was applied. */
+  builtBefore1940?: boolean;
 };
