@@ -1,6 +1,25 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
 
 /**
+ * Platform-aware command-key glyph. Apple devices use ⌘; everyone else (the
+ * majority of this site's audience — Windows/Android) uses Ctrl. Showing a Mac
+ * ⌘ to a Windows user reads as broken, so we detect once at load. The keyboard
+ * handler in Nav listens for both metaKey and ctrlKey, so the binding works
+ * regardless of which glyph we display.
+ */
+const IS_APPLE =
+  typeof navigator !== 'undefined' &&
+  // Prefer the stable userAgent over the deprecated navigator.platform; fall
+  // back to platform for the rare engine that trims the UA. (iPadOS 13+ reports
+  // "Macintosh" → matches Mac → ⌘, which is correct for an iPad with a keyboard.)
+  /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent || navigator.platform || '');
+
+/** What to render on a keycap: '⌘' on Apple, 'Ctrl' elsewhere. */
+export const MOD_KEY = IS_APPLE ? '⌘' : 'Ctrl';
+/** Spoken/aria form of the modifier, for accessible labels. */
+export const MOD_KEY_LABEL = IS_APPLE ? 'Command' : 'Control';
+
+/**
  * Live `prefers-reduced-motion` flag. Used to fully *skip* JS-driven animation
  * (the sliding indicator measure/tween, magnetic transforms), not just hide it —
  * CSS `transition-none` alone can't stop a running rAF loop.

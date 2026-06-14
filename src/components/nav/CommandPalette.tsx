@@ -3,13 +3,13 @@ import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
-import { NAV_ITEMS, EXTRA_PAGES } from './navItems';
+import { COMMAND_PAGES } from './navItems';
 import { useBodyScrollLock, useFocusTrap, useInertBackground } from './hooks';
-import { ArrowIcon, CornerReturnIcon, PhoneIcon, SearchIcon } from './icons';
+import { ArrowIcon, CloseIcon, CornerReturnIcon, PhoneIcon, SearchIcon } from './icons';
 
 type Command = {
   id: string;
-  group: 'Quick actions' | 'Go to';
+  group: 'Quick actions' | 'Pages';
   label: string;
   hint?: string;
   keywords?: string;
@@ -60,13 +60,6 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
         },
       },
       {
-        id: 'act-quote',
-        group: 'Quick actions',
-        label: 'Get a free quote',
-        keywords: 'price estimate cost calculator',
-        perform: go('/services'),
-      },
-      {
         id: 'act-email',
         group: 'Quick actions',
         label: 'Email us',
@@ -79,11 +72,11 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
         },
       },
     ];
-    const pages: Command[] = [...NAV_ITEMS, ...EXTRA_PAGES].map((p) => ({
-      id: `go-${p.to}-${p.label}`,
-      group: 'Go to' as const,
+    const pages: Command[] = COMMAND_PAGES.map((p) => ({
+      id: `go-${p.to}`,
+      group: 'Pages' as const,
       label: p.label,
-      keywords: 'keywords' in p ? p.keywords : undefined,
+      keywords: p.keywords,
       icon: 'arrow' as const,
       perform: go(p.to),
     }));
@@ -164,7 +157,7 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
 
       {/* Centering wrapper (flex, not transform) so the entrance animation can't
           fight the positioning. Side gutters fall through to the backdrop. */}
-      <div className="pointer-events-none absolute inset-x-0 top-[12vh] flex justify-center px-4">
+      <div className="pointer-events-none absolute inset-x-0 top-[7vh] flex justify-center px-4 sm:top-[12vh]">
       <div
         ref={dialogRef}
         role="dialog"
@@ -191,14 +184,32 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
-            placeholder="Search pages, or jump to an action…"
+            placeholder="Search pages and actions…"
             className="w-full bg-transparent py-4 text-[15px] text-bone outline-none placeholder:text-bone-dim"
             autoComplete="off"
             spellCheck={false}
           />
-          <kbd className="hidden shrink-0 rounded border border-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-bone-dim sm:block">
-            ESC
-          </kbd>
+          {query ? (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => {
+                setQuery('');
+                setActive(0);
+                inputRef.current?.focus();
+              }}
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-bone-dim transition-colors hover:bg-white/10 hover:text-white"
+            >
+              <CloseIcon className="h-4 w-4" />
+            </button>
+          ) : (
+            <kbd
+              aria-hidden="true"
+              className="hidden shrink-0 rounded border border-white/15 px-1.5 py-0.5 text-[10px] font-semibold text-bone-dim sm:block"
+            >
+              ESC
+            </kbd>
+          )}
         </div>
 
         {/* Results */}
@@ -273,7 +284,7 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
 
 function KbdKeys({ keys }: { keys: string[] }) {
   return (
-    <span className="inline-flex gap-1">
+    <span aria-hidden="true" className="inline-flex gap-1">
       {keys.map((k) => (
         <kbd key={k} className="rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 font-sans text-[10px] leading-none text-bone-muted">
           {k}

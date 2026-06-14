@@ -6,7 +6,7 @@ import Logo from './Logo';
 import MobileMenu from './nav/MobileMenu';
 import CommandPalette from './nav/CommandPalette';
 import { NAV_ITEMS, type NavItem } from './nav/navItems';
-import { useMagnetic, useReducedMotion } from './nav/hooks';
+import { useMagnetic, useReducedMotion, MOD_KEY, MOD_KEY_LABEL } from './nav/hooks';
 import { MenuIcon, PhoneIcon, SearchIcon } from './nav/icons';
 
 export default function Nav() {
@@ -111,19 +111,40 @@ export default function Nav() {
             <NavRail />
 
             {/* Actions */}
-            <div className="relative flex shrink-0 items-center gap-1.5 sm:gap-2">
-              {/* Command palette trigger (desktop) */}
+            <div className="relative flex shrink-0 items-center gap-2">
+              {/* Command palette trigger — a full labelled search field with a
+                  platform-aware keyboard hint (⌘ on Mac, Ctrl elsewhere, so it
+                  never shows a Mac key to a Windows visitor). Reserved for xl,
+                  where the rail + phone number + CTA leave room for it without
+                  crowding; narrower viewports use the compact icon below. */}
               <button
                 type="button"
                 onClick={openPalette}
-                aria-label="Open quick search (Command-K)"
-                className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] py-2 pl-3 pr-2 text-[13px] text-bone-muted transition-colors hover:border-white/20 hover:text-white lg:inline-flex"
+                aria-label={`Open search (${MOD_KEY_LABEL}-K)`}
+                className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] py-2 pl-3.5 pr-2 text-[13px] text-bone-muted transition-colors hover:border-white/20 hover:bg-white/[0.05] hover:text-white xl:inline-flex"
               >
-                <SearchIcon className="h-4 w-4" />
-                <span className="hidden xl:inline">Search</span>
-                <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-bone-dim">
-                  ⌘K
-                </kbd>
+                <SearchIcon className="h-4 w-4 text-bone-dim" />
+                <span>Search</span>
+                <span className="ml-1 inline-flex items-center gap-1" aria-hidden="true">
+                  <kbd className="inline-block min-w-[1.4rem] rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-center text-[10px] font-semibold leading-none text-bone-muted">
+                    {MOD_KEY}
+                  </kbd>
+                  <kbd className="rounded border border-white/15 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-semibold leading-none text-bone-muted">
+                    K
+                  </kbd>
+                </span>
+              </button>
+
+              {/* Compact search trigger (everything below xl) — same circular
+                  language as the phone link and hamburger, so the palette is
+                  reachable on touch and on tighter laptop widths alike. */}
+              <button
+                type="button"
+                onClick={openPalette}
+                aria-label="Open search"
+                className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-bone transition-colors hover:bg-white/[0.07] hover:text-white xl:hidden"
+              >
+                <SearchIcon className="h-5 w-5" />
               </button>
 
               {/* Phone (desktop) */}
