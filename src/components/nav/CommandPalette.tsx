@@ -185,7 +185,7 @@ export default function CommandPalette({ open, onClose }: { open: boolean; onClo
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onInputKeyDown}
             placeholder="Search pages and actions…"
-            className="w-full bg-transparent py-4 text-[15px] text-bone outline-none placeholder:text-bone-dim"
+            className="w-full bg-transparent py-4 text-[15px] text-bone outline-none placeholder:text-bone-dim focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
             autoComplete="off"
             spellCheck={false}
           />
