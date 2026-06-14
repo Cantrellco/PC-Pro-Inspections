@@ -29,18 +29,15 @@ export default function BookNow() {
     const estimateRaw = params.get('estimate');
     const addonsRaw = params.get('addons') ?? '';
     const typeRaw = params.get('type');
-    const oldRaw = params.get('old');
 
     const sqft = sqftRaw ? Number(sqftRaw) : undefined;
     const estimate = estimateRaw ? Number(estimateRaw) : undefined;
     const addOnIds = addonsRaw ? addonsRaw.split(',').filter(Boolean) : [];
     const propertyType: PropertyType =
       typeRaw === 'commercial' ? 'commercial' : 'residential';
-    const builtBefore1940 = oldRaw === '1';
 
     return {
       propertyType,
-      builtBefore1940,
       sqft: Number.isFinite(sqft) ? sqft : undefined,
       estimate: Number.isFinite(estimate) ? estimate : undefined,
       addOnIds,
@@ -55,7 +52,6 @@ export default function BookNow() {
         sqft: handoff.sqft,
         addOnIds: handoff.addOnIds,
         estimate: handoff.estimate,
-        builtBefore1940: handoff.builtBefore1940,
       })
     : '';
 
@@ -98,17 +94,12 @@ export default function BookNow() {
                   </span>
                 </li>
               )}
-              {(handoff.addOnLabels.length > 0 || handoff.builtBefore1940) && (
+              {handoff.addOnLabels.length > 0 && (
                 <li>
                   <span className="block text-bone-dim text-xs uppercase tracking-wider">
                     Extra services
                   </span>
-                  <span className="text-white">
-                    {[
-                      ...(handoff.builtBefore1940 ? ['Pre-1940 home'] : []),
-                      ...handoff.addOnLabels,
-                    ].join(', ')}
-                  </span>
+                  <span className="text-white">{handoff.addOnLabels.join(', ')}</span>
                 </li>
               )}
               {handoff.estimate !== undefined && (

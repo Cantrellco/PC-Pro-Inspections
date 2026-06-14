@@ -252,7 +252,7 @@ export const siteConfig: SiteConfig = {
     {
       question: 'How much does a home inspection cost?',
       answer:
-        'Residential pricing is a flat rate set by the home’s square footage, with an optional termite inspection and a small surcharge for homes built before 1940. Commercial buildings are priced per square foot. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
+        'Residential pricing is a flat rate set by the home’s square footage, with an optional termite inspection. Commercial buildings are priced per square foot. Use our quote calculator to see an itemized estimate in seconds; the final price is confirmed at scheduling.',
     },
     {
       question: 'How long does an inspection take?',

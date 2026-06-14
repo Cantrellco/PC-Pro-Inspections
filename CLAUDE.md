@@ -70,6 +70,7 @@ No component changes. No prop refactor. That is the seam.
 | List of service-area towns/counties (SEO + Service Areas page) | `src/config/siteConfig.ts` → `serviceAreaTowns` |
 | Certifications shown on About + Home | `src/config/siteConfig.ts` → `certifications` |
 | Testimonials | `src/config/siteConfig.ts` → `testimonials` |
+| Featured equipment showcase on About (name, copy, features, link) | `src/config/siteConfig.ts` → `equipment` (image at `public/equipment/`; remove the block to hide the section) |
 | FAQs (also drives FAQPage JSON-LD) | `src/config/siteConfig.ts` → `faqs` |
 | Pre-Inspection Prep Guide content | `src/config/siteConfig.ts` → `prepGuide` |
 | Response promise ("call back in X hrs, inspect in Y days") | `src/config/siteConfig.ts` → `responsePromise` |

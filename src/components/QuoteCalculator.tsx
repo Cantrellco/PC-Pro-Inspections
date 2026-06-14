@@ -7,7 +7,6 @@ import {
   COMMERCIAL_SQFT_STEP,
   DEFAULT_COMMERCIAL_SQFT,
   DEFAULT_SQFT,
-  OLD_HOME_SURCHARGE,
   PRICING_NOTE,
   SQFT_MAX,
   SQFT_MIN,
@@ -57,7 +56,6 @@ export default function QuoteCalculator() {
   const [propertyType, setPropertyType] = useState<PropertyType>('residential');
   const [sqft, setSqft] = useState<number>(DEFAULT_SQFT);
   const [selectedAddOns, setSelectedAddOns] = useState<string[]>([]);
-  const [builtBefore1940, setBuiltBefore1940] = useState(false);
 
   const isCommercial = propertyType === 'commercial';
   const sliderMin = isCommercial ? COMMERCIAL_SQFT_MIN : SQFT_MIN;
@@ -70,9 +68,8 @@ export default function QuoteCalculator() {
         propertyType,
         sqft,
         addOnIds: isCommercial ? [] : selectedAddOns,
-        builtBefore1940: isCommercial ? false : builtBefore1940,
       }),
-    [propertyType, sqft, selectedAddOns, builtBefore1940, isCommercial],
+    [propertyType, sqft, selectedAddOns, isCommercial],
   );
 
   // Fill percentage drives the slider's gradient track (see .range-pro).
@@ -171,9 +168,6 @@ export default function QuoteCalculator() {
     if (!isCommercial && selectedAddOns.length > 0) {
       params.set('addons', selectedAddOns.join(','));
     }
-    if (!isCommercial && builtBefore1940) {
-      params.set('old', '1');
-    }
     navigate(`/book?${params.toString()}`);
   };
 
@@ -247,107 +241,61 @@ export default function QuoteCalculator() {
           </div>
         </div>
 
-        {/* Residential-only inputs */}
+        {/* Optional add-ons (residential only) */}
         {!isCommercial && (
-          <>
-            {/* Older-home surcharge */}
-            <div>
-              <span className="field-label">Home age</span>
-              <label
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
-                  builtBefore1940
-                    ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
-                    : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={builtBefore1940}
-                  onChange={(e) => setBuiltBefore1940(e.target.checked)}
-                  className="peer sr-only"
-                  aria-describedby="old-home-desc"
-                />
-                <span
-                  aria-hidden="true"
-                  className={`grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
-                    builtBefore1940
-                      ? 'border-flag-red bg-flag-red text-white'
-                      : 'border-white/25 text-transparent'
-                  }`}
-                >
-                  <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                    <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
-                <span className="flex flex-1 items-baseline justify-between gap-2">
-                  <span>
-                    <span className="font-semibold text-white">Built before 1940</span>
-                    <span id="old-home-desc" className="mt-0.5 block text-xs text-bone-muted">
-                      Older homes take extra time and care to inspect thoroughly.
-                    </span>
-                  </span>
-                  <span className="font-semibold whitespace-nowrap text-flag-redSoft">
-                    +{currency.format(OLD_HOME_SURCHARGE.price)}
-                  </span>
-                </span>
-              </label>
-            </div>
-
-            {/* Optional add-ons */}
-            <fieldset>
-              <legend className="field-label">Optional extra services</legend>
-              <ul className="grid sm:grid-cols-2 gap-2.5">
-                {ADD_ONS.map((a) => {
-                  const checked = selectedAddOns.includes(a.id);
-                  return (
-                    <li key={a.id}>
-                      <label
-                        className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+          <fieldset>
+            <legend className="field-label">Optional extra services</legend>
+            <ul className="grid sm:grid-cols-2 gap-2.5">
+              {ADD_ONS.map((a) => {
+                const checked = selectedAddOns.includes(a.id);
+                return (
+                  <li key={a.id}>
+                    <label
+                      className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
+                        checked
+                          ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
+                          : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
+                      }`}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleAddOn(a.id)}
+                        className="peer sr-only"
+                        aria-describedby={`addon-${a.id}-desc`}
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
                           checked
-                            ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
-                            : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
+                            ? 'border-flag-red bg-flag-red text-white'
+                            : 'border-white/25 text-transparent'
                         }`}
                       >
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          onChange={() => toggleAddOn(a.id)}
-                          className="peer sr-only"
-                          aria-describedby={`addon-${a.id}-desc`}
-                        />
+                        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </span>
+                      <span className="flex-1">
+                        <span className="flex items-baseline justify-between gap-2">
+                          <span className="font-semibold text-white">{a.label}</span>
+                          <span className="font-semibold whitespace-nowrap text-flag-redSoft">
+                            +{currency.format(a.price)}
+                          </span>
+                        </span>
                         <span
-                          aria-hidden="true"
-                          className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
-                            checked
-                              ? 'border-flag-red bg-flag-red text-white'
-                              : 'border-white/25 text-transparent'
-                          }`}
+                          id={`addon-${a.id}-desc`}
+                          className="mt-1 block text-xs leading-relaxed text-bone-muted"
                         >
-                          <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                            <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                          {a.description}
                         </span>
-                        <span className="flex-1">
-                          <span className="flex items-baseline justify-between gap-2">
-                            <span className="font-semibold text-white">{a.label}</span>
-                            <span className="font-semibold whitespace-nowrap text-flag-redSoft">
-                              +{currency.format(a.price)}
-                            </span>
-                          </span>
-                          <span
-                            id={`addon-${a.id}-desc`}
-                            className="mt-1 block text-xs leading-relaxed text-bone-muted"
-                          >
-                            {a.description}
-                          </span>
-                        </span>
-                      </label>
-                    </li>
-                  );
-                })}
-              </ul>
-            </fieldset>
-          </>
+                      </span>
+                    </label>
+                  </li>
+                );
+              })}
+            </ul>
+          </fieldset>
         )}
 
         {isCommercial && (
@@ -372,14 +320,6 @@ export default function QuoteCalculator() {
                 {currency.format(quote.baseLineItem.amount)}
               </span>
             </li>
-            {quote.modifierLineItems.map((li) => (
-              <li key={li.id} className="flex animate-fade-up justify-between gap-3">
-                <span className="text-bone">{li.label}</span>
-                <span className="font-semibold whitespace-nowrap text-white">
-                  +{currency.format(li.amount)}
-                </span>
-              </li>
-            ))}
             {quote.addOnLineItems.map((li) => (
               <li key={li.id} className="flex animate-fade-up justify-between gap-3">
                 <span className="text-bone">{li.label}</span>

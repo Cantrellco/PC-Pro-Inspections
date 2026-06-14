@@ -245,7 +245,7 @@ export default function About() {
       </Section>
 
       {/* Certifications */}
-      <Section>
+      <Section tone="elevated">
         <SectionHeader
           eyebrow="Credentials"
           title="Specialty certifications."

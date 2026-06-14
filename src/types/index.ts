@@ -197,8 +197,6 @@ export type QuoteInputs = {
   propertyType: PropertyType;
   sqft: number;
   addOnIds: string[];
-  /** Residential only — applies the pre-1940 surcharge when true. */
-  builtBefore1940?: boolean;
 };
 
 export type QuoteLineItem = {
@@ -211,8 +209,6 @@ export type QuoteResult = {
   inputs: QuoteInputs;
   tier: SqftTier | CommercialTier;
   baseLineItem: QuoteLineItem;
-  /** Price modifiers (e.g. pre-1940 surcharge). Separate from optional add-ons. */
-  modifierLineItems: QuoteLineItem[];
   addOnLineItems: QuoteLineItem[];
   total: number;
   /** Approximate on-site time for the resolved tier. */
@@ -250,6 +246,4 @@ export type BookingPrefillParams = {
   sqft?: number;
   addOnIds?: string[];
   estimate?: number;
-  /** Residential only — pre-1940 surcharge was applied. */
-  builtBefore1940?: boolean;
 };

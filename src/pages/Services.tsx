@@ -3,7 +3,6 @@ import { track } from '@/services/analytics';
 import {
   ADD_ONS,
   COMMERCIAL_TIERS,
-  OLD_HOME_SURCHARGE,
   PRICING_NOTE,
   SQFT_TIERS,
 } from '@/config/pricing';
@@ -180,15 +179,9 @@ export default function Services() {
 
           <Card glow>
             <h3 className="text-sm uppercase tracking-wider text-bone-muted mb-3 font-semibold">
-              Extra services & modifiers
+              Extra services
             </h3>
             <ul className="space-y-2 text-sm">
-              <li className="flex justify-between gap-3 border-b border-white/5 pb-2">
-                <span className="text-bone">{OLD_HOME_SURCHARGE.label}</span>
-                <span className="text-flag-redSoft font-semibold whitespace-nowrap">
-                  +{currency.format(OLD_HOME_SURCHARGE.price)}
-                </span>
-              </li>
               {ADD_ONS.map((a) => (
                 <li
                   key={a.id}

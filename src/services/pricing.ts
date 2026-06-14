@@ -1,7 +1,6 @@
 import {
   ADD_ONS,
   COMMERCIAL_TIERS,
-  OLD_HOME_SURCHARGE,
   SQFT_TIERS,
   findAddOn,
 } from '@/config/pricing';
@@ -56,15 +55,6 @@ function residentialQuote(inputs: QuoteInputs): QuoteResult {
     amount: tier.price,
   };
 
-  const modifierLineItems: QuoteLineItem[] = [];
-  if (inputs.builtBefore1940) {
-    modifierLineItems.push({
-      id: OLD_HOME_SURCHARGE.id,
-      label: OLD_HOME_SURCHARGE.label,
-      amount: OLD_HOME_SURCHARGE.price,
-    });
-  }
-
   const addOnLineItems = inputs.addOnIds
     .map((id) => findAddOn(id))
     .filter((a): a is NonNullable<typeof a> => Boolean(a))
@@ -72,14 +62,12 @@ function residentialQuote(inputs: QuoteInputs): QuoteResult {
 
   const total =
     baseLineItem.amount +
-    modifierLineItems.reduce((sum, li) => sum + li.amount, 0) +
     addOnLineItems.reduce((sum, li) => sum + li.amount, 0);
 
   return {
     inputs,
     tier,
     baseLineItem,
-    modifierLineItems,
     addOnLineItems,
     total,
     durationLabel: tier.durationLabel,
@@ -102,7 +90,6 @@ function commercialQuote(inputs: QuoteInputs): QuoteResult {
     inputs,
     tier,
     baseLineItem,
-    modifierLineItems: [],
     addOnLineItems: [],
     total: amount,
     durationLabel: tier.durationLabel,

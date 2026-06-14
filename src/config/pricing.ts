@@ -23,17 +23,6 @@ export const SQFT_TIERS: SqftTier[] = [
 ];
 
 /**
- * Residential surcharge for older homes. Applied automatically when the
- * buyer indicates the home was built before `beforeYear`. (Price sheet: +$50.)
- */
-export const OLD_HOME_SURCHARGE = {
-  id: 'old-home',
-  label: 'Home built before 1940',
-  price: 50,
-  beforeYear: 1940,
-};
-
-/**
  * Commercial base price — charged PER SQUARE FOOT (first match wins).
  * Base estimate = sqft × pricePerSqft.
  */
