@@ -20,7 +20,7 @@ export const siteConfig: SiteConfig = {
   // service. Blank fields fall back to a polished gradient placeholder.
   images: {
     hero: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=2000&q=80', // TODO: owner — swap for a local home exterior
-    inspector: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80', // TODO: owner — your real portrait
+    inspector: '/team/paul-portrait.webp', // Paul Cantrell — real portrait (master: src/assets/paul-original.png; .jpg fallback alongside)
     services: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1400&q=80', // TODO: owner — you inspecting
     resources: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80', // TODO: owner — interior/report
     ctaBand: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80', // TODO: owner — dusk home exterior
@@ -89,8 +89,12 @@ export const siteConfig: SiteConfig = {
   ],
 
   // ─── Trust Numbers ───────────────────────────────────────────────────────
-  yearsInBusiness: 12, // TODO: owner to fill
-  inspectionsCompleted: 2500, // TODO: owner to fill (running count)
+  // NOTE: not currently surfaced anywhere on the site — the owner opted not to
+  // advertise a years-in-business or inspection count (the About page leans on
+  // certifications + real reviews instead). Kept here, with honest values, so a
+  // future page can use them. To show them again, wire them back into a page.
+  yearsInBusiness: 2, // owner completed training in 2024
+  inspectionsCompleted: 0, // not advertised — set a real running count to use
 
   // ─── Response Promise ────────────────────────────────────────────────────
   responsePromise: {
@@ -217,6 +221,28 @@ export const siteConfig: SiteConfig = {
           'Findings are captured as photos and video on the spot — proof you can see, not just our word for it.',
       },
     ],
+  },
+
+  // ─── Owner's Story ───────────────────────────────────────────────────────
+  // The personal letter that anchors the About page, written in the owner's own
+  // voice. Remove this block (or leave it off) and the letter hides itself,
+  // falling back to a generic intro.
+  ownerStory: {
+    eyebrow: 'Meet the owner',
+    greeting:
+      "Hi, I'm Paul Cantrell, owner of PC Pro Inspections in Fairfield, Illinois.",
+    paragraphs: [
+      "After my wife Mitzie (a real estate agent for the past five years) shared how much our area needed reliable home inspectors, I decided to pursue my certification. Two years ago I completed my training and quickly discovered my true passion: helping families feel confident and secure about one of the biggest decisions they'll ever make — buying or selling a home.",
+      "With a careful eye for detail and a commitment to thorough, honest inspections, I walk clients through every aspect of the property so they can make informed decisions with peace of mind. Whether it's identifying potential safety issues, structural concerns, or maintenance needs, I'm dedicated to providing clear, straightforward reports that put my clients first.",
+      "On a personal note, Mitzie and I have been happily married for 28 years. We're proud parents to our son Cody, who has been married to his wife Gracie for two years. We're also excitedly preparing to welcome our first grandchild very soon!",
+      "When I'm not inspecting homes, I enjoy spending time with family and being part of this wonderful Fairfield community. I understand how important it is to feel secure in your home — and I'm here to help make that happen.",
+      "If you're buying, selling, or just need a thorough home inspection, I'd be honored to serve you. Feel free to reach out — I'm always happy to answer your questions.",
+    ],
+    pullQuote: {
+      text: "Helping families feel confident and secure about one of the biggest decisions they'll ever make.",
+      afterParagraph: 1,
+    },
+    signature: { name: 'Paul Cantrell', title: 'Owner · PC Pro Inspections' },
   },
 
   // ─── Testimonials ────────────────────────────────────────────────────────

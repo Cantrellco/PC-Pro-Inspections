@@ -14,6 +14,7 @@ import CTABand from '@/components/CTABand';
 export default function About() {
   const c = siteConfig;
   const eq = c.equipment;
+  const story = c.ownerStory;
 
   const stats: { value?: number; suffix?: string; text?: string; label: string }[] = [
     { value: 1600, suffix: '+', label: 'Point inspection' },
@@ -25,64 +26,102 @@ export default function About() {
     <>
       <SEO
         title={`About — Certifications & Experience | ${c.businessName}`}
-        description={`Meet ${c.inspectorName} — InterNACHI® Certified Professional Inspector with ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Also certified in thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home inspection.`}
+        description={`Meet ${c.inspectorName}, owner of ${c.businessName} — an InterNACHI® Certified Professional Inspector in Fairfield, IL. Thorough, honest home inspections with same-day, photo-rich reports, plus thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home expertise.`}
         pathname="/about"
       />
 
       <Section>
-        <div className="grid md:grid-cols-5 gap-10 items-start">
-          {/* Bio */}
-          <div className="md:col-span-3">
-            <p className="eyebrow mb-4">About {c.businessName}</p>
-            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-[1.05] mb-6">
+        <div className="grid gap-10 lg:grid-cols-5 lg:gap-14">
+          {/* Portrait — framed with a restrained crimson hairline accent.
+              Sticky on desktop so Paul's face accompanies the whole letter;
+              shown first on mobile so visitors meet him before they read. */}
+          <div className="lg:order-last lg:col-span-2">
+            <div className="lg:sticky lg:top-28">
+              <div className="group relative">
+                <div
+                  aria-hidden="true"
+                  className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+                />
+                <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
+                  <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
+                  <Photo
+                    src={c.images.inspector}
+                    alt={`${c.inspectorName} — ${c.businessName}`}
+                    aspectClass="aspect-[4/5]"
+                    roundedClass="rounded-xl"
+                    placeholderLabel={`Portrait of ${c.inspectorName}`}
+                  />
+                </div>
+              </div>
+              {c.primaryCertification && (
+                <p className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1.5 pl-1.5 pr-4">
+                  <img
+                    src={c.primaryCertification.badgeSrc}
+                    alt={c.primaryCertification.badgeAlt}
+                    width={28}
+                    height={28}
+                    className="h-7 w-7 flex-shrink-0 object-contain"
+                  />
+                  <span className="text-sm font-medium text-bone-muted">
+                    {c.primaryCertification.shortLabel}
+                  </span>
+                </p>
+              )}
+              {/* Portrait: real photo of Paul, set in siteConfig.images.inspector.
+                  Processed from the original at src/assets/paul-original.png. For a
+                  crisper result later, drop a higher-res original and re-export. */}
+            </div>
+          </div>
+
+          {/* The owner's letter */}
+          <div className="lg:col-span-3">
+            <p className="eyebrow mb-4">{story ? story.eyebrow : `About ${c.businessName}`}</p>
+            <h1 className="mb-6 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-[1.05]">
               Built on craft,
               <br />
               <span className="italic text-flag-redSoft">paid by trust.</span>
             </h1>
-            <div className="space-y-5 text-bone-muted text-lg leading-relaxed">
-              <p>
-                {/* TODO: owner — replace this paragraph with your real story. */}
-                I started inspecting homes after years in the trades, because I
-                kept seeing buyers get burned by shallow inspections. A
-                home is the biggest purchase most people ever make. The work
-                deserves more care than a rushed checklist.
-              </p>
-              <p>
-                Every inspection I do is one I would do on my own family's home —
-                same depth, same patience, same plain-language walkthrough at
-                the end. If something is wrong, I tell you. If something is
-                fine, I tell you that too.
-              </p>
-              <p>
-                After {c.yearsInBusiness}+ years and{' '}
-                {c.inspectionsCompleted.toLocaleString()}+ inspections, my
-                report is what I want it to be: thorough, photo-rich, prioritized,
-                and delivered the same day.
-              </p>
-            </div>
 
-            <p className="mt-8 font-display text-2xl text-white leading-tight">
-              {c.inspectorName}
-              <span className="mt-1 block font-sans text-sm tracking-wide text-bone-dim">
-                Owner &amp; Home Inspector · {c.businessName}
-              </span>
-            </p>
-            {c.primaryCertification && (
-              <p className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1.5 pl-1.5 pr-4">
-                <img
-                  src={c.primaryCertification.badgeSrc}
-                  alt={c.primaryCertification.badgeAlt}
-                  width={28}
-                  height={28}
-                  className="h-7 w-7 flex-shrink-0 object-contain"
-                />
-                <span className="text-sm font-medium text-bone-muted">
-                  {c.primaryCertification.name}
-                </span>
-              </p>
+            {story && (
+              <>
+                <p className="lede mb-6 max-w-2xl !text-bone">{story.greeting}</p>
+
+                <div className="space-y-5 text-lg leading-relaxed text-bone-muted">
+                  {story.paragraphs.flatMap((para, i) => {
+                    const nodes = [<p key={`p-${i}`}>{para}</p>];
+                    if (story.pullQuote && story.pullQuote.afterParagraph === i) {
+                      nodes.push(
+                        <figure
+                          key={`q-${i}`}
+                          className="!my-9 border-l-2 border-flag-red/60 pl-6 sm:pl-7"
+                        >
+                          <blockquote className="font-display text-[1.55rem] sm:text-3xl font-medium leading-[1.22] text-white">
+                            {story.pullQuote.text}
+                          </blockquote>
+                        </figure>,
+                      );
+                    }
+                    return nodes;
+                  })}
+                </div>
+
+                {/* Signature */}
+                <div className="mt-10">
+                  <div
+                    aria-hidden="true"
+                    className="mb-5 h-px w-20 bg-gradient-to-r from-brass/70 to-transparent"
+                  />
+                  <p className="font-display text-3xl sm:text-[2rem] italic leading-none text-white">
+                    {story.signature.name}
+                  </p>
+                  <p className="mt-2 text-sm tracking-wide text-bone-dim">
+                    {story.signature.title}
+                  </p>
+                </div>
+              </>
             )}
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap gap-3">
               <Button as="link" to="/services">
                 See pricing
               </Button>
@@ -90,32 +129,6 @@ export default function About() {
                 Get in touch
               </Button>
             </div>
-          </div>
-
-          {/* Photo — framed with a restrained crimson hairline accent */}
-          <div className="md:col-span-2">
-            <div className="group relative">
-              <div
-                aria-hidden="true"
-                className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-              />
-              <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
-                <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
-                <Photo
-                  src={c.images.inspector}
-                  alt={`${c.inspectorName} — ${c.businessName}`}
-                  aspectClass="aspect-[4/5]"
-                  roundedClass="rounded-xl"
-                  placeholderLabel={`Portrait of ${c.inspectorName}`}
-                />
-              </div>
-            </div>
-            <p className="mt-8 text-sm text-bone-dim italic">
-              {c.inspectorName} — {c.businessName}
-            </p>
-            {/* TODO: owner — replace the placeholder portrait with a real photo
-                via siteConfig.images.inspector. Your own photo beats stock on a
-                trust-based service. */}
           </div>
         </div>
 

@@ -73,6 +73,23 @@ export type EquipmentShowcase = {
   features: EquipmentFeature[];
 };
 
+/**
+ * The owner's personal letter — the centerpiece of the About page.
+ * Optional on SiteConfig: the section hides itself when unset.
+ */
+export type OwnerStory = {
+  /** Small label above the headline, e.g. "Meet the owner". */
+  eyebrow: string;
+  /** Opening line, set as an emphasized lede, e.g. "Hi, I'm Paul…". */
+  greeting: string;
+  /** Letter body paragraphs, in reading order. */
+  paragraphs: string[];
+  /** Optional pulled refrain, injected after the given paragraph index. */
+  pullQuote?: { text: string; afterParagraph: number };
+  /** Closing signature shown beneath the letter. */
+  signature: { name: string; title: string };
+};
+
 export type Testimonial = {
   name: string;
   /** Secondary attribution shown after the name (e.g. role or town). */
@@ -153,6 +170,8 @@ export type SiteConfig = {
   inspectionExpertise: ExpertiseArea[];
   /** Featured specialty equipment showcase (About page). Optional — hides when unset. */
   equipment?: EquipmentShowcase;
+  /** The owner's personal letter (About page). Optional — hides when unset. */
+  ownerStory?: OwnerStory;
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];
