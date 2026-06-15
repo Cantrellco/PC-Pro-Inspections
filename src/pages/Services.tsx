@@ -4,6 +4,7 @@ import {
   ADD_ONS,
   COMMERCIAL_TIERS,
   PRICING_NOTE,
+  QUOTE_ONLY_SERVICES,
   SQFT_TIERS,
 } from '@/config/pricing';
 import { formatPricePerSqft } from '@/services/pricing';
@@ -185,12 +186,27 @@ export default function Services() {
               {ADD_ONS.map((a) => (
                 <li
                   key={a.id}
-                  className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
+                  className="flex justify-between gap-3 border-b border-white/5 pb-2"
                 >
                   <span className="text-bone">{a.label}</span>
                   <span className="text-flag-redSoft font-semibold whitespace-nowrap">
                     +{currency.format(a.price)}
                   </span>
+                </li>
+              ))}
+              {QUOTE_ONLY_SERVICES.map((s) => (
+                <li
+                  key={s.id}
+                  className="flex justify-between gap-3 border-b border-white/5 pb-2 last:border-0"
+                >
+                  <span className="text-bone">{s.label}</span>
+                  <a
+                    href={`tel:${c.phoneHref}`}
+                    onClick={() => track('tel_click', { location: 'services_quote_only' })}
+                    className="font-semibold whitespace-nowrap text-brass-soft underline-offset-4 hover:underline"
+                  >
+                    Call for quote
+                  </a>
                 </li>
               ))}
             </ul>

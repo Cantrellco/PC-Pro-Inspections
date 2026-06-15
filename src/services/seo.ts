@@ -61,6 +61,31 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
     };
   }
 
+  // Credentials — the headline cert names its recognizing body (InterNACHI);
+  // specialty certs are listed by name only (issuers are owner-supplied).
+  const credentials: Record<string, unknown>[] = [];
+  if (c.primaryCertification) {
+    credentials.push({
+      '@type': 'EducationalOccupationalCredential',
+      name: c.primaryCertification.name,
+      credentialCategory: 'certification',
+      recognizedBy: {
+        '@type': 'Organization',
+        name: c.primaryCertification.issuer,
+      },
+    });
+  }
+  c.certifications.forEach((cert) => {
+    credentials.push({
+      '@type': 'EducationalOccupationalCredential',
+      name: cert.name,
+      credentialCategory: 'certification',
+    });
+  });
+  if (credentials.length > 0) {
+    data.hasCredential = credentials;
+  }
+
   return data;
 }
 

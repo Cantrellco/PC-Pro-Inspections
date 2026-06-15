@@ -100,10 +100,27 @@ export const siteConfig: SiteConfig = {
 
   // ─── Socials ─────────────────────────────────────────────────────────────
   socials: [
-    // TODO: owner to fill (or remove items you don't use)
-    { label: 'Facebook', href: 'https://facebook.com/yourpage' },
-    { label: 'Instagram', href: 'https://instagram.com/yourpage' },
+    { label: 'Facebook', href: 'https://www.facebook.com/p/PC-Pro-Inspections-61570975048865/' },
   ],
+
+  // ─── Primary Certification ───────────────────────────────────────────────
+  // The headline professional credential, shown prominently and apart from the
+  // specialty certs below. Confirmed by the owner. The seal at /certs/internachi.svg
+  // is a clean house-style placeholder — for maximum recognition, replace it with
+  // the official "InterNACHI Certified Professional Inspector" badge the owner can
+  // download from his InterNACHI member account (drop a PNG/SVG in public/certs/
+  // and update badgeSrc). Add `verifyUrl` once the owner shares his InterNACHI
+  // inspector-profile link so visitors can verify the credential.
+  primaryCertification: {
+    name: 'InterNACHI® Certified Professional Inspector',
+    shortLabel: 'InterNACHI® Certified',
+    issuer: 'International Association of Certified Home Inspectors',
+    blurb:
+      "Trained and tested against InterNACHI's Standards of Practice and bound by its Code of Ethics — the most widely recognized certification in the home-inspection field.",
+    badgeSrc: '/certs/internachi.svg',
+    badgeAlt: 'InterNACHI Certified Professional Inspector seal',
+    // verifyUrl: '', // TODO: owner — paste your InterNACHI inspector-profile URL to make it a clickable proof link
+  },
 
   // ─── Certifications ──────────────────────────────────────────────────────
   // The specialty certifications the inspector actually holds. Each `issuer`
@@ -304,16 +321,6 @@ export const siteConfig: SiteConfig = {
       body: 'Plan roughly 2.5 to 6 hours depending on the size of the home. We start with the roof and exterior, then work inside top-to-bottom. The full digital report — with photos and a priority summary — is typically delivered the same evening.',
     },
   ],
-
-  // ─── Google Reviews ──────────────────────────────────────────────────────
-  // rating + reviewCount drive the rich summary card. Set them to match your
-  // real Google Business Profile, then paste placeUrl (and optionally an embed).
-  googleReviews: {
-    rating: 4.9, // TODO: owner — your real GBP star average
-    reviewCount: 127, // TODO: owner — your real GBP review count
-    placeUrl: '', // TODO: owner — Google Business Profile share/review URL
-    embedSrc: '', // TODO: optional — 3rd-party reviews widget iframe src
-  },
 
   // ─── Web3Forms ───────────────────────────────────────────────────────────
   // Sign up at https://web3forms.com → get free access key.

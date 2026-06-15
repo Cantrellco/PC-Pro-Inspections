@@ -11,6 +11,28 @@ export type Certification = {
   badgeSrc?: string;
 };
 
+/**
+ * The inspector's headline professional certification (e.g. InterNACHI CPI).
+ * Rendered prominently and apart from the specialty `certifications` list —
+ * it's the foundational credential, not a specialty. Optional on SiteConfig:
+ * every badge/section that uses it hides itself when unset.
+ */
+export type PrimaryCertification = {
+  /** Full name, e.g. "InterNACHI® Certified Professional Inspector". */
+  name: string;
+  /** Compact label for chips/badges, e.g. "InterNACHI® Certified". */
+  shortLabel: string;
+  /** Issuing body, e.g. "International Association of Certified Home Inspectors". */
+  issuer: string;
+  /** One line on what the credential means / why it matters. */
+  blurb: string;
+  /** Badge image path under /public, e.g. "/certs/internachi.svg". */
+  badgeSrc: string;
+  badgeAlt: string;
+  /** Optional public verification link (e.g. the inspector's InterNACHI profile). */
+  verifyUrl?: string;
+};
+
 export type ExpertiseArea = {
   /** Short display name, e.g. "Thermal Imaging". */
   label: string;
@@ -69,17 +91,6 @@ export type PrepGuideSection = {
   body: string;
 };
 
-export type GoogleReviewsConfig = {
-  /** Real GBP star average (e.g. 4.9) for the summary card. */
-  rating?: number;
-  /** Real GBP total review count. */
-  reviewCount?: number;
-  /** Public Google Maps "place" URL — used as fallback CTA. */
-  placeUrl: string;
-  /** Embed src for an iframe (e.g. a 3rd-party review embed); optional. */
-  embedSrc?: string;
-};
-
 export type AnalyticsConfig = {
   /** Provider's site domain (Plausible) or measurement ID (GA4). Blank = disabled. */
   domain: string;
@@ -135,6 +146,8 @@ export type SiteConfig = {
   inspectionsCompleted: number;
   responsePromise: ResponsePromise;
   socials: SocialLink[];
+  /** Headline professional certification (e.g. InterNACHI CPI). Optional — hides when unset. */
+  primaryCertification?: PrimaryCertification;
   certifications: Certification[];
   /** Full scope of what the inspector covers — drives the "Areas of Expertise" grid. */
   inspectionExpertise: ExpertiseArea[];
@@ -143,7 +156,6 @@ export type SiteConfig = {
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];
-  googleReviews: GoogleReviewsConfig;
   /** Web3Forms access key. While === DEFAULT, submitLead() throws to prevent live deploys. */
   web3FormsAccessKey: string;
   /** Scheduler embed URL. Blank → Book Now page shows polished fallback. */
@@ -163,6 +175,17 @@ export type AddOn = {
   description: string;
   /** Flat fee in USD. */
   price: number;
+};
+
+/**
+ * A service the inspector offers but that isn't priced on the sheet yet.
+ * Listed for transparency with a "Call for quote" tag; not selectable in the
+ * calculator until the owner confirms a price (then promote it to AddOn).
+ */
+export type QuoteOnlyService = {
+  id: string;
+  label: string;
+  description: string;
 };
 
 /** Residential vs. commercial — the two pricing models on the price sheet. */

@@ -6,7 +6,6 @@ import Card from '@/components/Card';
 import Button from '@/components/Button';
 import StarRating from '@/components/StarRating';
 import Reveal from '@/components/Reveal';
-import GoogleReviewsSummary from '@/components/GoogleReviewsSummary';
 import TestimonialCarousel from '@/components/TestimonialCarousel';
 import CTABand from '@/components/CTABand';
 
@@ -17,7 +16,7 @@ export default function Reviews() {
     <>
       <SEO
         title={`Reviews | ${c.businessName}`}
-        description={`Read real reviews from buyers and agents across ${c.serviceAreaSummary}. ${c.testimonials.length}+ testimonials and ongoing Google reviews.`}
+        description={`Read real reviews from buyers and agents across ${c.serviceAreaSummary}. ${c.testimonials.length}+ testimonials from real clients.`}
         pathname="/reviews"
       />
 
@@ -28,20 +27,6 @@ export default function Reviews() {
           title="Reputation, earned one inspection at a time."
           description="Reviews are the single biggest reason buyers choose us — and the biggest thing we protect. Here's the unfiltered picture."
         />
-
-        <Reveal className="mb-14">
-          <GoogleReviewsSummary />
-        </Reveal>
-
-        {c.googleReviews.embedSrc && (
-          <Reveal className="mb-14">
-            <Card className="!p-3">
-              <div className="aspect-video w-full rounded-xl overflow-hidden bg-ink-200 border border-white/10">
-                <iframe src={c.googleReviews.embedSrc} title="Google Reviews" className="w-full h-full" loading="lazy" />
-              </div>
-            </Card>
-          </Reveal>
-        )}
 
         {c.testimonials.length > 0 && (
           <Reveal className="mb-16">
@@ -73,28 +58,17 @@ export default function Reviews() {
 
       <div className="pb-20 sm:pb-28">
         <CTABand
-          eyebrow="Help the Next Buyer"
+          eyebrow="Your Turn"
           title={
             <>
-              Worked with us? <span className="italic text-gradient-brass">Say so.</span>
+              Get the same <span className="italic text-gradient-brass">straight answer.</span>
             </>
           }
-          description="A quick Google review is the single biggest way to help — and it takes a minute."
+          description="Book an inspection and get a same-evening digital report — photos, priorities, and the unfiltered condition of the home."
         >
-          {c.googleReviews.placeUrl ? (
-            <>
-              <Button as="a" href={c.googleReviews.placeUrl} target="_blank" rel="noopener noreferrer" className="!px-8 !py-4 !text-base">
-                Leave a Google review
-              </Button>
-              <Button as="link" to="/book" variant="secondary" className="!px-8 !py-4 !text-base">
-                Book an inspection
-              </Button>
-            </>
-          ) : (
-            <Button as="link" to="/book" className="!px-8 !py-4 !text-base">
-              Book an inspection
-            </Button>
-          )}
+          <Button as="link" to="/book" className="!px-8 !py-4 !text-base">
+            Book an inspection
+          </Button>
         </CTABand>
       </div>
     </>

@@ -48,7 +48,7 @@ export default function Home() {
     <>
       <SEO
         title={`Home Inspector in ${cityForTitle} | ${c.businessName}`}
-        description={`Certified residential home inspections in ${c.serviceAreaSummary}. We call back within ${c.responsePromise.callbackHours} hours and inspect within ${c.responsePromise.inspectionDays} days. Get a free quote.`}
+        description={`InterNACHI® Certified residential home inspections in ${c.serviceAreaSummary}. We call back within ${c.responsePromise.callbackHours} hours and inspect within ${c.responsePromise.inspectionDays} days. Get a free quote.`}
         pathname="/"
         jsonLd={c.faqs.length > 0 ? buildFaqJsonLd() : undefined}
       />
@@ -73,13 +73,27 @@ export default function Home() {
 
         <div className="container-wide above-grain py-24 sm:py-28">
           <div className="max-w-3xl animate-fade-up">
-            <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] py-1.5 pl-2.5 pr-4 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flag-redSoft opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-flag-red" />
-              </span>
-              Now booking across {c.serviceAreaSummary}
-            </p>
+            <div className="mb-7 flex flex-wrap items-center gap-2.5">
+              <p className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] py-1.5 pl-2.5 pr-4 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flag-redSoft opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-flag-red" />
+                </span>
+                Now booking across {c.serviceAreaSummary}
+              </p>
+              {c.primaryCertification && (
+                <p className="inline-flex items-center gap-2 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1 pl-1.5 pr-3.5 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
+                  <img
+                    src={c.primaryCertification.badgeSrc}
+                    alt=""
+                    width={22}
+                    height={22}
+                    className="h-[22px] w-[22px] flex-shrink-0 object-contain"
+                  />
+                  {c.primaryCertification.shortLabel}
+                </p>
+              )}
+            </div>
             <h1 className="display-1 text-white">
               Buy your home with{' '}
               <span className="italic text-gradient-flag">eyes wide open.</span>

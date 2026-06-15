@@ -1,4 +1,4 @@
-import type { AddOn, CommercialTier, SqftTier } from '@/types';
+import type { AddOn, CommercialTier, QuoteOnlyService, SqftTier } from '@/types';
 
 /**
  * Quote calculator pricing source of truth.
@@ -35,14 +35,11 @@ export const COMMERCIAL_TIERS: CommercialTier[] = [
 ];
 
 /**
- * Optional add-ons. Each adds a flat fee to the residential total.
- *
- * NOTE: The client's official price sheet lists ONLY the Termite Inspection
- * (+$50) as an add-on. The four services below it (mold, sewer scope, pool/spa,
- * well water) are NOT on that sheet — they're preserved here, commented out,
- * so they can be switched back on the moment the owner confirms they offer
- * them AND supplies a real price. Re-enabling a fabricated price on a live
- * quote calculator would mislead customers, so they stay off until confirmed.
+ * Optional add-ons with a SET price — selectable in the calculator and added
+ * to the running total. The client's official price sheet prices only the
+ * Termite Inspection (+$50), so that's the lone entry here. When the owner
+ * confirms a price for any QUOTE_ONLY_SERVICE below, move it up into this
+ * array (with its real `price`) and it becomes selectable automatically.
  */
 export const ADD_ONS: AddOn[] = [
   {
@@ -52,35 +49,32 @@ export const ADD_ONS: AddOn[] = [
       'Wood-destroying organism evaluation. Required by many lenders. Per the price sheet.',
     price: 50,
   },
-  // ── Not on the client's price sheet — confirm offering + real price, then uncomment ──
-  // {
-  //   id: 'mold',
-  //   label: 'Mold Assessment',
-  //   description:
-  //     'Visual assessment plus optional air-quality samples sent to an accredited lab.',
-  //   price: 0, // TODO: owner — set real price
-  // },
-  // {
-  //   id: 'sewer-scope',
-  //   label: 'Sewer Scope',
-  //   description:
-  //     'Camera inspection from cleanout to street. Critical on homes 30+ years old.',
-  //   price: 0, // TODO: owner — set real price
-  // },
-  // {
-  //   id: 'pool-spa',
-  //   label: 'Pool / Spa Inspection',
-  //   description:
-  //     'Equipment, finish, decking, and safety features.',
-  //   price: 0, // TODO: owner — set real price
-  // },
-  // {
-  //   id: 'well-water',
-  //   label: 'Well Water Quality Test',
-  //   description:
-  //     'Lab-analyzed water sample — bacteria, nitrates, and standard chemistry panel.',
-  //   price: 0, // TODO: owner — set real price
-  // },
+];
+
+/**
+ * Services the inspector offers that AREN'T priced on the sheet. They're shown
+ * for transparency with a "Call for quote" tag (no fabricated price) and are
+ * NOT selectable in the calculator. To make one priceable, delete it here and
+ * add it to ADD_ONS above with a confirmed `price`.
+ */
+export const QUOTE_ONLY_SERVICES: QuoteOnlyService[] = [
+  {
+    id: 'mold',
+    label: 'Mold Assessment',
+    description:
+      'Visual assessment plus optional air-quality samples sent to an accredited lab.',
+  },
+  {
+    id: 'pool-spa',
+    label: 'Pool / Spa Inspection',
+    description: 'Equipment, finish, decking, and safety features.',
+  },
+  {
+    id: 'thermal-imaging',
+    label: 'Thermal Imaging',
+    description:
+      'Infrared camera scan to reveal hidden moisture intrusion, missing insulation, and electrical hot spots.',
+  },
 ];
 
 /** Quick lookup helper used by services. */

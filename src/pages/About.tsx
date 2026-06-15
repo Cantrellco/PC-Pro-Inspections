@@ -25,7 +25,7 @@ export default function About() {
     <>
       <SEO
         title={`About — Certifications & Experience | ${c.businessName}`}
-        description={`Meet ${c.inspectorName} — ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Certified in thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home inspection.`}
+        description={`Meet ${c.inspectorName} — InterNACHI® Certified Professional Inspector with ${c.yearsInBusiness}+ years and ${c.inspectionsCompleted.toLocaleString()}+ inspections completed. Also certified in thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home inspection.`}
         pathname="/about"
       />
 
@@ -67,6 +67,20 @@ export default function About() {
                 Owner &amp; Home Inspector · {c.businessName}
               </span>
             </p>
+            {c.primaryCertification && (
+              <p className="mt-4 inline-flex items-center gap-2.5 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1.5 pl-1.5 pr-4">
+                <img
+                  src={c.primaryCertification.badgeSrc}
+                  alt={c.primaryCertification.badgeAlt}
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 flex-shrink-0 object-contain"
+                />
+                <span className="text-sm font-medium text-bone-muted">
+                  {c.primaryCertification.name}
+                </span>
+              </p>
+            )}
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Button as="link" to="/services">
@@ -248,9 +262,55 @@ export default function About() {
       <Section tone="elevated">
         <SectionHeader
           eyebrow="Credentials"
-          title="Specialty certifications."
-          description="Advanced certifications beyond the standard inspection — each is verifiable; ask for documentation any time."
+          title="Certified — and glad to prove it."
+          description="An InterNACHI® Certified Professional Inspector, plus advanced specialty certifications beyond the standard inspection — each verifiable; ask for documentation any time."
         />
+
+        {/* Headline credential — InterNACHI CPI */}
+        {c.primaryCertification && (
+          <Reveal>
+            <Card rim glow className="mb-10">
+              <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
+                <img
+                  src={c.primaryCertification.badgeSrc}
+                  alt={c.primaryCertification.badgeAlt}
+                  width={112}
+                  height={112}
+                  className="h-24 w-24 flex-shrink-0 object-contain drop-shadow-[0_3px_16px_rgba(205,165,49,0.22)] sm:h-28 sm:w-28"
+                />
+                <div>
+                  <p className="eyebrow mb-2">Professional certification</p>
+                  <h3 className="font-display text-2xl font-semibold leading-tight text-white">
+                    {c.primaryCertification.name}
+                  </h3>
+                  <p className="mt-1.5 text-xs uppercase tracking-[0.16em] text-brass-soft">
+                    {c.primaryCertification.issuer}
+                  </p>
+                  <p className="mt-3 text-bone-muted leading-relaxed">
+                    {c.primaryCertification.blurb}
+                  </p>
+                  {c.primaryCertification.verifyUrl && (
+                    <a
+                      href={c.primaryCertification.verifyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-flag-redSoft"
+                    >
+                      <span className="link-underline">Verify this credential</span>
+                      <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </Card>
+          </Reveal>
+        )}
+
+        {c.certifications.length > 0 && (
+          <p className="mb-6 text-center text-sm uppercase tracking-[0.2em] text-bone-dim">
+            Plus specialty certifications
+          </p>
+        )}
         <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {c.certifications.map((cert) => (
             <li key={cert.name}>

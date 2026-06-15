@@ -68,7 +68,8 @@ No component changes. No prop refactor. That is the seam.
 |---|---|
 | Business name, phone, email, hours, service area, social links | `src/config/siteConfig.ts` |
 | List of service-area towns/counties (SEO + Service Areas page) | `src/config/siteConfig.ts` → `serviceAreaTowns` |
-| Certifications shown on About + Home | `src/config/siteConfig.ts` → `certifications` |
+| Headline credential (InterNACHI CPI) shown in hero, cert strip, About, footer | `src/config/siteConfig.ts` → `primaryCertification` (badge at `public/certs/`; swap in the official InterNACHI member badge for max recognition; add `verifyUrl` for a proof link; remove the block to hide everywhere) |
+| Specialty certifications shown on About + Home | `src/config/siteConfig.ts` → `certifications` |
 | Testimonials | `src/config/siteConfig.ts` → `testimonials` |
 | Featured equipment showcase on About (name, copy, features, link) | `src/config/siteConfig.ts` → `equipment` (image at `public/equipment/`; remove the block to hide the section) |
 | FAQs (also drives FAQPage JSON-LD) | `src/config/siteConfig.ts` → `faqs` |
@@ -80,7 +81,6 @@ No component changes. No prop refactor. That is the seam.
 | Scheduler URL / embed (Cal.com, Acuity, Calendly, etc.) | `src/config/siteConfig.ts` → `bookingUrl` |
 | Service-area / contact map (keyless OSM, or Google "Embed a map" src) | `src/config/siteConfig.ts` → `mapEmbedSrc` |
 | Analytics provider key | `src/config/siteConfig.ts` → `analytics` |
-| Google reviews embed URL / place ID | `src/config/siteConfig.ts` → `googleReviews` |
 | Sample Report PDF | drop file at `public/sample-report.pdf` (linked from Resources page) |
 | Open Graph preview image | drop file at `public/og-image.png` (1200×630) |
 | Favicon / touch icon | replace `public/favicon-32.png`, `favicon-16.png`, `apple-touch-icon.png` |

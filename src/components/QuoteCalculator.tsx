@@ -8,10 +8,12 @@ import {
   DEFAULT_COMMERCIAL_SQFT,
   DEFAULT_SQFT,
   PRICING_NOTE,
+  QUOTE_ONLY_SERVICES,
   SQFT_MAX,
   SQFT_MIN,
   SQFT_STEP,
 } from '@/config/pricing';
+import { siteConfig } from '@/config/siteConfig';
 import { calculateQuote } from '@/services/pricing';
 import { submitLead } from '@/services/leads';
 import { track } from '@/services/analytics';
@@ -295,6 +297,39 @@ export default function QuoteCalculator() {
                 );
               })}
             </ul>
+
+            {QUOTE_ONLY_SERVICES.length > 0 && (
+              <>
+                <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wider text-bone-dim">
+                  Also available — call for a quote
+                </p>
+                <ul className="grid sm:grid-cols-2 gap-2.5">
+                  {QUOTE_ONLY_SERVICES.map((s) => (
+                    <li key={s.id}>
+                      <div className="flex h-full gap-3 rounded-xl border border-dashed border-white/15 bg-ink-100/40 p-3.5">
+                        <span className="flex-1">
+                          <span className="flex items-baseline justify-between gap-2">
+                            <span className="font-semibold text-bone">{s.label}</span>
+                            <a
+                              href={`tel:${siteConfig.phoneHref}`}
+                              onClick={() =>
+                                track('tel_click', { location: 'calculator_quote_only' })
+                              }
+                              className="font-semibold whitespace-nowrap text-brass-soft underline-offset-4 hover:underline"
+                            >
+                              Call for quote
+                            </a>
+                          </span>
+                          <span className="mt-1 block text-xs leading-relaxed text-bone-muted">
+                            {s.description}
+                          </span>
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </fieldset>
         )}
 

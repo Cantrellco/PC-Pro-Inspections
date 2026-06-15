@@ -21,6 +21,21 @@ export default function Footer() {
           </Link>
           <p className="mt-4 text-bone-muted max-w-sm leading-relaxed">{c.tagline}</p>
           <p className="mt-5 text-bone-dim text-sm">{c.serviceAreaSummary}</p>
+          {c.primaryCertification && (
+            <div className="mt-6 flex items-center gap-3">
+              <img
+                src={c.primaryCertification.badgeSrc}
+                alt={c.primaryCertification.badgeAlt}
+                width={40}
+                height={40}
+                loading="lazy"
+                className="h-10 w-10 flex-shrink-0 object-contain"
+              />
+              <span className="text-xs leading-snug text-bone-muted">
+                {c.primaryCertification.name}
+              </span>
+            </div>
+          )}
           <p className="mt-6 inline-flex items-center gap-2.5 text-[11px] uppercase tracking-[0.24em] text-brass-soft font-semibold">
             <span aria-hidden="true" className="h-px w-6 bg-brass/70" />
             American-owned &amp; operated
