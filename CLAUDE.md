@@ -108,14 +108,28 @@ No component changes. No prop refactor. That is the seam.
 
 ---
 
-## Web3Forms
+## Contact / Quote form delivery
+
+The forms have two delivery modes, chosen automatically in `services/leads.ts`
+→ `submitLead()` by whether a Web3Forms key is set. No component changes to
+switch between them.
+
+### Default (no setup): `mailto:` fallback
+
+While `web3FormsAccessKey` is the placeholder `YOUR_WEB3FORMS_ACCESS_KEY`,
+submitting **opens the visitor's email app** with a pre-filled draft (name,
+phone, message, and the quote breakdown for quote-form leads) addressed to
+`siteConfig.email`. No account, no backend, nothing to deploy. Trade-off: the
+visitor must have a mail client and press **Send** themselves, so it can drop
+leads on devices with no configured mail app — the success screen says so and
+shows the email address as a fallback.
+
+### Upgrade (recommended once live): Web3Forms
 
 - Sign up at https://web3forms.com → get free access key.
-- Paste it into `siteConfig.ts` → `web3FormsAccessKey`. Default value is
-  `YOUR_WEB3FORMS_ACCESS_KEY` — the form refuses to submit while that placeholder
-  is present (prevents accidental live deploys with a bad key).
-- Web3Forms supports custom redirect, custom subject, and honeypot — already
-  wired in `services/leads.ts`.
+- Paste it into `siteConfig.ts` → `web3FormsAccessKey`. The form **upgrades
+  automatically** to POST to Web3Forms, which emails the lead with no extra step
+  for the visitor. Custom subject + honeypot are already wired.
 - After deploy, add your production domain to the Web3Forms dashboard so
   submissions aren't blocked.
 

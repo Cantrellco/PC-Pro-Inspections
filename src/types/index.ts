@@ -175,7 +175,7 @@ export type SiteConfig = {
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];
-  /** Web3Forms access key. While === DEFAULT, submitLead() throws to prevent live deploys. */
+  /** Web3Forms access key. While === DEFAULT, submitLead() falls back to a mailto: draft; set a real key to email leads automatically. */
   web3FormsAccessKey: string;
   /** Scheduler embed URL. Blank → Book Now page shows polished fallback. */
   bookingUrl: string;
@@ -272,7 +272,7 @@ export type LeadPayload = {
 };
 
 export type LeadResult =
-  | { ok: true }
+  | { ok: true; via?: 'web3forms' | 'mailto' }
   | { ok: false; error: string };
 
 export type BookingConfig = {

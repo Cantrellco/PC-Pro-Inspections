@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { submitLead } from '@/services/leads';
+import { siteConfig } from '@/config/siteConfig';
 import type { LeadPayload } from '@/types';
 import Field from './Field';
 import Button from './Button';
@@ -26,7 +27,7 @@ export default function ContactForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [sentVia, setSentVia] = useState<'web3forms' | 'mailto' | null>(null);
 
   const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
@@ -69,26 +70,48 @@ export default function ContactForm() {
     setSubmitting(false);
 
     if (result.ok) {
-      setSubmitted(true);
+      setSentVia(result.via ?? 'web3forms');
       setForm(initial);
     } else {
       setSubmitError(result.error);
     }
   };
 
-  if (submitted) {
+  if (sentVia) {
     return (
       <div
         role="status"
         className="rounded-md border border-flag-navyLight/40 bg-flag-navy/15 p-6"
       >
-        <p className="font-display text-xl text-white mb-2">
-          Thanks — we got your message.
-        </p>
-        <p className="text-bone-muted">
-          We will be in touch within a few business hours. For anything urgent,
-          please call us directly.
-        </p>
+        {sentVia === 'mailto' ? (
+          <>
+            <p className="font-display text-xl text-white mb-2">
+              Your email is ready to send.
+            </p>
+            <p className="text-bone-muted">
+              We've opened your email app with your message filled in — just
+              press <span className="text-white font-semibold">Send</span> and it
+              reaches us. If nothing opened, email us directly at{' '}
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="text-white underline underline-offset-2"
+              >
+                {siteConfig.email}
+              </a>
+              .
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="font-display text-xl text-white mb-2">
+              Thanks — we got your message.
+            </p>
+            <p className="text-bone-muted">
+              We will be in touch within a few business hours. For anything
+              urgent, please call us directly.
+            </p>
+          </>
+        )}
       </div>
     );
   }

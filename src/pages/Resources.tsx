@@ -59,7 +59,6 @@ export default function Resources() {
                 Sample Inspection Report
               </h2>
               <p className="text-bone-muted mb-5">
-                {/* TODO: owner — drop a real PDF at public/sample-report.pdf */}
                 A redacted PDF showing exactly what you receive after your
                 inspection: priority summary, photos for every finding,
                 clear next-step recommendations, and a maintenance section.
@@ -83,8 +82,8 @@ export default function Resources() {
                 </Button>
               </div>
               <p className="mt-4 text-xs text-bone-dim">
-                The placeholder PDF will work once dropped at{' '}
-                <code>public/sample-report.pdf</code>.
+                Sample shown is illustrative. Findings and language vary by
+                property; client details are redacted.
               </p>
             </div>
           </div>

@@ -105,7 +105,7 @@ export default function QuoteCalculator() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
+  const [sentVia, setSentVia] = useState<'web3forms' | 'mailto' | null>(null);
   const [formOpen, setFormOpen] = useState(false);
 
   const toggleAddOn = (id: string) => {
@@ -153,7 +153,7 @@ export default function QuoteCalculator() {
     setSubmitting(false);
 
     if (result.ok) {
-      setSubmitted(true);
+      setSentVia(result.via ?? 'web3forms');
       setForm(initialForm);
     } else {
       setSubmitError(result.error);
@@ -414,18 +414,41 @@ export default function QuoteCalculator() {
             business hours.
           </p>
 
-          {submitted ? (
+          {sentVia ? (
             <div
               role="status"
               className="rounded-md border border-flag-navyLight/40 bg-flag-navy/15 p-5 text-bone"
             >
-              <p className="mb-1 font-semibold text-white">
-                Thanks — we got it.
-              </p>
-              <p className="text-sm text-bone-muted">
-                We will call you back shortly to confirm scheduling. Keep an eye
-                on your phone.
-              </p>
+              {sentVia === 'mailto' ? (
+                <>
+                  <p className="mb-1 font-semibold text-white">
+                    Your email is ready to send.
+                  </p>
+                  <p className="text-sm text-bone-muted">
+                    We've opened your email app with this quote in the message —
+                    just press{' '}
+                    <span className="font-semibold text-white">Send</span>. If
+                    nothing opened, email us at{' '}
+                    <a
+                      href={`mailto:${siteConfig.email}`}
+                      className="text-white underline underline-offset-2"
+                    >
+                      {siteConfig.email}
+                    </a>
+                    .
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="mb-1 font-semibold text-white">
+                    Thanks — we got it.
+                  </p>
+                  <p className="text-sm text-bone-muted">
+                    We will call you back shortly to confirm scheduling. Keep an
+                    eye on your phone.
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <form

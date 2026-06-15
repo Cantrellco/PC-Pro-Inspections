@@ -232,7 +232,7 @@ export const siteConfig: SiteConfig = {
     greeting:
       "Hi, I'm Paul Cantrell, owner of PC Pro Inspections in Fairfield, Illinois.",
     paragraphs: [
-      "After my wife Mitzie (a real estate agent for the past five years) shared how much our area needed reliable home inspectors, I decided to pursue my certification. Two years ago I completed my training and quickly discovered my true passion: helping families feel confident and secure about one of the biggest decisions they'll ever make — buying or selling a home.",
+      "After my wife Mitzie (a real estate agent for the past five years) shared how much our area needed reliable home inspectors, I decided to pursue my certification. I completed my training and quickly discovered my true passion: helping families feel confident and secure about one of the biggest decisions they'll ever make — buying or selling a home.",
       "With a careful eye for detail and a commitment to thorough, honest inspections, I walk clients through every aspect of the property so they can make informed decisions with peace of mind. Whether it's identifying potential safety issues, structural concerns, or maintenance needs, I'm dedicated to providing clear, straightforward reports that put my clients first.",
       "On a personal note, Mitzie and I have been happily married for 28 years. We're proud parents to our son Cody, who has been married to his wife Gracie for two years. We're also excitedly preparing to welcome our first grandchild very soon!",
       "When I'm not inspecting homes, I enjoy spending time with family and being part of this wonderful Fairfield community. I understand how important it is to feel secure in your home — and I'm here to help make that happen.",
@@ -348,10 +348,12 @@ export const siteConfig: SiteConfig = {
     },
   ],
 
-  // ─── Web3Forms ───────────────────────────────────────────────────────────
-  // Sign up at https://web3forms.com → get free access key.
-  // While value === DEFAULT, submitLead() refuses to send (prevents broken-form deploys).
-  web3FormsAccessKey: 'YOUR_WEB3FORMS_ACCESS_KEY', // TODO: owner to fill
+  // ─── Web3Forms (optional upgrade) ────────────────────────────────────────
+  // While this is the DEFAULT placeholder, the forms fall back to a mailto:
+  // draft (opens the visitor's email app — works with no account or backend).
+  // To deliver leads automatically instead: sign up at https://web3forms.com,
+  // get a free access key, paste it here. No other code changes needed.
+  web3FormsAccessKey: 'YOUR_WEB3FORMS_ACCESS_KEY', // optional: set to email leads automatically
 
   // ─── Booking ─────────────────────────────────────────────────────────────
   // Vendor-agnostic. Drop in any scheduler embed URL/iframe src.
