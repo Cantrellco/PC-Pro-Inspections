@@ -1,31 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Termite / wood-destroying organism certification seal">
   <defs>
-    <radialGradient id="tm-face" cx="50%" cy="35%" r="72%">
-      <stop offset="0" stop-color="#123f6c"/>
-      <stop offset="0.7" stop-color="#0a2647"/>
+    <linearGradient id="tm-bezel" x1="20" y1="3" x2="52" y2="69" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7e7ad"/>
+      <stop offset="0.34" stop-color="#cda531"/>
+      <stop offset="0.72" stop-color="#8c6712"/>
+      <stop offset="1" stop-color="#6b4e0d"/>
+    </linearGradient>
+    <linearGradient id="tm-sheen" x1="0" y1="3" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="1" stop-color="#cda531" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="tm-face" cx="50%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#15477a"/>
+      <stop offset="0.45" stop-color="#0e3460"/>
+      <stop offset="0.78" stop-color="#0a2647"/>
       <stop offset="1" stop-color="#04162c"/>
     </radialGradient>
-    <linearGradient id="tm-brass" x1="0" y1="6" x2="0" y2="66" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f4e1a0"/>
-      <stop offset="0.5" stop-color="#cda531"/>
-      <stop offset="1" stop-color="#9a7414"/>
+    <radialGradient id="tm-gloss" cx="50%" cy="19%" r="56%">
+      <stop offset="0" stop-color="#cfe2f3" stop-opacity="0.5"/>
+      <stop offset="0.55" stop-color="#cfe2f3" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#cfe2f3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tm-glyph" x1="0" y1="22" x2="0" y2="54" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="0.5" stop-color="#e6c552"/>
+      <stop offset="1" stop-color="#a37c18"/>
     </linearGradient>
+    <radialGradient id="tm-head" cx="50%" cy="40%" r="62%">
+      <stop offset="0" stop-color="#e23b53"/>
+      <stop offset="1" stop-color="#b3122b"/>
+    </radialGradient>
   </defs>
-  <circle cx="36" cy="36" r="33.5" fill="url(#tm-face)" stroke="url(#tm-brass)" stroke-width="2.6"/>
-  <circle cx="36" cy="36" r="28.5" fill="none" stroke="url(#tm-brass)" stroke-width="0.9" opacity="0.55"/>
-  <g transform="translate(0 3.8) translate(36 36) scale(.8) translate(-36 -36)">
-    <!-- antennae -->
-    <g fill="none" stroke="url(#tm-brass)" stroke-width="2" stroke-linecap="round">
-      <path d="M34.5 18.5Q31 15 29 16"/><path d="M37.5 18.5Q41 15 43 16"/>
-    </g>
-    <!-- legs -->
-    <g fill="none" stroke="url(#tm-brass)" stroke-width="2.2" stroke-linecap="round">
-      <path d="M33 26Q28 24 25 21"/><path d="M32.5 29.5Q27 29.5 24 28.5"/><path d="M33 33Q28 35 25 37.5"/>
-      <path d="M39 26Q44 24 47 21"/><path d="M39.5 29.5Q45 29.5 48 28.5"/><path d="M39 33Q44 35 47 37.5"/>
-    </g>
-    <!-- body -->
-    <ellipse cx="36" cy="28" rx="3.4" ry="3.8" fill="url(#tm-brass)"/>
-    <ellipse cx="36" cy="41" rx="5" ry="7.5" fill="url(#tm-brass)"/>
-    <circle cx="36" cy="20" r="3" fill="#e23b53"/>
+  <!-- CHROME -->
+  <circle cx="36" cy="36" r="34.4" fill="#5a4310"/>
+  <circle cx="36" cy="36" r="33.6" fill="url(#tm-bezel)"/>
+  <circle cx="36" cy="35.3" r="33.6" fill="url(#tm-sheen)" opacity="0.9"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#tm-face)"/>
+  <circle cx="36" cy="36" r="29.9" fill="none" stroke="#6b4e0d" stroke-width="0.7" opacity="0.7"/>
+  <circle cx="36" cy="36" r="25.4" fill="none" stroke="url(#tm-glyph)" stroke-width="1" opacity="0.7"/>
+  <circle cx="36" cy="36" r="28.2" fill="none" stroke="#04101f" stroke-width="1.1" opacity="0.55"/>
+  <path d="M17 28a20 20 0 0 1 38 0" fill="none" stroke="#5b86b0" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+  <path d="M18 46a19 10 0 0 0 36 0" fill="none" stroke="#020c1a" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
+  <!-- GLYPH: compact symmetrical termite, vertical, head up -->
+  <!-- legs (brass, thick, swept back & down so they read as legs, not star rays) -->
+  <g fill="none" stroke="url(#tm-glyph)" stroke-width="3" stroke-linecap="round">
+    <path d="M33.4 35Q28.8 35.5 25.6 38"/><path d="M38.6 35Q43.2 35.5 46.4 38"/>
+    <path d="M33.2 39.5Q28.4 41 25.4 44"/><path d="M38.8 39.5Q43.6 41 46.6 44"/>
+    <path d="M33.4 44Q29.2 46.5 26.8 50"/><path d="M38.6 44Q42.8 46.5 45.2 50"/>
   </g>
+  <!-- antennae (short, swept forward) -->
+  <g fill="none" stroke="url(#tm-glyph)" stroke-width="2.6" stroke-linecap="round">
+    <path d="M33.8 27.4Q31 24.5 30.4 23.2"/><path d="M38.2 27.4Q41 24.5 41.6 23.2"/>
+  </g>
+  <!-- thorax + abdomen (solid brass, heavy vertical mass) -->
+  <ellipse cx="36" cy="36" rx="4.4" ry="5.4" fill="url(#tm-glyph)"/>
+  <ellipse cx="36" cy="46" rx="5.8" ry="7.4" fill="url(#tm-glyph)"/>
+  <!-- crimson focal: large head -->
+  <circle cx="36" cy="29" r="4.8" fill="url(#tm-head)"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#tm-gloss)"/>
 </svg>

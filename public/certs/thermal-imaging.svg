@@ -1,25 +1,53 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Thermal imaging certification seal">
   <defs>
-    <radialGradient id="ti-face" cx="50%" cy="35%" r="72%">
-      <stop offset="0" stop-color="#123f6c"/>
-      <stop offset="0.7" stop-color="#0a2647"/>
+    <linearGradient id="ti-bezel" x1="20" y1="3" x2="52" y2="69" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7e7ad"/>
+      <stop offset="0.34" stop-color="#cda531"/>
+      <stop offset="0.72" stop-color="#8c6712"/>
+      <stop offset="1" stop-color="#6b4e0d"/>
+    </linearGradient>
+    <linearGradient id="ti-sheen" x1="0" y1="3" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="1" stop-color="#cda531" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="ti-face" cx="50%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#15477a"/>
+      <stop offset="0.45" stop-color="#0e3460"/>
+      <stop offset="0.78" stop-color="#0a2647"/>
       <stop offset="1" stop-color="#04162c"/>
     </radialGradient>
-    <linearGradient id="ti-brass" x1="0" y1="6" x2="0" y2="66" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f4e1a0"/>
-      <stop offset="0.5" stop-color="#cda531"/>
-      <stop offset="1" stop-color="#9a7414"/>
+    <radialGradient id="ti-gloss" cx="50%" cy="19%" r="56%">
+      <stop offset="0" stop-color="#cfe2f3" stop-opacity="0.5"/>
+      <stop offset="0.55" stop-color="#cfe2f3" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#cfe2f3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ti-glyph" x1="0" y1="20" x2="0" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="0.5" stop-color="#e6c552"/>
+      <stop offset="1" stop-color="#a37c18"/>
+    </linearGradient>
+    <linearGradient id="ti-merc" x1="0" y1="24" x2="0" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e23b53"/>
+      <stop offset="1" stop-color="#b3122b"/>
     </linearGradient>
   </defs>
-  <circle cx="36" cy="36" r="33.5" fill="url(#ti-face)" stroke="url(#ti-brass)" stroke-width="2.6"/>
-  <circle cx="36" cy="36" r="28.5" fill="none" stroke="url(#ti-brass)" stroke-width="0.9" opacity="0.55"/>
-  <g transform="translate(36 36) scale(.82) translate(-36 -36)" stroke-width="3">
-    <!-- thermometer -->
-    <path d="M32 42V23a4 4 0 0 1 8 0v19" fill="none" stroke="url(#ti-brass)" stroke-linecap="round"/>
-    <circle cx="36" cy="45.5" r="5.6" fill="#e23b53" stroke="url(#ti-brass)"/>
-    <path d="M36 44.5V29" stroke="#e23b53" stroke-linecap="round"/>
-    <g stroke="url(#ti-brass)" stroke-width="2" stroke-linecap="round">
-      <path d="M40.5 27h3"/><path d="M40.5 31.5h3"/><path d="M40.5 36h3"/>
-    </g>
+  <!-- CHROME -->
+  <circle cx="36" cy="36" r="34.4" fill="#5a4310"/>
+  <circle cx="36" cy="36" r="33.6" fill="url(#ti-bezel)"/>
+  <circle cx="36" cy="35.3" r="33.6" fill="url(#ti-sheen)" opacity="0.9"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#ti-face)"/>
+  <circle cx="36" cy="36" r="29.9" fill="none" stroke="#6b4e0d" stroke-width="0.7" opacity="0.7"/>
+  <circle cx="36" cy="36" r="25.4" fill="none" stroke="url(#ti-glyph)" stroke-width="1" opacity="0.7"/>
+  <circle cx="36" cy="36" r="28.2" fill="none" stroke="#04101f" stroke-width="1.1" opacity="0.55"/>
+  <path d="M17 28a20 20 0 0 1 38 0" fill="none" stroke="#5b86b0" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+  <path d="M18 46a19 10 0 0 0 36 0" fill="none" stroke="#020c1a" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
+  <!-- GLYPH: solid brass thermometer + carved navy channel + crimson mercury + brass heat waves -->
+  <g fill="none" stroke="url(#ti-glyph)" stroke-width="2.7" stroke-linecap="round">
+    <path d="M46 28.5h4.4"/><path d="M46 34h4.4"/><path d="M46 39.5h4.4"/>
   </g>
+  <path d="M31.6 24.4a4.4 4.4 0 0 1 8.8 0v15.6a7 7 0 1 1 -8.8 0Z" fill="url(#ti-glyph)" stroke="url(#ti-glyph)" stroke-width="0.5" stroke-linejoin="round"/>
+  <path d="M34 25a2 2 0 0 1 4 0v16.6a4.4 4.4 0 1 1 -4 0Z" fill="#0a2647"/>
+  <circle cx="36" cy="44.7" r="3.7" fill="url(#ti-merc)"/>
+  <path d="M36 31v9.8" fill="none" stroke="url(#ti-merc)" stroke-width="3.2" stroke-linecap="round"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#ti-gloss)"/>
 </svg>

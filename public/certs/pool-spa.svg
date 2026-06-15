@@ -1,23 +1,55 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Pool and spa inspection certification seal">
   <defs>
-    <radialGradient id="ps-face" cx="50%" cy="35%" r="72%">
-      <stop offset="0" stop-color="#123f6c"/>
-      <stop offset="0.7" stop-color="#0a2647"/>
+    <linearGradient id="ps-bezel" x1="20" y1="3" x2="52" y2="69" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7e7ad"/>
+      <stop offset="0.34" stop-color="#cda531"/>
+      <stop offset="0.72" stop-color="#8c6712"/>
+      <stop offset="1" stop-color="#6b4e0d"/>
+    </linearGradient>
+    <linearGradient id="ps-sheen" x1="0" y1="3" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="1" stop-color="#cda531" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="ps-face" cx="50%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#15477a"/>
+      <stop offset="0.45" stop-color="#0e3460"/>
+      <stop offset="0.78" stop-color="#0a2647"/>
       <stop offset="1" stop-color="#04162c"/>
     </radialGradient>
-    <linearGradient id="ps-brass" x1="0" y1="6" x2="0" y2="66" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f4e1a0"/>
-      <stop offset="0.5" stop-color="#cda531"/>
-      <stop offset="1" stop-color="#9a7414"/>
+    <radialGradient id="ps-gloss" cx="50%" cy="19%" r="56%">
+      <stop offset="0" stop-color="#cfe2f3" stop-opacity="0.5"/>
+      <stop offset="0.55" stop-color="#cfe2f3" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#cfe2f3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ps-glyph" x1="0" y1="24" x2="0" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="0.5" stop-color="#e6c552"/>
+      <stop offset="1" stop-color="#a37c18"/>
     </linearGradient>
+    <radialGradient id="ps-glint" cx="50%" cy="40%" r="62%">
+      <stop offset="0" stop-color="#e23b53"/>
+      <stop offset="1" stop-color="#b3122b"/>
+    </radialGradient>
   </defs>
-  <circle cx="36" cy="36" r="33.5" fill="url(#ps-face)" stroke="url(#ps-brass)" stroke-width="2.6"/>
-  <circle cx="36" cy="36" r="28.5" fill="none" stroke="url(#ps-brass)" stroke-width="0.9" opacity="0.55"/>
-  <g transform="translate(36 36) scale(.8) translate(-36 -36)" stroke-width="2.9">
-    <!-- pool basin -->
-    <path d="M19 23V40a5 5 0 0 0 5 5h24a5 5 0 0 0 5-5V23" fill="none" stroke="url(#ps-brass)" stroke-linecap="round"/>
-    <!-- water -->
-    <path d="M22.5 31q4.4-3.6 8.8 0t8.8 0 8.8 0" fill="none" stroke="#e23b53" stroke-linecap="round"/>
-    <path d="M22.5 38q4.4-3.6 8.8 0t8.8 0 8.8 0" fill="none" stroke="url(#ps-brass)" stroke-linecap="round"/>
+  <!-- CHROME -->
+  <circle cx="36" cy="36" r="34.4" fill="#5a4310"/>
+  <circle cx="36" cy="36" r="33.6" fill="url(#ps-bezel)"/>
+  <circle cx="36" cy="35.3" r="33.6" fill="url(#ps-sheen)" opacity="0.9"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#ps-face)"/>
+  <circle cx="36" cy="36" r="29.9" fill="none" stroke="#6b4e0d" stroke-width="0.7" opacity="0.7"/>
+  <circle cx="36" cy="36" r="25.4" fill="none" stroke="url(#ps-glyph)" stroke-width="1" opacity="0.7"/>
+  <circle cx="36" cy="36" r="28.2" fill="none" stroke="#04101f" stroke-width="1.1" opacity="0.55"/>
+  <path d="M17 28a20 20 0 0 1 38 0" fill="none" stroke="#5b86b0" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+  <path d="M18 46a19 10 0 0 0 36 0" fill="none" stroke="#020c1a" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
+  <!-- GLYPH: clean brass pool basin + two calm brass ripples + one crimson sun-glint -->
+  <!-- crimson sun-glint accent -->
+  <circle cx="43" cy="26.5" r="3.9" fill="url(#ps-glint)"/>
+  <!-- basin (brass U) -->
+  <path d="M23 30v10.5a6 6 0 0 0 6 6h14a6 6 0 0 0 6-6V30" fill="none" stroke="url(#ps-glyph)" stroke-width="3.4" stroke-linecap="round"/>
+  <!-- two calm water ripples (brass) -->
+  <g fill="none" stroke="url(#ps-glyph)" stroke-width="3" stroke-linecap="round">
+    <path d="M28 36.5q4-3.4 8 0t8 0"/>
+    <path d="M28 42q4-3.4 8 0t8 0"/>
   </g>
+  <circle cx="36" cy="36" r="28.2" fill="url(#ps-gloss)"/>
 </svg>

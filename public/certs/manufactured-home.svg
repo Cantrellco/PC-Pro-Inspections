@@ -1,27 +1,57 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-label="Manufactured and mobile home certification seal">
   <defs>
-    <radialGradient id="mh-face" cx="50%" cy="35%" r="72%">
-      <stop offset="0" stop-color="#123f6c"/>
-      <stop offset="0.7" stop-color="#0a2647"/>
+    <linearGradient id="mh-bezel" x1="20" y1="3" x2="52" y2="69" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f7e7ad"/>
+      <stop offset="0.34" stop-color="#cda531"/>
+      <stop offset="0.72" stop-color="#8c6712"/>
+      <stop offset="1" stop-color="#6b4e0d"/>
+    </linearGradient>
+    <linearGradient id="mh-sheen" x1="0" y1="3" x2="0" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="1" stop-color="#cda531" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="mh-face" cx="50%" cy="30%" r="82%">
+      <stop offset="0" stop-color="#15477a"/>
+      <stop offset="0.45" stop-color="#0e3460"/>
+      <stop offset="0.78" stop-color="#0a2647"/>
       <stop offset="1" stop-color="#04162c"/>
     </radialGradient>
-    <linearGradient id="mh-brass" x1="0" y1="6" x2="0" y2="66" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#f4e1a0"/>
-      <stop offset="0.5" stop-color="#cda531"/>
-      <stop offset="1" stop-color="#9a7414"/>
+    <radialGradient id="mh-gloss" cx="50%" cy="19%" r="56%">
+      <stop offset="0" stop-color="#cfe2f3" stop-opacity="0.5"/>
+      <stop offset="0.55" stop-color="#cfe2f3" stop-opacity="0.1"/>
+      <stop offset="1" stop-color="#cfe2f3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mh-glyph" x1="0" y1="24" x2="0" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fbf1cf"/>
+      <stop offset="0.5" stop-color="#e6c552"/>
+      <stop offset="1" stop-color="#a37c18"/>
+    </linearGradient>
+    <linearGradient id="mh-door" x1="0" y1="36" x2="0" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e23b53"/>
+      <stop offset="1" stop-color="#b3122b"/>
     </linearGradient>
   </defs>
-  <circle cx="36" cy="36" r="33.5" fill="url(#mh-face)" stroke="url(#mh-brass)" stroke-width="2.6"/>
-  <circle cx="36" cy="36" r="28.5" fill="none" stroke="url(#mh-brass)" stroke-width="0.9" opacity="0.55"/>
-  <g transform="translate(36 36) scale(.8) translate(-36 -36)">
-    <!-- roof -->
-    <path d="M19 34 36 21.5 53 34Z" fill="#e23b53"/>
-    <!-- body -->
-    <rect x="26" y="34" width="20" height="12.5" rx="2" fill="none" stroke="url(#mh-brass)" stroke-width="2.9"/>
-    <!-- door -->
-    <path d="M33 46.5v-5a3 3 0 0 1 6 0v5" fill="none" stroke="url(#mh-brass)" stroke-width="2.3" stroke-linejoin="round"/>
-    <!-- wheels -->
-    <circle cx="31" cy="49" r="2.8" fill="url(#mh-brass)"/>
-    <circle cx="41" cy="49" r="2.8" fill="url(#mh-brass)"/>
+  <!-- CHROME -->
+  <circle cx="36" cy="36" r="34.4" fill="#5a4310"/>
+  <circle cx="36" cy="36" r="33.6" fill="url(#mh-bezel)"/>
+  <circle cx="36" cy="35.3" r="33.6" fill="url(#mh-sheen)" opacity="0.9"/>
+  <circle cx="36" cy="36" r="28.2" fill="url(#mh-face)"/>
+  <circle cx="36" cy="36" r="29.9" fill="none" stroke="#6b4e0d" stroke-width="0.7" opacity="0.7"/>
+  <circle cx="36" cy="36" r="25.4" fill="none" stroke="url(#mh-glyph)" stroke-width="1" opacity="0.7"/>
+  <circle cx="36" cy="36" r="28.2" fill="none" stroke="#04101f" stroke-width="1.1" opacity="0.55"/>
+  <path d="M17 28a20 20 0 0 1 38 0" fill="none" stroke="#5b86b0" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+  <path d="M18 46a19 10 0 0 0 36 0" fill="none" stroke="#020c1a" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
+  <!-- GLYPH: long low manufactured home (wider than tall) -->
+  <!-- solid brass body with low gable -->
+  <path d="M20 32.5 36 25 52 32.5V44a1.5 1.5 0 0 1-1.5 1.5h-29A1.5 1.5 0 0 1 20 44Z" fill="url(#mh-glyph)"/>
+  <!-- carved navy window -->
+  <rect x="39" y="34.5" width="7" height="5.5" rx="0.8" fill="#0a2647"/>
+  <!-- crimson door (single focal accent) -->
+  <path d="M26.5 45.5v-9.2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v9.2Z" fill="url(#mh-door)"/>
+  <!-- subtle brass wheels under the skirt -->
+  <g fill="url(#mh-glyph)">
+    <circle cx="28" cy="47.2" r="2.4"/>
+    <circle cx="44" cy="47.2" r="2.4"/>
   </g>
+  <circle cx="36" cy="36" r="28.2" fill="url(#mh-gloss)"/>
 </svg>
