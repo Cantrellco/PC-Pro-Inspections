@@ -10,7 +10,7 @@ import type { SiteConfig } from '@/types';
 export const siteConfig: SiteConfig = {
   // ─── Identity ────────────────────────────────────────────────────────────
   businessName: 'PC Pro Inspections',
-  legalName: 'PC Pro Inspections LLC', // TODO: owner to confirm exact registered entity name
+  legalName: 'PC Pro Inspections', // sole proprietorship / DBA (not an LLC) — used in footer copyright + LocalBusiness JSON-LD
   inspectorName: 'Paul Cantrell',
   tagline: 'Honest, thorough home inspections — so you buy with confidence.',
 

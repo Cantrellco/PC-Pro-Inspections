@@ -229,10 +229,27 @@ These live outside the codebase but are required to actually rank.
 
 ## Legal Pages
 
-- `/privacy` and `/terms` are **templates with placeholder content**, labeled
-  `// TODO: owner to review with counsel` at the top.
-- Privacy Policy mentions Web3Forms (form processor) and analytics.
-- **NOT legal advice.** Review before launch.
+- `/privacy` and `/terms` are **complete, business-specific documents** —
+  written for PC Pro Inspections as an Illinois (Wayne County) sole
+  proprietorship, tailored to how this static, frontend-only site actually
+  works (dual mailto/Web3Forms form delivery, optional cookieless analytics,
+  optional future scheduler, self-hosted fonts).
+- Content lives as **plain data** (`intro` + `sections` + `closingNote`) inside
+  each page and is rendered by the shared `LegalContent` component. To edit the
+  copy, change the `content` object in `pages/Privacy.tsx` / `pages/Terms.tsx`;
+  no markup needed. Inline tokens `{EMAIL}`, `{PHONE}`, `{WEB3FORMS_PRIVACY}`
+  expand to live links. List items written `Lead-in — explanation` auto-emphasize
+  the lead-in.
+- Each page shows a **static** `EFFECTIVE_DATE` (top of each file) — update it
+  whenever the copy meaningfully changes; it is the "date shown" the copy
+  references. Do NOT make it `new Date()` (that would silently show today).
+- The Terms reference Illinois licensing/regulation; **owner must confirm the
+  active IDFPR home-inspector license** before launch (Terms §5 states the legal
+  requirement and routes specifics to the signed pre-inspection agreement — no
+  license number is published).
+- Each page ends with a brief, professional review note (not an alarming
+  "template" banner). **Still not legal advice** — owner should have counsel
+  glance at them before/periodically after launch.
 - Linked in the footer, not the top nav.
 
 ---
