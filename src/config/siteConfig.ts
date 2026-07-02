@@ -67,6 +67,8 @@ export const siteConfig: SiteConfig = {
     'Norris City',
     'Enfield',
     'Benton',
+    'Effingham',
+    'Marion',
   ],
 
   // ─── Map ───────────────────────────────────────────────────────────────
