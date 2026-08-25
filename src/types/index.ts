@@ -96,6 +96,15 @@ export type Testimonial = {
   role: string;
   quote: string;
   rating: 1 | 2 | 3 | 4 | 5;
+  /** Platform the review was left on — shown as a small badge. */
+  source?: 'google' | 'spectora';
+};
+
+export type GoogleBusinessProfile = {
+  /** Public Google Maps listing URL (also emitted in JSON-LD `sameAs`). */
+  mapsUrl: string;
+  /** Direct "write a review" short link from the GBP dashboard. Blank → mapsUrl. */
+  writeReviewUrl: string;
 };
 
 export type FaqItem = {
@@ -172,6 +181,8 @@ export type SiteConfig = {
   equipment?: EquipmentShowcase;
   /** The owner's personal letter (About page). Optional — hides when unset. */
   ownerStory?: OwnerStory;
+  /** Google Business Profile links. Optional — review CTA hides when unset. */
+  google?: GoogleBusinessProfile;
   testimonials: Testimonial[];
   faqs: FaqItem[];
   prepGuide: PrepGuideSection[];
@@ -194,6 +205,8 @@ export type AddOn = {
   description: string;
   /** Flat fee in USD. */
   price: number;
+  /** Extra on-site time this adds, in hours (per the price sheet). */
+  durationHours?: number;
 };
 
 /**
@@ -220,6 +233,8 @@ export type SqftTier = {
   label: string;
   /** Approximate on-site time, e.g. "~4 hrs" or "7+ hrs". */
   durationLabel?: string;
+  /** The same figure as a number, so add-on time can be summed onto it. */
+  durationHours?: number;
 };
 
 /** Commercial tier — priced PER SQUARE FOOT (base = sqft × pricePerSqft). */
@@ -233,6 +248,8 @@ export type CommercialTier = {
   label: string;
   /** Approximate on-site time, e.g. "~4 hrs" or "9+ hrs". */
   durationLabel?: string;
+  /** The same figure as a number, so add-on time can be summed onto it. */
+  durationHours?: number;
 };
 
 export type QuoteInputs = {
@@ -255,6 +272,8 @@ export type QuoteResult = {
   total: number;
   /** Approximate on-site time for the resolved tier. */
   durationLabel?: string;
+  /** Commercial only: the sheet minimum set the price, not the square footage. */
+  minimumApplied?: boolean;
 };
 
 export type LeadSource = 'contact_form' | 'quote_form';

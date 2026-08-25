@@ -1,0 +1,42 @@
+{
+  "title": "Approve the Home page composition",
+  "question": "Three compositions of the Folk Woodblock world. Pick the one to build against, or say what to combine.",
+  "options": [
+    {
+      "id": "comp-1-poster",
+      "label": "The Poster",
+      "kicker": "THE CHOSEN COMP",
+      "lineage": "the decision comp you picked",
+      "thesis": "One print: name and prices stacked vertical on the left, the house in section, the phone on a red banner.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["shell paper", "misregistered blocks", "black keyblock"],
+      "viewport": "Vertical cut-letter name and price stack on the left, the house section center-right, full-width red CALL banner at the bottom, nav as small caps top right.",
+      "risk": "Least like a website: the nav is tiny and the second fold is unproven; the flag is a small corner print.",
+      "sketch": ".impeccable/mocks/comps/comp-1-poster.png"
+    },
+    {
+      "id": "comp-2-site",
+      "label": "The Site",
+      "lineage": "same world, denser page topology",
+      "thesis": "A woodblock-printed waving flag band crowns the page; headline left, house right, a brass ledger of prices across, review seals in the second fold.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["printed flag band", "brass ledger strip", "round review seals"],
+      "viewport": "Flag band, then header with shield mark, nav with star ornaments, red CALL button; hero headline 'Know the house before you buy it.' with two buttons left, house section right; full-width brass price ledger; review seals begin the second fold.",
+      "risk": "Most conventional topology of the three; the flag band must be the live waving-flag canvas printed as a woodblock, not a static image, or it goes flat.",
+      "sketch": ".impeccable/mocks/comps/comp-2-site.png"
+    },
+    {
+      "id": "comp-3-print-in-progress",
+      "label": "Print in Progress",
+      "lineage": "same world, the print-order reveal as the fold's subject",
+      "thesis": "The house is printing block by block as you arrive, registration marks at the corners, and your price ticket sits beside it.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["registration crosshairs", "half-printed brass block", "woodcut price ticket"],
+      "viewport": "Headline 'Every system. One print.' top-left; a huge house section across the center with red and navy already printed, brass printing halfway, keyblock arriving; right, a ticket-framed calculator: sqft slider, termite checkbox, $450 in red, CALL button, 'Book this inspection'; brass credential strip along the bottom.",
+      "risk": "The reveal must be built for real (SVG blocks registering in print order on load and scroll); it also puts the calculator on Home, which makes the Services page a pricing-table detail rather than the only price surface.",
+      "sketch": ".impeccable/mocks/comps/comp-3-print-in-progress.png"
+    }
+  ],
+  "steer": true,
+  "canon": false
+}

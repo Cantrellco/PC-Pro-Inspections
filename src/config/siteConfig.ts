@@ -1,4 +1,5 @@
 import type { SiteConfig } from '@/types';
+import { reviews } from '@/config/reviews';
 
 /**
  * Single source of truth for business info, content, and integrations.
@@ -20,7 +21,7 @@ export const siteConfig: SiteConfig = {
   // service. Blank fields fall back to a polished gradient placeholder.
   images: {
     hero: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=2000&q=80', // TODO: owner — swap for a local home exterior
-    inspector: '/team/paul-portrait.webp', // Paul Cantrell — real portrait (master: src/assets/paul-original.png; .jpg fallback alongside)
+    inspector: '/team/paul-portrait.webp', // Paul Cantrell — outdoor business portrait (master: src/assets/paul-portrait-source.png; paul-original.png = the older snapshot it was built from; .jpg fallback alongside)
     services: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1400&q=80', // TODO: owner — you inspecting
     resources: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80', // TODO: owner — interior/report
     ctaBand: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=80', // TODO: owner — dusk home exterior
@@ -32,19 +33,18 @@ export const siteConfig: SiteConfig = {
   email: 'paul@pcproinspections.com',
 
   // ─── Address ─────────────────────────────────────────────────────────────
-  // Mobile / service-area business based in Fairfield, IL (Wayne County).
-  // Owner works out of Fairfield with no public office, so `street` is blank
-  // by design: the site then shows "Fairfield, IL" and omits PostalAddress
-  // from the JSON-LD (the correct shape for a service-area business). The
-  // `areaServed` town list + geo coordinates still carry the local SEO signal.
+  // MUST match the Google Business Profile exactly (NAP consistency is a
+  // local-ranking factor). GBP shows 500 NW 9th St; Yelp still shows 502 —
+  // correct Yelp to match. With a street set, PostalAddress is emitted in the
+  // LocalBusiness JSON-LD and the footer/contact page show the full address.
   address: {
-    street: '', // intentionally blank — no public office address
+    street: '500 NW 9th St',
     city: 'Fairfield',
     region: 'IL',
     postalCode: '62837',
     country: 'US',
   },
-  geo: { latitude: 38.3786, longitude: -88.3595 }, // Fairfield, IL
+  geo: { latitude: 38.3838059, longitude: -88.3718119 }, // pin from the Google listing
 
   // ─── Service Area ────────────────────────────────────────────────────────
   serviceAreaSummary: 'Serving Fairfield & Southern Illinois', // TODO: owner to confirm
@@ -247,50 +247,21 @@ export const siteConfig: SiteConfig = {
     signature: { name: 'Paul Cantrell', title: 'Owner · PC Pro Inspections' },
   },
 
+  // ─── Google Business Profile ─────────────────────────────────────────────
+  // The listing lives at the Maps URL below (CID 2666121571154123334). As of
+  // 2026-08-25 it had NO reviews — all real reviews are on Spectora — so the
+  // Reviews page shows a "Review us on Google" CTA to start them flowing.
+  // `writeReviewUrl`: in the GBP dashboard click "Ask for reviews" and paste
+  // the short link (https://g.page/r/…/review). Blank → falls back to mapsUrl.
+  google: {
+    mapsUrl: 'https://www.google.com/maps/place/?cid=2666121571154123334',
+    writeReviewUrl: '', // TODO: owner to fill from GBP dashboard → "Ask for reviews"
+  },
+
   // ─── Testimonials ────────────────────────────────────────────────────────
-  testimonials: [
-    // Real verified reviews (Spectora). Add new ones here as they come in.
-    {
-      name: 'Larry B.',
-      role: 'Client',
-      quote:
-        'Great, thorough job! Explained everything well and was very courteous. We will gladly recommend your service to anyone needing or wanting a home inspection.',
-      rating: 5,
-    },
-    {
-      name: 'Melissa J.',
-      role: 'Real estate agent',
-      quote:
-        'Love working with Paul! He answers his phone and communicates well with the buyers and the agents!',
-      rating: 5,
-    },
-    {
-      name: 'Cody H.',
-      role: 'Client',
-      quote:
-        'Extremely thorough! Answered all of our questions and explained everything to us. Highly recommend PC Pro to anybody looking for their new home!',
-      rating: 5,
-    },
-    {
-      name: 'Missy W.',
-      role: 'Client',
-      quote:
-        'Paul was great and very thorough and explained everything to us.',
-      rating: 5,
-    },
-    {
-      name: 'Jakob & Bailey S.',
-      role: 'Client',
-      quote: 'Very detailed and well put together.',
-      rating: 5,
-    },
-    {
-      name: 'Sandy S.',
-      role: 'Client',
-      quote: 'Clearly explained what he observed and the condition of the property.',
-      rating: 5,
-    },
-  ],
+  // Hand-entered reviews live in src/config/reviews.ts (paste-friendly format).
+  // Live Google reviews are merged in at runtime by services/reviews.ts.
+  testimonials: reviews,
 
   // ─── FAQs (drives FAQPage JSON-LD on Home) ───────────────────────────────
   faqs: [
@@ -374,7 +345,7 @@ export const siteConfig: SiteConfig = {
   },
 
   // ─── Social Sharing ──────────────────────────────────────────────────────
-  ogImage: '/og-image.svg', // Branded 1200×630 share card. Some platforms prefer PNG; export og-image.svg → og-image.png and switch this back if needed.
+  ogImage: '/og-image.png', // Branded 1200×630 share card (woodblock world), rendered from the live site art
 };
 
 // Helper: returns true when the address has been filled with non-placeholder values.

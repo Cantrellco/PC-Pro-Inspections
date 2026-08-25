@@ -3,10 +3,10 @@ import { track } from '@/services/analytics';
 import { formatTime } from '@/lib/time';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
-import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
+import Button from '@/components/Button';
 import ContactForm from '@/components/ContactForm';
-import ServiceAreaMap from '@/components/ServiceAreaMap';
+import CTABand from '@/components/CTABand';
 
 export default function Contact() {
   const c = siteConfig;
@@ -15,103 +15,86 @@ export default function Contact() {
     <>
       <SEO
         title={`Contact | ${c.businessName}`}
-        description={`Call ${c.phone} or send a message — we reply within ${c.responsePromise.callbackHours} hours during business days.`}
+        description={`Call ${c.phone} or send Paul a message. Callback within ${c.responsePromise.callbackHours} hours on business days.`}
         pathname="/contact"
       />
 
-      <Section>
-        <SectionHeader
-          as="h1"
-          eyebrow="Contact"
-          title="Let's talk about your inspection."
-          description={`We call back within ${c.responsePromise.callbackHours} business hours. For closings in a hurry, just call — we usually pick up.`}
-        />
+      <Section wide>
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-10">
+          {/* ─── Left: the facts ─────────────────────────────────────── */}
+          <div className="lg:col-span-6">
+            <h1 className="display-1 cut-red animate-fade-up">Talk to Paul.</h1>
+            <p className="lede mt-4 max-w-md">
+              Calling is fastest. He calls back within {c.responsePromise.callbackHours} hours on
+              business days.
+            </p>
 
-        <div className="grid lg:grid-cols-5 gap-8">
-          {/* Form */}
-          <Card glow className="lg:col-span-3">
-            <ContactForm />
-          </Card>
+            <a
+              href={`tel:${c.phoneHref}`}
+              onClick={() => track('tel_click', { location: 'contact_page' })}
+              className="num mt-8 block font-display uppercase leading-none text-red hover:text-red-deep"
+              style={{ fontSize: 'clamp(2.4rem, 1.2rem + 5.2vw, 5rem)' }}
+            >
+              {c.phone}
+            </a>
+            <a
+              href={`mailto:${c.email}`}
+              onClick={() => track('mailto_click', { location: 'contact_page' })}
+              className="mt-3 inline-block break-all font-condensed text-xl font-bold uppercase tracking-wide text-navy underline decoration-2 underline-offset-4 hover:text-red sm:text-2xl"
+            >
+              {c.email}
+            </a>
 
-          {/* Sidebar */}
-          <div className="lg:col-span-2 flex flex-col gap-5">
-            <Card rim glow>
-              <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
-                Reach us directly
-              </h2>
-              <ul className="space-y-3 text-bone">
-                <li>
-                  <a
-                    href={`tel:${c.phoneHref}`}
-                    onClick={() => track('tel_click', { location: 'contact_page' })}
-                    className="text-xl font-display font-semibold text-white hover:text-flag-redSoft"
-                  >
-                    {c.phone}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${c.email}`}
-                    onClick={() => track('mailto_click', { location: 'contact_page' })}
-                    className="text-bone hover:text-white break-all"
-                  >
-                    {c.email}
-                  </a>
-                </li>
-                {c.address.city && (
-                  <li className="text-bone-muted text-sm pt-2">
-                    {c.address.street && (
-                      <>
-                        {c.address.street}
-                        <br />
-                      </>
-                    )}
-                    {c.address.city}, {c.address.region} {c.address.postalCode}
-                  </li>
-                )}
-              </ul>
-            </Card>
-
-            <Card glow>
-              <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
-                Hours
-              </h2>
-              <ul className="space-y-1.5 text-sm">
+            {c.hours.length > 0 && (
+              <dl className="mt-10 max-w-md border-t-3 border-ink">
                 {c.hours.map((h) => (
-                  <li key={h.day} className="flex justify-between gap-3">
-                    <span className="text-bone-muted">{h.day}</span>
-                    <span className="text-bone font-medium">
-                      {h.open === 'Closed'
-                        ? 'Closed'
-                        : `${formatTime(h.open)} – ${formatTime(h.close)}`}
-                    </span>
-                  </li>
+                  <div
+                    key={h.day}
+                    className="flex items-baseline justify-between gap-4 border-b-2 border-ink py-2.5"
+                  >
+                    <dt className="label">{h.day}</dt>
+                    <dd className="num font-condensed text-lg font-semibold text-ink-soft">
+                      {h.open === 'Closed' ? 'Closed' : `${formatTime(h.open)} – ${formatTime(h.close)}`}
+                    </dd>
+                  </div>
                 ))}
-              </ul>
-            </Card>
+              </dl>
+            )}
 
-            <Card glow>
-              <h2 className="text-xs uppercase tracking-[0.2em] text-flag-redSoft font-semibold mb-3">
-                Our Response Promise
-              </h2>
-              <p className="text-bone-muted text-sm">
-                <span className="text-white font-semibold">
-                  {c.responsePromise.callbackHours} hours
-                </span>{' '}
-                to call you back; inspection booked within{' '}
-                <span className="text-white font-semibold">
-                  {c.responsePromise.inspectionDays} business days
-                </span>{' '}
-                in most cases.
+            {c.address.city && (
+              <p className="mt-6 text-ink-soft">
+                <span className="label mr-2">Based in</span>
+                {c.address.city}, {c.address.region} {c.address.postalCode}
               </p>
-            </Card>
+            )}
+          </div>
 
-            {/* Fills the remaining sidebar height so it bottom-aligns with the
-                form; min-height keeps it tidy when the column is short. */}
-            <ServiceAreaMap className="flex-1 !h-auto !min-h-[16rem]" />
+          {/* ─── Right: the form ─────────────────────────────────────── */}
+          <div className="animate-fade-up [animation-delay:120ms] lg:col-span-6">
+            <Card ink="navy">
+              <h2 className="display-3">Or write it down</h2>
+              <p className="mb-6 mt-2 text-ink-soft">
+                Paul reads every message himself and replies by phone.
+              </p>
+              <ContactForm />
+            </Card>
           </div>
         </div>
       </Section>
+
+      {/* ─── Close ───────────────────────────────────────────────────── */}
+      <CTABand
+        tone="navy"
+        title="Have a price in mind first?"
+        description="The calculator gives an itemized estimate in seconds. No account, no email required."
+      >
+        <Button as="link" to="/services" variant="primary" className="!text-lg">
+          Get my price
+        </Button>
+        <Button as="link" to="/service-areas" variant="secondary" className="!text-lg">
+          Where Paul drives
+        </Button>
+      </CTABand>
     </>
   );
 }

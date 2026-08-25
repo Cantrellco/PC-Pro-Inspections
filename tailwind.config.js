@@ -4,77 +4,82 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Near-black canvas with layered elevated surfaces.
+        // Folk woodblock on crushed-shell paper: four inks on one ground.
+        paper: {
+          DEFAULT: '#f4efe4', // shell paper
+          deep: '#e9e1cf', // second sheet / ledger rows
+          white: '#fbf8f1', // pinned label boxes
+        },
         ink: {
-          DEFAULT: '#0a0a0b',
+          DEFAULT: '#111111', // black keyblock
+          soft: '#2f2b27', // body copy
+          mute: '#6b655c', // secondary copy (4.6:1 on paper)
+          // Legacy aliases (dark-theme scale) — kept so untouched pages compile
+          // during the redesign; do not use in new work.
           50: '#1c1c20',
           100: '#151517',
           200: '#100f12',
           300: '#0c0c0e',
         },
-        // Warm off-white for an editorial, premium feel.
-        bone: {
-          DEFAULT: '#f5f3ee',
-          muted: '#c7c4bd',
-          dim: '#928f88',
+        red: {
+          DEFAULT: '#c8102e',
+          deep: '#9c0f26',
         },
+        navy: {
+          DEFAULT: '#0a3161',
+          deep: '#061a33',
+        },
+        brass: {
+          DEFAULT: '#b8952a',
+          deep: '#8c6f18',
+          pale: '#e8d9a8',
+          // legacy alias
+          soft: '#b8952a',
+        },
+        // Legacy aliases so not-yet-rewritten pages keep compiling.
+        bone: { DEFAULT: '#2f2b27', muted: '#3a3632', dim: '#6b655c' },
         flag: {
-          // Heritage palette: Old Glory crimson + navy, with legible soft tints.
           red: '#c8102e',
-          redSoft: '#ef4a63',
+          redSoft: '#c8102e',
           redDeep: '#9c0f26',
           navy: '#0a3161',
-          navyLight: '#3a5fa8',
+          navyLight: '#0a3161',
           navyDeep: '#061a33',
-        },
-        // Restrained antique-brass accent for hairlines, seals, fine detail.
-        brass: {
-          DEFAULT: '#c9a227',
-          soft: '#e0c469',
-          deep: '#8c6f18',
         },
       },
       fontFamily: {
-        sans: ['"Hanken Grotesk"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        display: ['"Fraunces"', 'Georgia', 'Cambria', 'serif'],
+        display: ['"Anton"', '"Arial Narrow"', 'Impact', 'sans-serif'],
+        condensed: ['"Barlow Condensed"', '"Arial Narrow"', 'sans-serif'],
+        sans: ['"Barlow"', 'system-ui', '-apple-system', 'sans-serif'],
       },
-      letterSpacing: {
-        tightest: '-0.045em',
-      },
-      borderRadius: {
-        xl: '0.875rem',
-        '2xl': '1.25rem',
-        '3xl': '1.75rem',
-      },
-      boxShadow: {
-        card: '0 1px 0 rgba(255,255,255,0.04) inset, 0 10px 30px -12px rgba(0,0,0,0.7)',
-        lift: '0 1px 0 rgba(255,255,255,0.07) inset, 0 28px 60px -20px rgba(0,0,0,0.75)',
-        red: '0 10px 30px -10px rgba(200,16,46,0.55)',
-        brass: '0 0 0 1px rgba(201,162,39,0.35)',
-        glow: '0 0 44px -10px rgba(224,196,105,0.4)',
-        deep: '0 40px 80px -24px rgba(0,0,0,0.85)',
+      borderWidth: {
+        3: '3px',
       },
       transitionTimingFunction: {
+        // "Register": snaps into place with a one-frame overshoot, like a block
+        // landing on the paper.
+        register: 'cubic-bezier(0.2, 1.35, 0.4, 1)',
         smooth: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
       keyframes: {
+        register: {
+          '0%': { opacity: '0', transform: 'translateY(10px) scale(0.985)' },
+          '70%': { opacity: '1', transform: 'translateY(-2px) scale(1.005)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
         'fade-up': {
-          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         'fade-in': {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
-        shimmer: {
-          '0%': { transform: 'translateX(-100%)' },
-          '100%': { transform: 'translateX(100%)' },
-        },
       },
       animation: {
-        'fade-up': 'fade-up 0.7s cubic-bezier(0.22,1,0.36,1) both',
-        'fade-in': 'fade-in 0.8s ease-out both',
+        register: 'register 0.42s cubic-bezier(0.2, 1.35, 0.4, 1) both',
+        'fade-up': 'fade-up 0.35s cubic-bezier(0.2, 1.35, 0.4, 1) both',
+        'fade-in': 'fade-in 0.3s ease-out both',
       },
     },
   },

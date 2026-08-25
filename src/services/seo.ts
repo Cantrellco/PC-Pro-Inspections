@@ -17,7 +17,10 @@ export function buildLocalBusinessJsonLd(): Record<string, unknown> {
       '@type': 'City',
       name: t,
     })),
-    sameAs: c.socials.map((s) => s.href),
+    sameAs: [
+      ...c.socials.map((s) => s.href),
+      ...(c.google?.mapsUrl ? [c.google.mapsUrl] : []),
+    ],
   };
 
   if (c.inspectorName) {

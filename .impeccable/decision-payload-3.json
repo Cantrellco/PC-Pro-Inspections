@@ -1,0 +1,29 @@
+{
+  "title": "How the Folk Woodblock gets built",
+  "question": "One more call: does an approved comp govern the build, or does the written contract?",
+  "options": [
+    {
+      "id": "comp-led",
+      "label": "Comp-led",
+      "kicker": "LEADS FOR THIS WORLD",
+      "lineage": "the chosen decision comp plus two composition variations, one approved, then rebuilt to match",
+      "thesis": "The picture is law: I generate two more first-viewport compositions beside the one you chose, you approve one, and the finish review audits the build against it.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["approved comp", "composited rendered assets where CSS cannot match", "authored woodcut SVG"],
+      "viewport": "Whichever of the three comps you approve, reproduced near pixel-for-pixel at 1440 wide, then extended to every page in the same grammar.",
+      "risk": "Boldest composition on the table and the most fix rounds; the illustrated house section will likely ship as a rendered asset rather than hand-drawn SVG, and motion (block-by-block print registration) is at risk until reproduction holds."
+    },
+    {
+      "id": "code-led",
+      "label": "Code-led",
+      "lineage": "no comp of this page; the direction contract carries the ambition",
+      "thesis": "No further comps. The FIRST VIEWPORT block, a named signature interaction (the house prints one colour block at a time as you scroll, keyblock last), and the motion grammar are written into the contract and audited in behavior.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["authored woodcut SVG", "CSS shell-paper ground", "print-order reveal"],
+      "viewport": "The chosen comp returns at the finish review as the critique reference, what the image dared that the build did not.",
+      "risk": "The house illustration and cut lettering are drawn in SVG by hand, so they will be simpler than the comp; the upside is a fully live, animatable, responsive artifact with no bitmap dependency."
+    }
+  ],
+  "steer": false,
+  "canon": false
+}

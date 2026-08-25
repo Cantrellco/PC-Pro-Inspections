@@ -1,7 +1,5 @@
 import { siteConfig } from '@/config/siteConfig';
 import SEO from '@/components/SEO';
-import Section from '@/components/Section';
-import SectionHeader from '@/components/SectionHeader';
 import LegalContent, { type LegalDocContent } from '@/components/LegalContent';
 
 // Set this to the date this policy was last meaningfully changed (it is the
@@ -284,16 +282,7 @@ export default function Privacy() {
         pathname="/privacy"
       />
 
-      <Section>
-        <SectionHeader
-          as="h1"
-          eyebrow="Legal"
-          title="Privacy Policy"
-          description={`Last updated: ${EFFECTIVE_DATE}`}
-        />
-
-        <LegalContent {...content} />
-      </Section>
+      <LegalContent title="Privacy Policy" effectiveDate={EFFECTIVE_DATE} {...content} />
     </>
   );
 }

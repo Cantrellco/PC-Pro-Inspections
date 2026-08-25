@@ -14,25 +14,29 @@ import type { AddOn, CommercialTier, QuoteOnlyService, SqftTier } from '@/types'
 
 /** Residential base price by square footage — first match wins (in order). */
 export const SQFT_TIERS: SqftTier[] = [
-  { min: 0, max: 1000, price: 400, label: '1 – 1,000 sqft', durationLabel: '~2.5 hrs' },
-  { min: 1001, max: 2000, price: 450, label: '1,001 – 2,000 sqft', durationLabel: '~3.5 hrs' },
-  { min: 2001, max: 2500, price: 500, label: '2,001 – 2,500 sqft', durationLabel: '~4 hrs' },
-  { min: 2501, max: 3000, price: 550, label: '2,501 – 3,000 sqft', durationLabel: '~4.5 hrs' },
-  { min: 3001, max: 4000, price: 600, label: '3,001 – 4,000 sqft', durationLabel: '~5 hrs' },
-  { min: 4001, max: 5000, price: 700, label: '4,001 – 5,000 sqft', durationLabel: '~6 hrs' },
+  { min: 0, max: 1000, price: 400, label: '1 – 1,000 sqft', durationLabel: '~2.5 hrs', durationHours: 2.5 },
+  { min: 1001, max: 2000, price: 450, label: '1,001 – 2,000 sqft', durationLabel: '~3.5 hrs', durationHours: 3.5 },
+  { min: 2001, max: 2500, price: 500, label: '2,001 – 2,500 sqft', durationLabel: '~4 hrs', durationHours: 4 },
+  { min: 2501, max: 3000, price: 550, label: '2,501 – 3,000 sqft', durationLabel: '~4.5 hrs', durationHours: 4.5 },
+  { min: 3001, max: 4000, price: 600, label: '3,001 – 4,000 sqft', durationLabel: '~5 hrs', durationHours: 5 },
+  { min: 4001, max: 5000, price: 700, label: '4,001 – 5,000 sqft', durationLabel: '~6 hrs', durationHours: 6 },
 ];
 
 /**
  * Commercial base price — charged PER SQUARE FOOT (first match wins).
- * Base estimate = sqft × pricePerSqft.
+ * Base estimate = sqft × pricePerSqft, floored at COMMERCIAL_MINIMUM.
+ * The sheet prices buildings up to 10,000 sqft; larger ones are a phone call.
  */
 export const COMMERCIAL_TIERS: CommercialTier[] = [
-  { min: 0, max: 5000, pricePerSqft: 0.15, label: '1 – 5,000 sqft', durationLabel: '~4 hrs' },
-  { min: 5001, max: 7500, pricePerSqft: 0.17, label: '5,001 – 7,500 sqft', durationLabel: '~6 hrs' },
-  { min: 7501, max: 10000, pricePerSqft: 0.2, label: '7,501 – 10,000 sqft', durationLabel: '7+ hrs' },
-  { min: 10001, max: 15000, pricePerSqft: 0.225, label: '10,001 – 15,000 sqft', durationLabel: '8+ hrs' },
-  { min: 15001, max: null, pricePerSqft: 0.25, label: '15,001 – 20,000 sqft', durationLabel: '9+ hrs' },
+  { min: 0, max: 5000, pricePerSqft: 0.2, label: "1 – 5,000 sqft", durationLabel: "~4 hrs", durationHours: 4 },
+  { min: 5001, max: 10000, pricePerSqft: 0.225, label: "5,000 – 10,000 sqft", durationLabel: "~6 hrs", durationHours: 6 },
 ];
+
+/**
+ * Every commercial inspection carries a minimum charge, whatever the square
+ * footage works out to. Straight from the price sheet.
+ */
+export const COMMERCIAL_MINIMUM = 500;
 
 /**
  * Optional add-ons with a SET price — selectable in the calculator and added
@@ -46,8 +50,9 @@ export const ADD_ONS: AddOn[] = [
     id: 'termite-wdo',
     label: 'Termite / WDO Inspection',
     description:
-      'Wood-destroying organism evaluation. Required by many lenders. Per the price sheet.',
+      'Wood-destroying organism evaluation, added to your home inspection. Required by many lenders.',
     price: 50,
+    durationHours: 0.5,
   },
 ];
 
@@ -57,6 +62,23 @@ export const ADD_ONS: AddOn[] = [
  * NOT selectable in the calculator. To make one priceable, delete it here and
  * add it to ADD_ONS above with a confirmed `price`.
  */
+/**
+ * Priced services that are NOT an add-on to a home inspection — they stand on
+ * their own. From the price sheet: a termite/WDO inspection booked by itself
+ * (a lender letter, say) is $100, where the same inspection added to a home
+ * inspection is +$50.
+ */
+export const STANDALONE_SERVICES: AddOn[] = [
+  {
+    id: "termite-only",
+    label: "Termite / WDO inspection only",
+    description:
+      "A wood-destroying organism inspection booked on its own, without a home inspection.",
+    price: 100,
+    durationHours: 0.5,
+  },
+];
+
 export const QUOTE_ONLY_SERVICES: QuoteOnlyService[] = [
   {
     id: 'mold',
@@ -94,6 +116,6 @@ export const SQFT_STEP = 50;
 
 /** Commercial sqft slider bounds + default. */
 export const COMMERCIAL_SQFT_MIN = 1000;
-export const COMMERCIAL_SQFT_MAX = 20000;
+export const COMMERCIAL_SQFT_MAX = 10000;
 export const COMMERCIAL_SQFT_STEP = 250;
-export const DEFAULT_COMMERCIAL_SQFT = 5000;
+export const DEFAULT_COMMERCIAL_SQFT = 4000;

@@ -5,323 +5,290 @@ import { buildFaqJsonLd } from '@/services/seo';
 import SEO from '@/components/SEO';
 import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
-import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Reveal from '@/components/Reveal';
-import CountUp from '@/components/CountUp';
-import Magnetic from '@/components/Magnetic';
-import TestimonialCarousel from '@/components/TestimonialCarousel';
-import WavingFlag from '@/components/WavingFlag';
-import ServiceAreaMap from '@/components/ServiceAreaMap';
+import WoodblockPrint from '@/components/WoodblockPrint';
+import QuoteCalculator from '@/components/QuoteCalculator';
+import PriceLedger from '@/components/PriceLedger';
 import CertStrip from '@/components/CertStrip';
+import Seal from '@/components/Seal';
 import CTABand from '@/components/CTABand';
 import FaqAccordion from '@/components/FaqAccordion';
-import {
-  IconRoof, IconFoundation, IconPlumbing, IconElectrical, IconHvac,
-  IconAttic, IconInterior, IconBasement, IconAddons, IconShield, IconClock, IconDoc, IconPhone,
-} from '@/components/icons';
 
-const SERVICES = [
-  [IconRoof, 'Roof & Exterior', 'Covering, flashing, drainage, siding, soffits, trim, decks, grading.'],
-  [IconFoundation, 'Structure & Foundation', 'Visible framing, foundation walls, slabs, settlement indicators.'],
-  [IconPlumbing, 'Plumbing', 'Supply, drains, fixtures, water heater, visible piping, leaks.'],
-  [IconElectrical, 'Electrical', 'Service entrance, panel, breakers, GFCI/AFCI, wiring, outlets.'],
-  [IconHvac, 'Heating & Cooling', 'HVAC condition, distribution, thermostats, age and lifespan.'],
-  [IconAttic, 'Attic & Ventilation', 'Insulation depth, ventilation, moisture and pest indicators.'],
-  [IconInterior, 'Interior', 'Walls, ceilings, floors, doors, windows, stairs, safety hazards.'],
-  [IconBasement, 'Basement / Crawl', 'Moisture, sump pumps, vapor barriers, structural concerns.'],
-  [IconAddons, 'Specialty Inspections', 'Pools & spas, mold, termite/WDO, thermal imaging, manufactured & mobile homes.'],
-] as const;
+/** Paper tags pinned over the house print (percent of the print's box). */
+const HOUSE_LABELS = [
+  { text: 'Roof', x: 70, y: 9 },
+  { text: 'Attic', x: 27, y: 21 },
+  { text: 'Electrical panel', x: 6, y: 62 },
+  { text: 'Plumbing', x: 60, y: 45 },
+  { text: 'Water heater', x: 37, y: 72 },
+  { text: 'Crawl space', x: 14, y: 88 },
+];
 
-const PROCESS = [
-  [IconDoc, 'Get a quote', 'Use the live calculator or call. We confirm availability fast — usually same day.'],
-  [IconClock, 'Book your slot', 'Online or by phone. We coordinate with your agent and the seller for you.'],
-  [IconShield, 'On-site walkthrough', 'A few hours, depending on size. Join us for the last 45 minutes — we tour the home together.'],
-  [IconDoc, 'Same-day report', 'A photo-rich digital report with a prioritized summary, typically that evening.'],
+/** What is covered, set as a ledger; every line is in the standard inspection. */
+const COVERED = [
+  ['Roof & exterior', 'Covering, flashing, drainage, siding, soffits, decks, grading'],
+  ['Structure & foundation', 'Visible framing, foundation walls, slabs, settlement signs'],
+  ['Attic & ventilation', 'Insulation depth, ventilation, moisture and pest indicators'],
+  ['Electrical', 'Service entrance, panel, breakers, GFCI/AFCI, wiring, outlets'],
+  ['Plumbing', 'Supply, drains, fixtures, water heater, visible piping, leaks'],
+  ['Heating & cooling', 'HVAC condition, distribution, thermostats, age and lifespan'],
+  ['Interior', 'Walls, ceilings, floors, doors, windows, stairs, safety hazards'],
+  ['Crawl space & basement', 'Moisture, sump, vapor barrier, piers; the crawler goes where we cannot'],
 ] as const;
 
 export default function Home() {
   const c = siteConfig;
-  const cityForTitle = c.address.city || 'Your Area';
+  const seals = c.testimonials.slice(0, 3);
 
   return (
     <>
       <SEO
-        title={`Home Inspector in ${cityForTitle} | ${c.businessName}`}
-        description={`InterNACHI® Certified residential home inspections in ${c.serviceAreaSummary}. We call back within ${c.responsePromise.callbackHours} hours and inspect within ${c.responsePromise.inspectionDays} days. Get a free quote.`}
+        title={`Home Inspector in ${c.address.city}, IL | ${c.businessName}`}
+        description={`Flat-rate home inspections from $400 in ${c.serviceAreaSummary.replace('Serving ', '')}. InterNACHI® certified. Callback within ${c.responsePromise.callbackHours} hours, inspected within ${c.responsePromise.inspectionDays} days, report the same evening.`}
         pathname="/"
         jsonLd={c.faqs.length > 0 ? buildFaqJsonLd() : undefined}
       />
 
-      {/* ─── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative isolate overflow-hidden min-h-[92vh] flex items-center">
-        <div className="absolute inset-0 -z-10" aria-hidden="true">
-          <div className="absolute inset-0 bg-ink-200" />
-          <WavingFlag className="absolute inset-0 h-full w-full" />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'linear-gradient(102deg, rgba(8,8,9,0.97) 0%, rgba(8,8,9,0.92) 42%, rgba(8,8,9,0.68) 74%, rgba(8,8,9,0.5) 100%)',
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ background: 'linear-gradient(0deg, rgba(8,8,9,0.96) 0%, transparent 45%)' }}
-          />
-        </div>
-
-        <div className="container-wide above-grain py-24 sm:py-28">
-          <div className="max-w-3xl animate-fade-up">
-            <div className="mb-7 flex flex-wrap items-center gap-2.5">
-              <p className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.03] py-1.5 pl-2.5 pr-4 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-flag-redSoft opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-flag-red" />
-                </span>
-                Now booking across {c.serviceAreaSummary}
-              </p>
-              {c.primaryCertification && (
-                <p className="inline-flex items-center gap-2 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1 pl-1.5 pr-3.5 text-[12.5px] font-medium text-bone-muted backdrop-blur-sm">
-                  <img
-                    src={c.primaryCertification.badgeSrc}
-                    alt=""
-                    width={22}
-                    height={22}
-                    className="h-[22px] w-[22px] flex-shrink-0 object-contain"
-                  />
-                  {c.primaryCertification.shortLabel}
+      {/* ─── The print ───────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden">
+        <div className="container-wide pb-10 pt-6 sm:pt-8 lg:pb-14">
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-6">
+            {/* Headline sits over the top-left of the print on desktop */}
+            <div className="lg:col-span-8">
+              <div className="grid animate-fade-up gap-4 sm:grid-cols-[auto_1fr] sm:items-end">
+                <h1 className="display-1 cut-red lg:text-[4.6rem] xl:text-[5.2rem]">
+                  Every system.
+                  <br />
+                  One print.
+                </h1>
+                <p className="lede max-w-sm sm:pb-2">
+                  A full inspection, block by block, and a report the same evening. You walk the
+                  house with Paul before you sign anything.
                 </p>
-              )}
-            </div>
-            <h1 className="display-1 text-white">
-              Buy your home with{' '}
-              <span className="italic text-gradient-flag">eyes wide open.</span>
-            </h1>
-            <p className="lede mt-6 max-w-2xl">
-              {c.tagline} Same-day, photo-rich reports — walked through with you on
-              site. The biggest purchase of your life deserves a real inspection.
-            </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Magnetic>
-                <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-                  Get a Free Quote
-                </Button>
-              </Magnetic>
-              <Magnetic>
-                <Button
-                  as="a"
-                  href={`tel:${c.phoneHref}`}
-                  variant="secondary"
-                  onClick={() => track('tel_click', { location: 'hero' })}
-                  className="!px-8 !py-4 !text-base"
-                >
-                  Call {c.phone}
-                </Button>
-              </Magnetic>
+              </div>
+              <div className="relative mt-6 sm:mt-8 lg:pl-2 xl:pl-8">
+                <WoodblockPrint
+                  base="house"
+                  ratio={1800 / 1005}
+                  alt="A farmhouse cut in section as a folk woodblock print, showing the roof, attic, electrical panel, plumbing, water heater and crawl space with the inspection crawler beneath the floor"
+                  labels={HOUSE_LABELS}
+                  crosshairs
+                  immediate
+                  priority
+                  className="mx-auto w-full"
+                />
+              </div>
             </div>
 
-            <dl className="mt-14 flex flex-wrap items-start gap-x-4 sm:gap-x-9 gap-y-5">
-              {([
-                { count: 1600, suffix: '+', label: 'Point inspection' },
-                { text: 'Same-Day', label: 'Reports' },
-                { count: 14, suffix: '', label: 'Areas of expertise' },
-              ] as ({ count: number; suffix: string; label: string } | { text: string; label: string })[]).map((s) => (
-                <div key={s.label} className="border-l border-white/15 pl-4">
-                  <dd className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-none tracking-tight whitespace-nowrap">
-                    {'count' in s ? <CountUp value={s.count} suffix={s.suffix} /> : s.text}
-                  </dd>
-                  <dt className="mt-2.5 text-[11px] uppercase tracking-[0.18em] text-bone-dim whitespace-nowrap">{s.label}</dt>
-                </div>
-              ))}
-            </dl>
+            <div className="lg:col-span-4 lg:pt-2">
+              <div className="animate-fade-up [animation-delay:120ms]">
+                <QuoteCalculator variant="ticket" />
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Scroll cue */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-7 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-bone-dim motion-reduce:hidden sm:flex"
-        >
-          <span className="text-[10px] uppercase tracking-[0.3em]">Scroll</span>
-          <span className="relative flex h-9 w-5 justify-center rounded-full border border-white/20">
-            <span className="mt-1.5 h-1.5 w-1 animate-bounce rounded-full bg-brass-soft" />
-          </span>
-        </div>
+        <CertStrip />
       </section>
 
-      {/* ─── Trust / credentials strip ────────────────────────────────── */}
-      <CertStrip />
-
-      {/* ─── Response promise (americana) ─────────────────────────────── */}
-      <Section tone="americana">
-        <div className="grid lg:grid-cols-12 gap-10 items-center">
-          <Reveal className="lg:col-span-5">
-            <p className="eyebrow mb-4">Our Promise</p>
-            <h2 className="display-2 text-white">A quick callback. A quick inspection.</h2>
-            <p className="lede mt-5">
-              No voicemail black holes. No waiting days to learn whether we have
-              availability. You reach out — we move.
-            </p>
-          </Reveal>
-          <div className="lg:col-span-7 grid sm:grid-cols-2 gap-5">
-            <Reveal delay={60}>
-              <Card rim glow className="h-full">
-                <IconPhone className="h-7 w-7 text-flag-redSoft" />
-                <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
-                  {c.responsePromise.callbackHours}
-                  <span className="ml-2 text-xl text-bone-muted font-sans font-normal">hrs</span>
-                </p>
-                <p className="mt-3 text-bone-muted">to call you back, every time.</p>
-              </Card>
-            </Reveal>
-            <Reveal delay={140}>
-              <Card rim glow className="h-full">
-                <IconClock className="h-7 w-7 text-brass-soft" />
-                <p className="mt-5 font-display text-6xl font-semibold text-white leading-none">
-                  {c.responsePromise.inspectionDays}
-                  <span className="ml-2 text-xl text-bone-muted font-sans font-normal">days</span>
-                </p>
-                <p className="mt-3 text-bone-muted">to get you on the schedule.</p>
-              </Card>
-            </Reveal>
-          </div>
-        </div>
-      </Section>
-
-      {/* ─── What we inspect — services grid ──────────────────────────── */}
-      <Section tone="elevated">
-        <SectionHeader
-          eyebrow="What We Inspect"
-          title="Every system, head to foundation."
-          description="One thorough visual inspection covers the whole house — and a roster of specialty certifications covers the rest."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SERVICES.map(([Icon, title, desc], i) => (
-            <Reveal key={title} delay={(i % 3) * 70}>
-              <Card hover glow className="group h-full">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-flag-navy/20 text-brass-soft transition-colors duration-300 group-hover:border-brass/40 group-hover:text-brass-soft">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
-                <p className="mt-1.5 text-sm text-bone-muted leading-relaxed">{desc}</p>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* ─── Process timeline ─────────────────────────────────────────── */}
-      <Section blueprint>
-        <SectionHeader eyebrow="How It Works" title="Four steps, zero friction." />
-        <ol className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Connector rail behind the cards (desktop) */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute left-0 right-0 top-[3.15rem] hidden h-px bg-gradient-to-r from-transparent via-brass/30 to-transparent lg:block"
-          />
-          {PROCESS.map(([Icon, title, desc], i) => (
-            <Reveal as="li" key={title} delay={i * 80} className="relative">
-              <Card glow className="h-full">
-                <div className="flex items-center gap-3">
-                  <span className="font-display text-3xl font-semibold text-gradient-flag leading-none">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <span className="flex-1 hairline" aria-hidden="true" />
-                  <span className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-ink-100/70 text-bone-dim">
-                    <Icon className="h-4 w-4" />
-                  </span>
-                </div>
-                <h3 className="mt-5 text-lg font-semibold text-white">{title}</h3>
-                <p className="mt-2 text-sm text-bone-muted leading-relaxed">{desc}</p>
-              </Card>
-            </Reveal>
-          ))}
-        </ol>
-      </Section>
-
-      {/* ─── Service area ─────────────────────────────────────────────── */}
-      <Section tone="elevated">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          <Reveal>
-            <p className="eyebrow mb-4">Where We Work</p>
-            <h2 className="display-2 text-white">{c.serviceAreaSummary}</h2>
-            <p className="lede mt-5">
-              We inspect across the towns and counties below — plus surrounding
-              areas on request. Not sure if we cover your address?{' '}
-              <a
-                href={`tel:${c.phoneHref}`}
-                onClick={() => track('tel_click', { location: 'service_area_section' })}
-                className="text-flag-redSoft underline-offset-4 hover:underline"
-              >
-                Give us a call.
-              </a>
-            </p>
-            <Link
-              to="/service-areas"
-              className="group mt-6 inline-flex items-center gap-1.5 font-semibold text-flag-redSoft"
+      {/* ─── How it goes ─────────────────────────────────────────────── */}
+      <Section wide>
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <SectionHeader
+              title="Call today. Inspected this week."
+              description="One inspector, reachable by phone, who shows up when he says he will."
+              cut="navy"
+              className="!mb-6"
+            />
+            <a
+              href={`tel:${c.phoneHref}`}
+              onClick={() => track('tel_click', { location: 'home_process' })}
+              className="btn-primary"
             >
-              <span className="link-underline">See all service areas</span>
-              <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </Link>
-          </Reveal>
-          <Reveal delay={80}>
-            <ServiceAreaMap />
-          </Reveal>
+              Call <span className="num">{c.phone}</span>
+            </a>
+          </div>
+          <ol className="grid gap-0 border-t-3 border-ink lg:col-span-8">
+            {[
+              ['You call', `Or send the ticket above. Paul calls back within ${c.responsePromise.callbackHours} hours, not days.`],
+              ['We set a date', `Usually within ${c.responsePromise.inspectionDays} days. Paul coordinates access with your agent and the seller.`],
+              ['The walk-through', 'Two and a half to six hours on site depending on the house. Come for the last 45 minutes and walk it with him.'],
+              ['The report, that evening', 'Photos, a priority summary, and plain-language notes you can hand to your agent for repair talks.'],
+            ].map(([t, d], i) => (
+              <Reveal as="li" key={t} delay={i * 60} className="grid grid-cols-[3.5rem_1fr] gap-4 border-b-3 border-ink py-5 sm:grid-cols-[5rem_1fr]">
+                <span className="num font-display text-4xl leading-none text-brass sm:text-5xl">{i + 1}</span>
+                <div>
+                  <h3 className="font-display text-2xl uppercase leading-none text-ink sm:text-3xl">{t}</h3>
+                  <p className="mt-2 max-w-xl text-ink-soft">{d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </Section>
 
-      {/* ─── Testimonials ─────────────────────────────────────────────── */}
-      {c.testimonials.length > 0 && (
-        <Section>
-          <SectionHeader eyebrow="Word From Clients" title="Trusted by buyers and their agents." />
-          <Reveal>
-            <TestimonialCarousel items={c.testimonials} />
-          </Reveal>
-          <div className="mt-12 text-center">
-            <Button as="link" to="/reviews" variant="secondary">Read all reviews</Button>
+      {/* ─── Prices posted ───────────────────────────────────────────── */}
+      <PriceLedger />
+
+      {/* ─── What the print covers ───────────────────────────────────── */}
+      <Section wide tone="deep">
+        <SectionHeader
+          title="What's in the standard inspection"
+          description="Every line below is included. No tiers, no upsell at the door."
+          cut="brass"
+        />
+        <ul className="grid gap-x-10 border-t-3 border-ink sm:grid-cols-2">
+          {COVERED.map(([t, d], i) => (
+            <Reveal as="li" key={t} delay={(i % 2) * 60} className="border-b-2 border-ink py-4">
+              <h3 className="font-display text-xl uppercase leading-none text-ink sm:text-2xl">{t}</h3>
+              <p className="mt-1.5 text-ink-soft">{d}</p>
+            </Reveal>
+          ))}
+        </ul>
+        <p className="mt-6 text-ink-soft">
+          Specialty work (mold, termite/WDO, pool & spa, thermal imaging, manufactured homes) is
+          listed on the{' '}
+          <Link to="/services" className="font-semibold text-navy underline decoration-2 underline-offset-4 hover:text-red">
+            Services page
+          </Link>
+          .
+        </p>
+      </Section>
+
+      {/* ─── The crawler ─────────────────────────────────────────────── */}
+      {c.equipment && (
+        <Section wide tone="navy">
+          <div className="grid items-center gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-6">
+              <WoodblockPrint
+                base="wombat"
+                ratio={1200 / 896}
+                alt={c.equipment.imageAlt}
+                className="mx-auto w-full max-w-xl"
+              />
+            </div>
+            <div className="lg:col-span-6">
+              <h2 className="display-2 text-paper" style={{ textShadow: '0.045em 0.045em 0 #c8102e' }}>
+                {c.equipment.headline}
+              </h2>
+              <p className="mt-5 max-w-xl text-lg text-paper/90">{c.equipment.body}</p>
+              <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+                {c.equipment.features.map((f) => (
+                  <li key={f.label} className="border-l-3 border-brass pl-3">
+                    <span className="font-condensed text-lg font-bold uppercase leading-none tracking-wide text-paper">{f.label}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link to="/about" className="btn-secondary mt-8">
+                More about the crawler
+              </Link>
+            </div>
           </div>
         </Section>
       )}
 
-      {/* ─── FAQ ──────────────────────────────────────────────────────── */}
-      {c.faqs.length > 0 && (
-        <Section tone="elevated">
-          <SectionHeader eyebrow="Common Questions" title="Answers, before you ask." />
-          <Reveal>
-            <FaqAccordion items={c.faqs} />
-          </Reveal>
+      {/* ─── Seals ───────────────────────────────────────────────────── */}
+      {seals.length > 0 && (
+        <Section wide>
+          <SectionHeader title="Stamped by clients" cut="red" centered />
+          <ul className="grid gap-8 sm:grid-cols-3 sm:gap-6">
+            {seals.map((t, i) => (
+              <Reveal as="li" key={t.name} delay={i * 80} className="flex flex-col items-center text-center">
+                <Seal stars={t.rating} ink={(['red', 'navy', 'brass'] as const)[i % 3]} className="w-56 sm:w-full sm:max-w-[16rem]">
+                  <p className="font-display text-[1.05rem] uppercase leading-tight text-ink sm:text-xl">
+                    “{shortQuote(t.quote)}”
+                  </p>
+                </Seal>
+                <p className="label mt-3">{t.name}</p>
+                <p className="text-sm text-ink-mute">{t.role}</p>
+              </Reveal>
+            ))}
+          </ul>
+          <div className="mt-10 text-center">
+            <Button as="link" to="/reviews" variant="secondary">
+              Read every review
+            </Button>
+          </div>
         </Section>
       )}
 
-      {/* ─── Closing CTA ──────────────────────────────────────────────── */}
-      <div className="pb-20 sm:pb-28">
-        <CTABand
-          eyebrow="Ready When You Are"
-          title={
-            <>
-              Let's get you a real{' '}
-              <span className="italic text-gradient-brass">inspection.</span>
-            </>
-          }
-          description="Free quote in seconds. A callback within hours. A report you can actually act on."
+      {/* ─── Where ───────────────────────────────────────────────────── */}
+      <Section wide tone="deep">
+        <div className="grid items-center gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <SectionHeader
+              title={c.serviceAreaSummary.replace('Serving ', '')}
+              description="Based in Fairfield. Paul drives to these towns and the country between them."
+              cut="navy"
+              className="!mb-5"
+            />
+            <p className="text-ink-soft">
+              {c.serviceAreaTowns.join(' · ')}
+            </p>
+            <Link to="/service-areas" className="btn-ghost mt-5">
+              All service areas
+            </Link>
+          </div>
+          <div className="lg:col-span-7">
+            <WoodblockPrint
+              base="landscape"
+              ratio={2000 / 1116}
+              alt="A folk woodblock print of Southern Illinois: corn rows, a grain elevator, a water tower, a courthouse dome, a farmhouse and barn"
+              className="w-full"
+            />
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Questions ───────────────────────────────────────────────── */}
+      {c.faqs.length > 0 && (
+        <Section wide>
+          <div className="grid gap-10 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <SectionHeader title="Buyers ask" cut="brass" className="!mb-4" />
+              <p className="text-ink-soft">
+                Anything else,{' '}
+                <a
+                  href={`tel:${c.phoneHref}`}
+                  onClick={() => track('tel_click', { location: 'home_faq' })}
+                  className="font-semibold text-navy underline decoration-2 underline-offset-4 hover:text-red"
+                >
+                  call Paul
+                </a>
+                .
+              </p>
+            </div>
+            <div className="lg:col-span-8">
+              <FaqAccordion items={c.faqs} />
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* ─── Close ───────────────────────────────────────────────────── */}
+      <CTABand
+        title="Know the house before you buy it."
+        description={`Callback within ${c.responsePromise.callbackHours} hours. Report the same evening.`}
+      >
+        <a
+          href={`tel:${c.phoneHref}`}
+          onClick={() => track('tel_click', { location: 'home_cta_band' })}
+          className="btn-navy !text-lg"
         >
-          <Magnetic>
-            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-              Get a Free Quote
-            </Button>
-          </Magnetic>
-          <Button
-            as="a"
-            href={`tel:${c.phoneHref}`}
-            variant="secondary"
-            onClick={() => track('tel_click', { location: 'home_cta_band' })}
-            className="!px-8 !py-4 !text-base"
-          >
-            Call {c.phone}
-          </Button>
-        </CTABand>
-      </div>
+          Call <span className="num">{c.phone}</span>
+        </a>
+        <Button as="link" to="/services" variant="secondary" className="!text-lg">
+          Get my price
+        </Button>
+      </CTABand>
     </>
   );
+}
+
+/** Trim a review to the stamp-sized phrase: first clause, max ~6 words. */
+function shortQuote(q: string): string {
+  const first = q.split(/[.!?]/)[0].replace(/^(Love working with Paul!?\s*)/i, 'Love working with Paul');
+  const words = first.split(/\s+/);
+  return words.length > 6 ? `${words.slice(0, 6).join(' ')}` : first;
 }

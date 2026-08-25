@@ -1,66 +1,61 @@
 import type { ReactNode } from 'react';
 
+type Tone = 'paper' | 'deep' | 'navy' | 'red' | 'brass' | 'ink';
+
 type Props = {
   children: ReactNode;
-  /** Background variant. */
-  tone?: 'default' | 'elevated' | 'dark' | 'americana';
+  /** Ground the section is printed on. Colour tones own the whole band. */
+  tone?: Tone | 'default' | 'elevated' | 'dark' | 'americana';
   className?: string;
   id?: string;
   ariaLabel?: string;
   /** Use the wider container. */
   wide?: boolean;
-  /** Drifting heritage light-leaks behind the content. */
+  /** Keyblock rules top and bottom (a printed band). */
+  ruled?: boolean;
+  /** Tighter vertical rhythm. */
+  compact?: boolean;
+  // Legacy props from the previous world; ignored.
   aurora?: boolean;
-  /** Faint architectural blueprint grid behind the content. */
   blueprint?: boolean;
 };
 
+const TONE: Record<Tone, string> = {
+  paper: '',
+  deep: 'bg-paper-deep',
+  navy: 'bg-navy text-paper',
+  red: 'bg-red text-paper',
+  brass: 'bg-brass text-ink',
+  ink: 'bg-ink text-paper',
+};
+
+function normalize(t: Props['tone']): Tone {
+  if (t === 'elevated' || t === 'default' || t === undefined) return t === 'elevated' ? 'deep' : 'paper';
+  if (t === 'dark' || t === 'americana') return 'navy';
+  return t;
+}
+
 export default function Section({
   children,
-  tone = 'default',
+  tone,
   className = '',
   id,
   ariaLabel,
   wide = false,
-  aurora = false,
-  blueprint = false,
+  ruled = false,
+  compact = false,
 }: Props) {
-  const toneClass =
-    tone === 'elevated'
-      ? 'bg-white/[0.018]'
-      : tone === 'dark'
-        ? 'bg-ink-300'
-        : tone === 'americana'
-          ? 'relative overflow-hidden'
-          : '';
-
-  const needsClip = tone === 'americana' || aurora || blueprint;
-
+  const t = normalize(tone);
+  const colored = t !== 'paper' && t !== 'deep';
   return (
     <section
       id={id}
       aria-label={ariaLabel}
-      className={`relative py-20 sm:py-28 ${needsClip ? 'overflow-hidden' : ''} ${
-        aurora ? 'aurora' : ''
-      } ${toneClass} ${className}`.trim()}
+      data-tone={t}
+      className={`relative ${compact ? 'py-12 sm:py-16' : 'py-16 sm:py-24'} ${TONE[t]} ${
+        ruled || colored ? 'border-y-3 border-ink' : ''
+      } ${className}`.trim()}
     >
-      {blueprint && (
-        <div aria-hidden="true" className="blueprint-grid absolute inset-0 pointer-events-none" />
-      )}
-      {tone === 'americana' && (
-        <>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(155deg, rgba(10,49,97,0.5) 0%, rgba(10,10,11,0.25) 52%, rgba(156,15,38,0.16) 100%)',
-            }}
-          />
-          <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-          <div aria-hidden="true" className="hairline absolute inset-x-0 bottom-0" />
-        </>
-      )}
       <div className={`${wide ? 'container-wide' : 'container-narrow'} relative above-grain`}>
         {children}
       </div>

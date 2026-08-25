@@ -1,7 +1,5 @@
 import { siteConfig } from '@/config/siteConfig';
 import SEO from '@/components/SEO';
-import Section from '@/components/Section';
-import SectionHeader from '@/components/SectionHeader';
 import LegalContent, { type LegalDocContent } from '@/components/LegalContent';
 
 // Set this to the date these terms were last meaningfully changed (it is the
@@ -252,16 +250,7 @@ export default function Terms() {
         pathname="/terms"
       />
 
-      <Section>
-        <SectionHeader
-          as="h1"
-          eyebrow="Legal"
-          title="Terms of Service"
-          description={`Last updated: ${EFFECTIVE_DATE}`}
-        />
-
-        <LegalContent {...content} />
-      </Section>
+      <LegalContent title="Terms of Service" effectiveDate={EFFECTIVE_DATE} {...content} />
     </>
   );
 }

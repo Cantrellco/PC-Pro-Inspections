@@ -1,80 +1,32 @@
-import { useState } from 'react';
 import type { FaqItem } from '@/types';
 
 type Props = {
   items: FaqItem[];
-  /** Index open on first render (default: first item). */
-  defaultOpen?: number;
 };
 
 /**
- * Accessible FAQ accordion with a smoothly animated open/close. Each panel
- * uses the grid-template-rows 0fr→1fr technique so height eases naturally
- * (native <details> can't transition height). Buttons carry aria-expanded /
- * aria-controls; panels are regions. Content stays in the DOM, so it remains
- * crawlable — the FAQPage JSON-LD is emitted separately from siteConfig.
+ * Questions set as a ruled list; each opens like a folded sheet. Native
+ * <details> so it works with no script and reads to assistive tech as-is.
  */
-export default function FaqAccordion({ items, defaultOpen = 0 }: Props) {
-  const [open, setOpen] = useState<number | null>(defaultOpen);
-  // The ARIA APG marks the panel `region` role optional and warns against it
-  // past ~6 panels (landmark-rotor flooding). Keep it only for short lists.
-  const useRegion = items.length <= 6;
-
+export default function FaqAccordion({ items }: Props) {
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-white/10 border-y border-white/10">
-      {items.map((f, i) => {
-        const isOpen = open === i;
-        const panelId = `faq-panel-${i}`;
-        const btnId = `faq-button-${i}`;
-        return (
-          <div key={f.question}>
-            <h3>
-              <button
-                id={btnId}
-                type="button"
-                aria-expanded={isOpen}
-                aria-controls={panelId}
-                onClick={() => setOpen(isOpen ? null : i)}
-                className="group flex w-full items-center justify-between gap-4 py-5 text-left transition-colors hover:text-white"
-              >
-                <span className="font-display text-lg font-medium text-white">
-                  {f.question}
-                </span>
-                <span
-                  aria-hidden="true"
-                  className={`relative grid h-7 w-7 flex-shrink-0 place-items-center rounded-full border transition-all duration-300 ${
-                    isOpen
-                      ? 'border-flag-redSoft/50 bg-flag-red/15 text-flag-redSoft'
-                      : 'border-white/15 text-brass-soft group-hover:border-brass/50'
-                  }`}
-                >
-                  <span className="absolute h-[1.5px] w-3 rounded bg-current" />
-                  <span
-                    className={`absolute h-3 w-[1.5px] rounded bg-current transition-transform duration-300 ${
-                      isOpen ? 'scale-y-0' : 'scale-y-100'
-                    }`}
-                  />
-                </span>
-              </button>
-            </h3>
-            <div
-              id={panelId}
-              role={useRegion ? 'region' : undefined}
-              aria-labelledby={useRegion ? btnId : undefined}
-              aria-hidden={!isOpen}
-              className={`grid transition-all duration-300 ease-smooth ${
-                isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-              }`}
+    <div className="border-t-3 border-ink">
+      {items.map((f, i) => (
+        <details key={f.question} className="group border-b-3 border-ink" open={i === 0}>
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
+            <span className="font-display text-xl uppercase leading-tight text-ink group-open:text-red sm:text-2xl">
+              {f.question}
+            </span>
+            <span
+              aria-hidden="true"
+              className="grid h-9 w-9 shrink-0 place-items-center border-2 border-ink bg-paper-white font-display text-xl text-ink transition-transform duration-300 ease-register group-open:rotate-45"
             >
-              <div className="overflow-hidden">
-                <div className="pb-6 -mt-1 max-w-2xl leading-relaxed text-bone-muted">
-                  {f.answer}
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      })}
+              +
+            </span>
+          </summary>
+          <p className="max-w-3xl pb-6 text-[1.05rem] leading-relaxed text-ink-soft">{f.answer}</p>
+        </details>
+      ))}
     </div>
   );
 }

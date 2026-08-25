@@ -1,5 +1,6 @@
 import {
   ADD_ONS,
+  COMMERCIAL_MINIMUM,
   COMMERCIAL_TIERS,
   SQFT_TIERS,
   findAddOn,
@@ -26,6 +27,12 @@ const resolveCommercialTier = (sqft: number): CommercialTier => {
   );
   return found ?? COMMERCIAL_TIERS[0];
 };
+
+/** "~4 hrs" / "~4.5 hrs" from a number of hours. */
+export function formatDuration(hours: number): string {
+  const rounded = Math.round(hours * 2) / 2;
+  return `~${rounded} hrs`;
+}
 
 /** Display a per-sqft rate as "$0.15" / "$0.20" / "$0.225". */
 export function formatPricePerSqft(rate: number): string {
@@ -64,25 +71,43 @@ function residentialQuote(inputs: QuoteInputs): QuoteResult {
     baseLineItem.amount +
     addOnLineItems.reduce((sum, li) => sum + li.amount, 0);
 
+  // Add-ons lengthen the visit; the sheet puts termite at half an hour.
+  const addOnHours = inputs.addOnIds
+    .map((id) => findAddOn(id)?.durationHours ?? 0)
+    .reduce((sum, h) => sum + h, 0);
+  const durationLabel =
+    tier.durationHours != null && addOnHours > 0
+      ? formatDuration(tier.durationHours + addOnHours)
+      : tier.durationLabel;
+
   return {
     inputs,
     tier,
     baseLineItem,
     addOnLineItems,
     total,
-    durationLabel: tier.durationLabel,
+    durationLabel,
   };
 }
 
 function commercialQuote(inputs: QuoteInputs): QuoteResult {
   const tier = resolveCommercialTier(inputs.sqft);
-  const amount = Math.round(inputs.sqft * tier.pricePerSqft);
+  const byArea = Math.round(inputs.sqft * tier.pricePerSqft);
+  // Every commercial job carries the sheet's minimum, whatever the area works out to.
+  const minimumApplied = byArea < COMMERCIAL_MINIMUM;
+  const amount = minimumApplied ? COMMERCIAL_MINIMUM : byArea;
 
   const baseLineItem: QuoteLineItem = {
     id: 'base',
-    label: `Commercial — ${inputs.sqft.toLocaleString()} sqft @ ${formatPricePerSqft(
-      tier.pricePerSqft,
-    )}/sqft`,
+    label: minimumApplied
+      ? `Commercial — ${COMMERCIAL_MINIMUM.toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          maximumFractionDigits: 0,
+        })} minimum`
+      : `Commercial — ${inputs.sqft.toLocaleString()} sqft @ ${formatPricePerSqft(
+          tier.pricePerSqft,
+        )}/sqft`,
     amount,
   };
 
@@ -93,6 +118,7 @@ function commercialQuote(inputs: QuoteInputs): QuoteResult {
     addOnLineItems: [],
     total: amount,
     durationLabel: tier.durationLabel,
+    minimumApplied,
   };
 }
 

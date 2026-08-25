@@ -70,7 +70,9 @@ No component changes. No prop refactor. That is the seam.
 | List of service-area towns/counties (SEO + Service Areas page) | `src/config/siteConfig.ts` → `serviceAreaTowns` |
 | Headline credential (InterNACHI CPI) shown in hero, cert strip, About, footer | `src/config/siteConfig.ts` → `primaryCertification` (badge at `public/certs/`; swap in the official InterNACHI member badge for max recognition; add `verifyUrl` for a proof link; remove the block to hide everywhere) |
 | Specialty certifications shown on About + Home | `src/config/siteConfig.ts` → `certifications` |
-| Testimonials | `src/config/siteConfig.ts` → `testimonials` |
+| Hand-entered reviews (owner pastes a review in chat → added here; `source: 'google' \| 'spectora'`) | `src/config/reviews.ts` |
+| Live Google reviews (auto-pulled; needs `GOOGLE_PLACES_API_KEY` in Vercel env) | `api/google-reviews.js` (server) + `src/services/reviews.ts` (`getReviews()` / `useReviews()`) |
+| Google Business Profile links (Maps URL in JSON-LD `sameAs`; "Write a Google review" CTA on Reviews page) | `src/config/siteConfig.ts` → `google` (`writeReviewUrl` from GBP dashboard → "Ask for reviews") |
 | Featured equipment showcase on About (name, copy, features, link) | `src/config/siteConfig.ts` → `equipment` (image at `public/equipment/`; remove the block to hide the section) |
 | FAQs (also drives FAQPage JSON-LD) | `src/config/siteConfig.ts` → `faqs` |
 | Pre-Inspection Prep Guide content | `src/config/siteConfig.ts` → `prepGuide` |
@@ -82,29 +84,53 @@ No component changes. No prop refactor. That is the seam.
 | Service-area / contact map (keyless OSM, or Google "Embed a map" src) | `src/config/siteConfig.ts` → `mapEmbedSrc` |
 | Analytics provider key | `src/config/siteConfig.ts` → `analytics` |
 | Sample Report PDF | drop file at `public/sample-report.pdf` (linked from Resources page) |
-| Open Graph preview image | drop file at `public/og-image.png` (1200×630) |
+| Open Graph preview image | `public/og-image.png` (1200×630, rendered from the site art; re-render after a headline change) |
 | Favicon / touch icon | replace `public/favicon-32.png`, `favicon-16.png`, `apple-touch-icon.png` |
+| Woodblock illustrations (house section, crawler, landscape) | `public/art/` — regenerate a print and run `node scripts/separate-blocks.mjs` (see Design System) |
+| Display / body fonts | `public/fonts/fonts.css` (Anton, Barlow, Barlow Condensed) + `tailwind.config.js` → `fontFamily` |
 | Logo emblem (nav, footer) | master at `src/assets/PC Pro Logo.png`; web asset at `public/brand/logo-mark.png` (transparent PNG) |
 | Site photography (hero, inspector, services, resources, CTA) | `src/config/siteConfig.ts` → `images` (paste URLs; blank → elegant placeholder) |
 
-## Design System
+## Design System — "Folk Woodblock on crushed-shell paper"
 
-- **Type:** Fraunces (display serif) + Hanken Grotesk (UI/body), **self-hosted**
-  under `public/fonts/` (`fonts.css` + woff2). Hanken is a warm humanist
-  grotesque shipped as one variable file (weights 400–700). No third-party CDN —
-  fonts always load and there's no render-blocking round trip. To change fonts,
-  replace the woff2 files + `fonts.css`, then update `tailwind.config.js` →
-  `fontFamily`.
-- **Palette:** near-black canvas, heritage crimson + navy, a restrained
-  antique-brass accent. Tokens live in `tailwind.config.js` → `colors`.
-- **Components:** `Section` (tones: default/elevated/dark/americana), `Card`
-  (`rim` brass hairline, `hover` lift), `SectionHeader`, `Button`, `Photo`
-  (image-or-placeholder), `Reveal` (scroll-in, respects reduced-motion),
-  `Flag` / `FlagRosette` (heritage accents). Fluid display type via
-  `.display-1/2/3` and `.lede` in `src/index.css`.
-- **Photography is the #1 upgrade:** fill `siteConfig.images` with real photos
-  (your own beat stock). Each slot degrades gracefully to a gradient
-  placeholder, so the site never looks broken while empty.
+Redesigned 2026-08-25 (impeccable direction seed b64509d8; approved comp at
+`.impeccable/mocks/comps/comp-3-print-in-progress.png`; product truth in
+`PRODUCT.md`; the durable rulebook is `DESIGN.md`). The old dark "glass card"
+look is gone and must not come back.
+
+- **Ground:** shell paper (`bg-paper` #f4efe4, `bg-paper-deep`, `bg-paper-white`)
+  with a faint speckle + tooth set on `body` in `src/index.css`.
+- **Four inks only:** `red` #c8102e, `navy` #0a3161, `brass` #b8952a, `ink` #111
+  (the keyblock). Colour arrives as flat fields that own whole bands
+  (`<Section tone="navy|red|brass|deep">`), never as scattered accents.
+- **Depth = misregistration:** a colour block peeking 3–4px past the black line
+  (`.sheet`, `.btn` box-shadow, `.cut-red/.cut-brass/.cut-navy` text-shadow).
+  No gradients, no blur, no glow, no soft shadows, **no border-radius** (round
+  `Seal`s are the one exception).
+- **Type (self-hosted, `public/fonts/`):** Anton (`font-display`, always uppercase;
+  `.display-1/2/3`), Barlow Condensed (`font-condensed`; `.label`, `.label-sm`),
+  Barlow (`font-sans`, body). Tabular figures via `.num`.
+- **Structure:** 3px keyblock rules (`border-3 border-ink`), ruled lists instead of
+  card grids, notched `.ticket`s, pinned `.tag` label boxes, brass ledger bands.
+  No eyebrow/kicker labels above headings; no stat counters (owner declined).
+- **Components:** `Section`, `SectionHeader`, `Card` (a `.sheet`; never nest),
+  `Button` (primary red / secondary paper / navy / ghost), `Field`, `Photo`
+  (keyblock frame), `Seal`, `WoodblockPrint`, `PriceLedger`, `CertStrip`,
+  `CTABand`, `FaqAccordion`, `Reveal`, `WavingFlag` (canvas, four inks,
+  posterized shading; header chip + footer band).
+- **Motion grammar:** things *register* (snap with a one-frame overshoot,
+  `ease-register`) rather than fade; illustrations print one ink at a time
+  (`WoodblockPrint`: red → navy → brass → keyblock, then settle into register);
+  the price figure stamps on change. Reduced-motion users get the finished print.
+- **Art pipeline:** four-ink illustrations live in `public/art/` as one PNG per ink
+  (`<name>-{red,navy,brass,key}.png`) plus a composite. They are generated
+  woodcuts colour-separated by `scripts/separate-blocks.mjs <input> public/art <name>`
+  (sharp). Current prints: `house` (section, 1800×1005), `wombat` (crawler),
+  `landscape` (Southern Illinois strip), `paul-cut` (portrait, optional).
+  Raw sources: `.impeccable/mocks/assets/`. Share card: `public/og-image.png`.
+- **Legacy shims** in `tailwind.config.js` / `index.css` (`bone-*`, `flag-*`,
+  `ink-100…`, `.eyebrow`, `.card`, `.text-gradient-*`) exist only so untouched
+  code compiles; do not use them in new work and delete them once unused.
 
 ---
 
@@ -134,6 +160,28 @@ shows the email address as a fallback.
   submissions aren't blocked.
 
 ---
+
+## Reviews — two sources, one seam
+
+`services/reviews.ts` → `getReviews()` / `useReviews()` is the only thing
+pages call. It returns `config/reviews.ts` instantly, then merges live Google
+reviews from `/api/google-reviews` (a Vercel serverless function in `api/`
+that calls Places API (New) with `GOOGLE_PLACES_API_KEY` from the Vercel
+environment — the key never reaches the browser). Duplicates are collapsed;
+Google entries lead. Locally (`vite dev` has no `/api`), without a key, or on
+any Google error the config reviews are shown alone — nothing breaks.
+
+- Google returns at most the 5 "most relevant" reviews per listing, so older
+  Google reviews should also be pasted into `config/reviews.ts`.
+- Setup: Google Cloud → enable **Places API (New)** → create key restricted
+  to that API → Vercel → Environment Variables → `GOOGLE_PLACES_API_KEY`
+  (optionally `GOOGLE_PLACE_ID`; otherwise resolved by name once). See
+  `.env.example`. Redeploy after setting.
+- The Reviews page shows a live "4.9 · 12 reviews on Google" pill when the
+  feed is configured, plus a "Write a Google review" CTA from
+  `siteConfig.google`.
+- The site's NAP (name / `address` / `hours`) must match the Google listing
+  exactly. Fix mismatches on the GBP side too.
 
 ## Booking — Vendor-Agnostic, Deferred
 

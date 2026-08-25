@@ -2,38 +2,33 @@ import type { ReactNode } from 'react';
 import Reveal from './Reveal';
 
 type Props = {
-  eyebrow?: string;
   title: ReactNode;
   description?: ReactNode;
   /** Action buttons / links. */
   children: ReactNode;
+  /** Ink the band is printed in. */
+  tone?: 'red' | 'navy';
+  /** Legacy prop; ignored. */
+  eyebrow?: string;
 };
 
 /**
- * Signature closing call-to-action band. A dark heritage panel with drifting
- * aurora light-leaks, a tri-color top rule, and an oversized serif headline —
- * the recurring "ready to move?" moment at the foot of interior pages.
+ * The closing band: a solid colour field ruled top and bottom, cut-letter
+ * headline in paper, and the actions. The recurring "call Paul" moment at
+ * the foot of every page.
  */
-export default function CTABand({ eyebrow, title, description, children }: Props) {
+export default function CTABand({ title, description, children, tone = 'red' }: Props) {
   return (
-    <section className="relative">
-      <div className="container-wide">
-        <Reveal>
-          <div className="aurora relative overflow-hidden rounded-3xl border border-white/10 bg-ink-300/80 px-6 py-16 text-center shadow-deep sm:px-12 sm:py-20">
-            <div aria-hidden="true" className="rule-flag absolute inset-x-0 top-0 h-px opacity-80" />
-            <div
-              aria-hidden="true"
-              className="blueprint-grid absolute inset-0 opacity-40 pointer-events-none"
-            />
-            <div className="relative mx-auto max-w-2xl">
-              {eyebrow && <p className="eyebrow mb-4 justify-center">{eyebrow}</p>}
-              <h2 className="display-2 text-white">{title}</h2>
-              {description && <p className="lede mt-5">{description}</p>}
-              <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-                {children}
-              </div>
-            </div>
+    <section className={`border-y-3 border-ink ${tone === 'red' ? 'bg-red' : 'bg-navy'} text-paper`}>
+      <div className="container-wide py-16 sm:py-20">
+        <Reveal className="grid items-end gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <h2 className="display-2 text-paper" style={{ textShadow: '0.045em 0.045em 0 #111111' }}>
+              {title}
+            </h2>
+            {description && <p className="mt-4 max-w-2xl text-lg font-medium text-paper/90">{description}</p>}
           </div>
+          <div className="flex flex-wrap gap-3 lg:col-span-4 lg:justify-end">{children}</div>
         </Reveal>
       </div>
     </section>

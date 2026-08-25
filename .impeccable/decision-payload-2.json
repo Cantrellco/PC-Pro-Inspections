@@ -1,0 +1,110 @@
+{
+  "title": "Bolder hand: choose the visual world for PC Pro Inspections",
+  "question": "Re-roll in the bolder register. Foreign forms only, each fused with the product at full commitment. The Safelight Darkroom leads by deal order; the Folk Woodblock beat it on both axes.",
+  "options": [
+    {
+      "id": "challenger-darkroom",
+      "label": "Safelight Darkroom",
+      "kicker": "THE DEAL",
+      "lineage": "a photographic printing darkroom under amber safelight",
+      "thesis": "Every house develops slowly; the inspection is the print you do not pull early.",
+      "palette": ["#c96a1a", "#3a1e08", "#e8e4dc", "#c8102e"],
+      "materials": ["amber safelight wash", "wet silver-gelatin prints", "grease-pencil labels", "enamel trays"],
+      "viewport": "Amber-washed page. Black-and-white prints of house details clipped to a drying line across the top, one print half-emerged in the tray. A red timer readout '4:00 · callback within 4 hours'. Headline 'Every house develops. We don't pull the print early.' Prices run down the left as a stepped test strip. Phone number on a red tray label is the primary action.",
+      "risk": "Amber replaces navy as the ground, so the flag and logo palette live only in accents; the metaphor needs a line of explanation for a buyer who has never seen a darkroom.",
+      "raised": [
+        {"from": "silk canopy color chords", "raise": "Every state is labeled beyond color: a print's stage is written on it, not only tinted."},
+        {"from": "sleeping city fold", "raise": "The whole page is one continuous scene; sections are stations along the drying line, not separate cards."}
+      ],
+      "sketch": ".impeccable/mocks/decision/challenger-darkroom.png",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay.webp"
+    },
+    {
+      "id": "challenger-woodblock",
+      "label": "Folk Woodblock on Shell Paper",
+      "verdict": "wins",
+      "lineage": "folk woodblock print pulled onto crushed-shell paper, each colour its own block, black keyblock last",
+      "thesis": "The house is printed one system at a time in red, navy, and brass, and the black keyblock is the inspection that ties it together.",
+      "palette": ["#f4efe4", "#c8102e", "#0a3161", "#b8952a", "#111111"],
+      "materials": ["crushed-shell paper that glitters faintly", "flat mineral pigment", "misregistered colour blocks", "woodcut black keyblock"],
+      "viewport": "Pearlescent off-white ground. Centered: a Midwestern farmhouse cut open in section, printed as red, navy, and brass blocks with a black woodcut outline; ATTIC, PANEL, WATER HEATER, CRAWL SPACE labeled in cut letters. Left: a short block of woodcut capitals with the name and the six price bands. Bottom: a red block-printed banner carrying the phone number. The waving flag prints as a woodblock flag in the corner and as the bunting on the Home page.",
+      "case": "A rural buyer reads barn-quilt and county-fair folk print instantly, and the house-in-section with prices beside it is the clearest statement of the offer on the table.",
+      "risk": "Illustration is the whole identity, so every page needs authored cuts, not photos; done timidly it becomes clip art.",
+      "sketch": ".impeccable/mocks/decision/challenger-woodblock.png",
+      "hero": "https://impeccable.style/worlds/cards/posters-covers-sleeves-dong-ho-shell-ground-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/posters-covers-sleeves-dong-ho-shell-ground.webp"
+    },
+    {
+      "id": "challenger-magazine",
+      "label": "Mid-Century Magazine Program",
+      "verdict": "competitive",
+      "lineage": "a 1960s art-directed monthly: serif masthead, two-column grid, one spot colour, a hidden mark on every cover",
+      "thesis": "Each page is an issue of the buyer's magazine, and the logo shield hides somewhere in every illustration.",
+      "palette": ["#ffffff", "#111111", "#c8102e"],
+      "materials": ["coated white stock", "black serif and rules", "one red spot", "commissioned flat illustration"],
+      "viewport": "Serif masthead 'PC PRO INSPECTIONS · The buyer's issue'. Two columns: left opens with a red drop initial and the question 'How much?' answered by the tabular price list; right is a black-white-red illustration of the inspector with a flashlight at a house section, the shield mark hidden in the lamp. Red 'Call' button, black outline 'Get my price'.",
+      "case": "Holds product clarity (the grid and the question-and-answer rhythm are made for prices and FAQs) but a first-time buyer identifies less with an art magazine than with a folk print.",
+      "risk": "Navy drops to a footnote; the identity leans on illustration quality.",
+      "sketch": ".impeccable/mocks/decision/challenger-magazine.png",
+      "hero": "https://impeccable.style/worlds/cards/brand-identity-canon-art-paul-magazine-program-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/brand-identity-canon-art-paul-magazine-program.webp"
+    },
+    {
+      "id": "challenger-shader-portal",
+      "label": "Flag Shader Portal",
+      "verdict": "competitive",
+      "lineage": "the full-bleed portal of an experiential studio: a GPU shader scene, thin type floating over living pixels",
+      "thesis": "The waving flag becomes the entire page: one living shader, one word, thin type at the corners.",
+      "palette": ["#0a3161", "#c8102e", "#f5f3ee"],
+      "materials": ["fullscreen flag shader", "film grain", "cursor displacement", "thin tracked caps"],
+      "viewport": "The whole viewport is the flag rippling in slow wind, dark and cinematic, warped softly under the cursor. Corners carry the name, nav, town, and credential in tiny caps. Center: 'INSPECTED.' oversized, one line 'Flat prices from $400. Report the same evening.', two thin pill links: Call and Get my price.",
+      "case": "Holds identification (it is the owner's pinned flag at full commitment) but loses clarity: the offer is one line and prices live a click away.",
+      "risk": "Closest of the hand to what the current site already does; the risk is arriving back at the dark-hero look with better execution.",
+      "sketch": ".impeccable/mocks/decision/challenger-shader-portal.png",
+      "hero": "https://impeccable.style/worlds/cards/webgl-shader-portal-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/webgl-shader-portal.webp"
+    },
+    {
+      "id": "challenger-silk-canopy",
+      "label": "Silk Canopy Color Chords",
+      "verdict": "declined",
+      "lineage": "translucent indigo, madder, and saffron silk banners over a sunlit courtyard",
+      "thesis": "Overlapping translucent lanes compute colour chords.",
+      "palette": ["#2b2e7a", "#a4302d", "#e2a31b", "#ffffff"],
+      "materials": ["translucent silk", "sun-white paving"],
+      "viewport": "Horizontal silk lanes crossing a white field.",
+      "case": "No buyer identifies with a courtyard canopy, and overlapping translucency muddies a price list.",
+      "kept": "States labeled beyond colour.",
+      "risk": "Decorative.",
+      "hero": "https://impeccable.style/worlds/cards/generative-art-computational-color-chord-counterpoint-hero.webp"
+    },
+    {
+      "id": "challenger-sleeping-city",
+      "label": "Sleeping City Fold",
+      "verdict": "declined",
+      "lineage": "a surreal city folding into blankets and bedposts",
+      "thesis": "Neighbourhoods dream different weather under one night.",
+      "palette": ["#141a33", "#5a5f8f", "#f0d9a8"],
+      "materials": ["quilt seams", "embroidered lights"],
+      "viewport": "A folded city at midnight.",
+      "case": "Beautiful and unreadable as an offer.",
+      "kept": "One continuous scene, not sections.",
+      "risk": "Dream costume.",
+      "hero": "https://impeccable.style/worlds/cards/dream-surreal-impossible-worlds-sleeping-city-fold-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "What a good home-inspector site ships in 2026, executed at full craft.",
+    "palette": ["#ffffff", "#0a3161", "#c8102e"],
+    "materials": ["clean grid", "inspector photo", "service cards"],
+    "viewport": "Light page, photo of the inspector, headline, phone + quote buttons, three service cards, reviews, FAQ, footer.",
+    "risk": "Indistinguishable from the next inspector's site by design.",
+    "sketch": ".impeccable/mocks/decision/canon.png"
+  },
+  "steer": true,
+  "followup": true
+}

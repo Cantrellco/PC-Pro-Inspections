@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react';
 
 type Props = {
   className?: string;
+  /** Tilt in degrees; negative lifts the fly end. 0 for bands and chips. */
+  angle?: number;
+  /** Which part of the flag a short, wide box shows. */
+  anchor?: "center" | "top";
 };
 
 /**
@@ -20,7 +24,7 @@ type Props = {
  *
  * Honors `prefers-reduced-motion` (single static frame) and pauses when hidden.
  */
-export default function WavingFlag({ className = '' }: Props) {
+export default function WavingFlag({ className = '', angle = -14, anchor = 'center' }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -32,7 +36,7 @@ export default function WavingFlag({ className = '' }: Props) {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Tilt: negative angle lifts the fly end (right) upward → flows up-right.
-    const ANGLE = (-14 * Math.PI) / 180;
+    const ANGLE = (angle * Math.PI) / 180;
     const cosA = Math.abs(Math.cos(ANGLE));
     const sinA = Math.abs(Math.sin(ANGLE));
     const OVERSCAN = 1.08;
@@ -42,17 +46,13 @@ export default function WavingFlag({ className = '' }: Props) {
     const fctx = flag.getContext('2d');
     const waved = document.createElement('canvas');
     const wx = waved.getContext('2d');
-    const shade = document.createElement('canvas'); // 1px-tall lighting strip
-    shade.height = 1;
-    const sx2 = shade.getContext('2d');
-    if (!fctx || !wx || !sx2) return;
+    if (!fctx || !wx) return;
 
     let WW = 0;
     let WH = 0;
     let FW = 0;
     let FH = 0;
     let step = 6; // wave slice width (px) — scaled to the buffer size
-    let shadeImg: ImageData | null = null;
 
     const buildFlag = (targetW: number) => {
       FW = Math.min(Math.max(Math.round(targetW), 900), 2200);
@@ -77,12 +77,13 @@ export default function WavingFlag({ className = '' }: Props) {
       WH = Math.round(WW / 1.9);
       waved.width = WW;
       waved.height = WH;
-      shade.width = WW;
-      shadeImg = sx2.createImageData(WW, 1);
 
       step = Math.max(4, Math.ceil(WW / 420)); // ~420 wave slices, regardless of size
       buildFlag(WW);
-      if (reduce) render();
+      // Always repaint once after a resize, even while the loop is parked
+      // off-screen; otherwise a resize leaves a blank canvas until it scrolls
+      // back into view.
+      if (!raf) render();
     };
 
     let raf = 0;
@@ -108,28 +109,6 @@ export default function WavingFlag({ className = '' }: Props) {
         wx.drawImage(flag, u * FW, 0, srcSliceW, FH, xs, baseY + offset, step + 1, drawH);
       }
 
-      // 2) Cloth lighting: build a 1px row, stretch it over the buffer once.
-      if (shadeImg) {
-        const d = shadeImg.data;
-        for (let x = 0; x < WW; x++) {
-          const phase = (x / WW) * waveLen * Math.PI * 2 - t * SPEED;
-          const sh = Math.cos(phase);
-          const i = x * 4;
-          if (sh >= 0) {
-            d[i] = 245;
-            d[i + 1] = 243;
-            d[i + 2] = 238;
-            d[i + 3] = sh * 0.16 * 255;
-          } else {
-            d[i] = 6;
-            d[i + 1] = 10;
-            d[i + 2] = 18;
-            d[i + 3] = -sh * 0.34 * 255;
-          }
-        }
-        sx2.putImageData(shadeImg, 0, 0);
-        wx.drawImage(shade, 0, 0, WW, 1, 0, 0, WW, WH);
-      }
     };
 
     const render = () => {
@@ -145,7 +124,10 @@ export default function WavingFlag({ className = '' }: Props) {
       const coverScale = Math.max((W * cosA + H * sinA) / WW, (W * sinA + H * cosA) / WH);
       const dw = WW * coverScale;
       const dh = WH * coverScale;
-      ctx.drawImage(waved, -dw / 2, -dh / 2, dw, dh);
+      // Anchor: a short wide band shows the top of the flag (canton + stripes)
+      // instead of a slice through its middle.
+      const dy = anchor === 'top' ? -H / 2 - dh * 0.02 : -dh / 2;
+      ctx.drawImage(waved, -dw / 2, dy, dw, dh);
       ctx.restore();
 
       // Only keep the loop alive while the hero is on-screen and the tab is
@@ -199,33 +181,47 @@ export default function WavingFlag({ className = '' }: Props) {
       window.removeEventListener('resize', resize);
       document.removeEventListener('visibilitychange', onVis);
     };
-  }, []);
+  }, [angle, anchor]);
 
   return <canvas ref={canvasRef} className={className} aria-hidden="true" />;
 }
 
-/** Draws an official-geometry U.S. flag, graded to the site's heritage palette. */
+/** Draws an official-geometry U.S. flag cut as a woodblock: flat brand inks,
+ *  a black keyblock line between every stripe and around the canton, and the
+ *  stars cut in paper. The wave displacement alone carries the cloth. */
 function drawFlag(ctx: CanvasRenderingContext2D, W: number, H: number) {
-  const RED = '#a8112a'; // deepened Old Glory crimson
-  const WHITE = '#ece6d8'; // warm bone, not pure white
-  const NAVY = '#0a2a52'; // muted heritage navy
-  const STAR = '#f1ebdd';
+  const RED = '#c8102e'; // brand red, flat
+  const WHITE = '#f4efe4'; // shell paper
+  const NAVY = '#0a3161'; // brand navy, flat
+  const STAR = '#f4efe4';
 
+  const KEY = '#111111';
+  const line = Math.max(2, Math.round(H / 110)); // keyblock weight scales with the print
   const stripeH = H / 13;
   for (let i = 0; i < 13; i++) {
     ctx.fillStyle = i % 2 === 0 ? RED : WHITE;
     ctx.fillRect(0, i * stripeH, W, stripeH + 1);
   }
+  // Misregistered red: a hair of red peeking above each red stripe's keyline.
+  ctx.fillStyle = RED;
+  for (let i = 0; i < 13; i += 2) ctx.fillRect(0, i * stripeH - line * 0.6, W, line * 0.6);
+  // Keyblock lines between stripes.
+  ctx.fillStyle = KEY;
+  for (let i = 1; i < 13; i++) ctx.fillRect(0, i * stripeH - line / 2, W, line);
+  ctx.fillRect(0, 0, W, line);
+  ctx.fillRect(0, H - line, W, line);
 
   const cantonW = W * 0.4;
   const cantonH = stripeH * 7;
   ctx.fillStyle = NAVY;
   ctx.fillRect(0, 0, cantonW, cantonH);
+  ctx.fillStyle = KEY;
+  ctx.fillRect(cantonW - line / 2, 0, line, cantonH + line / 2);
+  ctx.fillRect(0, cantonH - line / 2, cantonW, line);
 
   const mx = cantonW / 12;
   const my = cantonH / 10;
   const r = mx * 0.42;
-  ctx.fillStyle = STAR;
   for (let row = 0; row < 9; row++) {
     const even = row % 2 === 0;
     const count = even ? 6 : 5;
@@ -233,6 +229,9 @@ function drawFlag(ctx: CanvasRenderingContext2D, W: number, H: number) {
     const cy = my * (row + 1);
     for (let s = 0; s < count; s++) {
       const cx = mx * (startCol + s * 2);
+      ctx.fillStyle = KEY;
+      drawStar(ctx, cx + r * 0.16, cy + r * 0.16, 5, r, r * 0.42); // keyblock, offset
+      ctx.fillStyle = STAR;
       drawStar(ctx, cx, cy, 5, r, r * 0.42);
     }
   }

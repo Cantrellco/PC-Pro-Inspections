@@ -28,3 +28,25 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# local secrets (see .env.example)
+.env
+.env.local
+.env*.local
+
+# Playwright MCP session logs
+.playwright-mcp/
+
+# Impeccable working artifacts: keep the approved comp + its approval sidecar,
+# drop the dealt decision hand, raw generations, and review screenshots (large PNGs).
+.impeccable/review/
+.impeccable/mocks/decision/
+.impeccable/mocks/assets/
+.impeccable/mocks/world/
+.impeccable/mocks/comps/*
+!.impeccable/mocks/comps/comp-3-print-in-progress.png
+!.impeccable/mocks/comps/comp-3-print-in-progress.json
+
+# Impeccable mobile proof sheets (large PNG screenshots + inlined HTML sheet):
+# same rationale as .impeccable/review/ above — working artifacts, not site content.
+.impeccable/mobile/

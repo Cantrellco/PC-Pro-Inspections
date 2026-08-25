@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ADD_ONS,
+  COMMERCIAL_MINIMUM,
+  COMMERCIAL_TIERS,
+  STANDALONE_SERVICES,
   COMMERCIAL_SQFT_MAX,
   COMMERCIAL_SQFT_MIN,
   COMMERCIAL_SQFT_STEP,
@@ -12,12 +15,12 @@ import {
   SQFT_MAX,
   SQFT_MIN,
   SQFT_STEP,
+  SQFT_TIERS,
 } from '@/config/pricing';
 import { siteConfig } from '@/config/siteConfig';
 import { calculateQuote } from '@/services/pricing';
 import { submitLead } from '@/services/leads';
 import { track } from '@/services/analytics';
-import Card from './Card';
 import Field from './Field';
 import Button from './Button';
 import type { LeadPayload, PropertyType, QuoteResult } from '@/types';
@@ -35,24 +38,27 @@ type FormState = {
   propertyAddress: string;
   message: string;
 };
-
 type FormErrors = Partial<Record<keyof FormState, string>>;
-
-const initialForm: FormState = {
-  name: '',
-  email: '',
-  phone: '',
-  propertyAddress: '',
-  message: '',
-};
+const initialForm: FormState = { name: '', email: '', phone: '', propertyAddress: '', message: '' };
 
 const PROPERTY_TYPES: { id: PropertyType; label: string }[] = [
-  { id: 'residential', label: 'Residential' },
+  { id: 'residential', label: 'House' },
   { id: 'commercial', label: 'Commercial' },
 ];
 
-export default function QuoteCalculator() {
+type Props = {
+  /**
+   * `ticket` — the compact price ticket (Home hero): residential only, slider,
+   *            add-ons, the figure, Call + Book.
+   * `full`   — the Services page version with the commercial toggle, quote-only
+   *            services, and the request form.
+   */
+  variant?: 'ticket' | 'full';
+};
+
+export default function QuoteCalculator({ variant = 'full' }: Props) {
   const navigate = useNavigate();
+  const ticket = variant === 'ticket';
 
   // ─── Calculator state ──────────────────────────────────────────────────
   const [propertyType, setPropertyType] = useState<PropertyType>('residential');
@@ -65,40 +71,39 @@ export default function QuoteCalculator() {
   const sliderStep = isCommercial ? COMMERCIAL_SQFT_STEP : SQFT_STEP;
 
   const quote: QuoteResult = useMemo(
-    () =>
-      calculateQuote({
-        propertyType,
-        sqft,
-        addOnIds: isCommercial ? [] : selectedAddOns,
-      }),
+    () => calculateQuote({ propertyType, sqft, addOnIds: isCommercial ? [] : selectedAddOns }),
     [propertyType, sqft, selectedAddOns, isCommercial],
   );
-
-  // Fill percentage drives the slider's gradient track (see .range-pro).
   const rangeFill = ((sqft - sliderMin) / (sliderMax - sliderMin)) * 100;
+  // Tick scale printed under the track: the top of every price band.
+  const ticks = (isCommercial ? COMMERCIAL_TIERS : SQFT_TIERS)
+    .map((t) => t.max)
+    .filter((m): m is number => typeof m === 'number' && m > sliderMin && m <= sliderMax)
+    .map((m) => ({ value: m, pct: ((m - sliderMin) / (sliderMax - sliderMin)) * 100 }));
 
-  // Switching property type resets sqft to that mode's sensible default.
   const switchType = (t: PropertyType) => {
     if (t === propertyType) return;
     setPropertyType(t);
     setSqft(t === 'commercial' ? DEFAULT_COMMERCIAL_SQFT : DEFAULT_SQFT);
   };
 
-  // Debounced "quote_calculated" event
   useEffect(() => {
     const id = window.setTimeout(() => {
       track('quote_calculated', {
         propertyType,
         sqft,
-        addons:
-          propertyType === 'commercial'
-            ? 'none'
-            : selectedAddOns.join(',') || 'none',
+        addons: propertyType === 'commercial' ? 'none' : selectedAddOns.join(',') || 'none',
         total: quote.total,
       });
     }, 600);
     return () => window.clearTimeout(id);
   }, [propertyType, sqft, selectedAddOns, quote.total]);
+
+  // Stamp the figure when it changes.
+  const [stamp, setStamp] = useState(0);
+  useEffect(() => {
+    setStamp((s) => s + 1);
+  }, [quote.total]);
 
   // ─── Lead form state ──────────────────────────────────────────────────
   const [form, setForm] = useState<FormState>(initialForm);
@@ -108,28 +113,17 @@ export default function QuoteCalculator() {
   const [sentVia, setSentVia] = useState<'web3forms' | 'mailto' | null>(null);
   const [formOpen, setFormOpen] = useState(false);
 
-  const toggleAddOn = (id: string) => {
-    setSelectedAddOns((curr) =>
-      curr.includes(id) ? curr.filter((x) => x !== id) : [...curr, id],
-    );
-  };
-
-  const update = <K extends keyof FormState>(k: K, v: FormState[K]) =>
-    setForm((f) => ({ ...f, [k]: v }));
+  const toggleAddOn = (id: string) =>
+    setSelectedAddOns((curr) => (curr.includes(id) ? curr.filter((x) => x !== id) : [...curr, id]));
+  const update = <K extends keyof FormState>(k: K, v: FormState[K]) => setForm((f) => ({ ...f, [k]: v }));
 
   const validate = (): boolean => {
     const e: FormErrors = {};
-    if (!form.name.trim()) e.name = 'Please tell us your name.';
-    if (!form.email.trim()) {
-      e.email = 'Please share an email.';
-    } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
-      e.email = 'That email looks off — please double-check it.';
-    }
-    if (!form.phone.trim()) {
-      e.phone = 'A phone number speeds up scheduling.';
-    } else if (form.phone.replace(/\D/g, '').length < 10) {
-      e.phone = 'Phone number looks too short.';
-    }
+    if (!form.name.trim()) e.name = 'Tell us your name.';
+    if (!form.email.trim()) e.email = 'Add an email so we can confirm.';
+    else if (!/^\S+@\S+\.\S+$/.test(form.email)) e.email = 'That email looks off. Check it.';
+    if (!form.phone.trim()) e.phone = 'Add a phone number so Paul can call you back.';
+    else if (form.phone.replace(/\D/g, '').length < 10) e.phone = 'Phone number looks too short.';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -138,7 +132,6 @@ export default function QuoteCalculator() {
     ev.preventDefault();
     setSubmitError(null);
     if (!validate()) return;
-
     setSubmitting(true);
     const payload: LeadPayload = {
       source: 'quote_form',
@@ -151,7 +144,6 @@ export default function QuoteCalculator() {
     };
     const result = await submitLead(payload);
     setSubmitting(false);
-
     if (result.ok) {
       setSentVia(result.via ?? 'web3forms');
       setForm(initialForm);
@@ -161,32 +153,178 @@ export default function QuoteCalculator() {
   };
 
   const goToBooking = () => {
-    track('book_now_click', { location: 'calculator' });
-    const params = new URLSearchParams({
-      type: propertyType,
-      sqft: String(sqft),
-      estimate: String(quote.total),
-    });
-    if (!isCommercial && selectedAddOns.length > 0) {
-      params.set('addons', selectedAddOns.join(','));
-    }
+    track('book_now_click', { location: ticket ? 'home_ticket' : 'calculator' });
+    const params = new URLSearchParams({ type: propertyType, sqft: String(sqft), estimate: String(quote.total) });
+    if (!isCommercial && selectedAddOns.length > 0) params.set('addons', selectedAddOns.join(','));
     navigate(`/book?${params.toString()}`);
   };
 
-  // ─── Render ────────────────────────────────────────────────────────────
-  return (
-    <div className="grid lg:grid-cols-5 gap-6">
-      {/* Left: inputs */}
-      <Card glow className="lg:col-span-3 space-y-8">
-        {/* Property type toggle */}
-        <div>
-          <span className="field-label">Property type</span>
-          <div
-            role="radiogroup"
-            aria-label="Property type"
-            className="grid grid-cols-2 gap-2 rounded-xl border border-white/10 bg-ink-100/60 p-1.5"
+  // ─── Shared pieces ───────────────────────────────────────────────────
+  const slider = (
+    <div>
+      <div className="mb-1 flex items-baseline justify-between">
+        <label htmlFor={`${variant}-sqft`} className="label">
+          {isCommercial ? 'Building size' : 'Your house'}
+        </label>
+        <span className="num font-display text-2xl leading-none text-ink">
+          {sqft.toLocaleString()} <span className="font-condensed text-base font-semibold uppercase text-ink-mute">sq ft</span>
+        </span>
+      </div>
+      <input
+        id={`${variant}-sqft`}
+        type="range"
+        min={sliderMin}
+        max={sliderMax}
+        step={sliderStep}
+        value={sqft}
+        onChange={(e) => setSqft(Number(e.target.value))}
+        className="range-cut"
+        style={{ '--range-fill': `${rangeFill}%` } as CSSProperties}
+        aria-describedby={`${variant}-sqft-tier`}
+      />
+      <div aria-hidden="true" className="relative -mt-2 h-6">
+        {ticks.map((t) => (
+          <span
+            key={t.value}
+            className="absolute top-0 flex -translate-x-1/2 flex-col items-center"
+            style={{ left: `${t.pct}%` }}
           >
-            {PROPERTY_TYPES.map((pt) => {
+            <span className={`w-[2px] bg-ink ${t.value === quote.tier.max ? 'h-3' : 'h-2'}`} />
+            <span
+              className={`num mt-0.5 font-condensed text-[0.78rem] font-semibold uppercase leading-none tracking-wide ${
+                t.value === quote.tier.max ? 'text-red' : 'text-ink-mute'
+              }`}
+            >
+              {t.value >= 1000 ? `${Math.round(t.value / 100) / 10}k` : t.value}
+            </span>
+          </span>
+        ))}
+      </div>
+      <p id={`${variant}-sqft-tier`} className="num font-condensed text-xs font-semibold uppercase tracking-wide text-ink">
+        {quote.tier.label.replace('sqft', 'sq ft')}
+        {quote.durationLabel && ` · ${quote.durationLabel} on site`}
+      </p>
+    </div>
+  );
+
+  const addOns = !isCommercial && (
+    <fieldset>
+      <legend className="label mb-2">Add</legend>
+      <ul className="grid gap-2">
+        {ADD_ONS.map((a) => {
+          const checked = selectedAddOns.includes(a.id);
+          return (
+            <li key={a.id}>
+              <label className="flex cursor-pointer items-start gap-3 border-2 border-ink bg-paper-white p-3 transition-colors hover:bg-paper">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleAddOn(a.id)}
+                  className="peer sr-only"
+                  aria-describedby={`${variant}-addon-${a.id}-desc`}
+                />
+                <span
+                  aria-hidden="true"
+                  className={`mt-0.5 grid h-6 w-6 shrink-0 place-items-center border-2 border-ink peer-focus-visible:outline peer-focus-visible:outline-[3px] peer-focus-visible:outline-offset-2 peer-focus-visible:outline-navy ${
+                    checked ? 'bg-red text-paper' : 'bg-paper-white text-transparent'
+                  }`}
+                >
+                  <svg viewBox="0 0 16 16" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="square" />
+                  </svg>
+                </span>
+                <span className="flex-1">
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className="font-condensed text-lg font-bold uppercase leading-none tracking-wide text-ink">
+                      {a.label.replace(' Inspection', '')}
+                    </span>
+                    <span className="num font-display text-lg leading-none text-red">+{currency.format(a.price)}</span>
+                  </span>
+                  {a.durationHours ? (
+                    <span className="label-sm mt-1 block normal-case tracking-normal">
+                      Adds about {a.durationHours} hours on site
+                    </span>
+                  ) : null}
+                  {!ticket && (
+                    <span id={`${variant}-addon-${a.id}-desc`} className="mt-1 block text-sm text-ink-soft">
+                      {a.description}
+                    </span>
+                  )}
+                </span>
+              </label>
+            </li>
+          );
+        })}
+      </ul>
+    </fieldset>
+  );
+
+  const figure = (
+    <div className="border-t-3 border-ink pt-4">
+      <p className="label-sm">Your price</p>
+      <p
+        key={stamp}
+        className="num font-display leading-none text-red motion-safe:animate-register"
+        style={{ fontSize: ticket ? 'clamp(3.4rem, 6vw, 4.6rem)' : 'clamp(3rem, 5vw, 4rem)' }}
+        aria-live="polite"
+        aria-label={`Your price ${currency.format(quote.total)}`}
+      >
+        {currency.format(quote.total)}
+      </p>
+      <p className="mt-1 text-sm text-ink-mute">
+        {isCommercial
+          ? quote.minimumApplied
+            ? `Commercial minimum. Above ${Math.round(COMMERCIAL_MINIMUM / 0.2).toLocaleString()} sq ft the rate takes over.`
+            : 'Per-square-foot rate.'
+          : 'Flat rate.'}{' '}
+        Confirmed when you book. {PRICING_NOTE}
+      </p>
+    </div>
+  );
+
+  // ─── Ticket (Home hero) ──────────────────────────────────────────────
+  if (ticket) {
+    return (
+      <div className="ticket-cast">
+      <div className="ticket p-5 sm:p-6">
+        <h2 className="display-3 cut-brass mb-4">Your price</h2>
+        <div className="space-y-5">
+          {slider}
+          {addOns}
+          {figure}
+          <div className="grid gap-3">
+            <a
+              href={`tel:${siteConfig.phoneHref}`}
+              onClick={() => track('tel_click', { location: 'home_ticket' })}
+              className="btn-primary w-full !text-lg"
+            >
+              Call <span className="num">{siteConfig.phone}</span>
+            </a>
+            <button type="button" onClick={goToBooking} className="btn-ghost justify-center">
+              Book this inspection
+            </button>
+          </div>
+          <p className="border-t-2 border-ink pt-3 text-sm text-ink-mute">
+            Commercial building? Mold, pool, or thermal imaging?{' '}
+            <Link to="/services" className="font-semibold text-navy underline decoration-2 underline-offset-4 hover:text-red">
+              See the full price sheet
+            </Link>
+            .
+          </p>
+        </div>
+      </div>
+      </div>
+    );
+  }
+
+  // ─── Full (Services page) ────────────────────────────────────────────
+  return (
+    <div className="grid gap-6 lg:grid-cols-5">
+      <div className="space-y-7 lg:col-span-3">
+        <div>
+          <span className="label mb-2 block">What are we inspecting?</span>
+          <div role="radiogroup" aria-label="Property type" className="grid grid-cols-2 border-3 border-ink">
+            {PROPERTY_TYPES.map((pt, i) => {
               const active = pt.id === propertyType;
               return (
                 <button
@@ -195,11 +333,9 @@ export default function QuoteCalculator() {
                   role="radio"
                   aria-checked={active}
                   onClick={() => switchType(pt.id)}
-                  className={`rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-flag-redSoft focus-visible:ring-offset-2 focus-visible:ring-offset-ink ${
-                    active
-                      ? 'bg-flag-red text-white shadow-[0_1px_0_rgba(255,255,255,0.15)_inset]'
-                      : 'text-bone-muted hover:text-white'
-                  }`}
+                  className={`px-4 py-3 font-condensed text-lg font-bold uppercase tracking-wide transition-colors ${
+                    i > 0 ? 'border-l-3 border-ink' : ''
+                  } ${active ? 'bg-navy text-paper' : 'bg-paper-white text-ink hover:bg-paper'}`}
                 >
                   {pt.label}
                 </button>
@@ -208,231 +344,106 @@ export default function QuoteCalculator() {
           </div>
         </div>
 
-        {/* Square footage slider */}
-        <div>
-          <div className="flex items-baseline justify-between mb-3">
-            <label htmlFor="sqft" className="field-label !mb-0">
-              Square footage
-            </label>
-            <span className="font-display text-2xl font-semibold text-white">
-              {sqft.toLocaleString()}
-              <span className="ml-1 text-sm font-sans font-normal text-bone-dim">sqft</span>
-            </span>
-          </div>
-          <input
-            id="sqft"
-            type="range"
-            min={sliderMin}
-            max={sliderMax}
-            step={sliderStep}
-            value={sqft}
-            onChange={(e) => setSqft(Number(e.target.value))}
-            className="range-pro"
-            style={{ '--range-fill': `${rangeFill}%` } as CSSProperties}
-            aria-describedby="sqft-tier"
-          />
-          <div className="mt-2 flex items-center justify-between text-xs text-bone-dim">
-            <span>{sliderMin.toLocaleString()} sqft</span>
-            <span id="sqft-tier">
-              Tier: <span className="font-medium text-brass-soft">{quote.tier.label}</span>
-              {quote.durationLabel && (
-                <span className="text-bone-dim"> · {quote.durationLabel} on-site</span>
-              )}
-            </span>
-            <span>{sliderMax.toLocaleString()}+ sqft</span>
-          </div>
-        </div>
+        {slider}
+        {addOns}
 
-        {/* Optional add-ons (residential only) */}
-        {!isCommercial && (
-          <fieldset>
-            <legend className="field-label">Optional extra services</legend>
-            <ul className="grid sm:grid-cols-2 gap-2.5">
-              {ADD_ONS.map((a) => {
-                const checked = selectedAddOns.includes(a.id);
-                return (
-                  <li key={a.id}>
-                    <label
-                      className={`flex cursor-pointer gap-3 rounded-xl border p-3.5 transition-all duration-200 ${
-                        checked
-                          ? 'border-flag-redSoft/60 bg-flag-red/10 shadow-[0_0_0_1px_rgba(239,74,99,0.15)]'
-                          : 'border-white/10 bg-ink-100/60 hover:border-white/25 hover:bg-ink-100'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleAddOn(a.id)}
-                        className="peer sr-only"
-                        aria-describedby={`addon-${a.id}-desc`}
-                      />
-                      <span
-                        aria-hidden="true"
-                        className={`mt-0.5 grid h-5 w-5 flex-shrink-0 place-items-center rounded-md border transition-all duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-flag-redSoft peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-ink ${
-                          checked
-                            ? 'border-flag-red bg-flag-red text-white'
-                            : 'border-white/25 text-transparent'
-                        }`}
-                      >
-                        <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.5">
-                          <path d="M3 8.5l3.2 3.2L13 5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </span>
-                      <span className="flex-1">
-                        <span className="flex items-baseline justify-between gap-2">
-                          <span className="font-semibold text-white">{a.label}</span>
-                          <span className="font-semibold whitespace-nowrap text-flag-redSoft">
-                            +{currency.format(a.price)}
-                          </span>
-                        </span>
-                        <span
-                          id={`addon-${a.id}-desc`}
-                          className="mt-1 block text-xs leading-relaxed text-bone-muted"
-                        >
-                          {a.description}
-                        </span>
-                      </span>
-                    </label>
-                  </li>
-                );
-              })}
+        {!isCommercial && STANDALONE_SERVICES.length > 0 && (
+          <div>
+            <p className="label mb-2">Booked on its own</p>
+            <ul className="grid gap-2 sm:grid-cols-3">
+              {STANDALONE_SERVICES.map((a) => (
+                <li key={a.id} className="border-2 border-ink bg-paper-white p-3">
+                  <span className="flex items-baseline justify-between gap-2">
+                    <span className="font-condensed text-lg font-bold uppercase leading-none tracking-wide text-ink">
+                      {a.label}
+                    </span>
+                    <span className="num font-display text-lg leading-none text-ink">
+                      {currency.format(a.price)}
+                    </span>
+                  </span>
+                  <span className="mt-1.5 block text-sm text-ink-soft">{a.description}</span>
+                </li>
+              ))}
             </ul>
+          </div>
+        )}
 
-            {QUOTE_ONLY_SERVICES.length > 0 && (
-              <>
-                <p className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wider text-bone-dim">
-                  Also available — call for a quote
-                </p>
-                <ul className="grid sm:grid-cols-2 gap-2.5">
-                  {QUOTE_ONLY_SERVICES.map((s) => (
-                    <li key={s.id}>
-                      <div className="flex h-full gap-3 rounded-xl border border-dashed border-white/15 bg-ink-100/40 p-3.5">
-                        <span className="flex-1">
-                          <span className="flex items-baseline justify-between gap-2">
-                            <span className="font-semibold text-bone">{s.label}</span>
-                            <a
-                              href={`tel:${siteConfig.phoneHref}`}
-                              onClick={() =>
-                                track('tel_click', { location: 'calculator_quote_only' })
-                              }
-                              className="font-semibold whitespace-nowrap text-brass-soft underline-offset-4 hover:underline"
-                            >
-                              Call for quote
-                            </a>
-                          </span>
-                          <span className="mt-1 block text-xs leading-relaxed text-bone-muted">
-                            {s.description}
-                          </span>
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </fieldset>
+        {!isCommercial && QUOTE_ONLY_SERVICES.length > 0 && (
+          <div>
+            <p className="label mb-2">Also available, priced by the job</p>
+            <ul className="grid gap-2 sm:grid-cols-3">
+              {QUOTE_ONLY_SERVICES.map((s) => (
+                <li key={s.id} className="border-2 border-dashed border-ink p-3">
+                  <p className="font-condensed text-lg font-bold uppercase leading-none tracking-wide text-ink">{s.label}</p>
+                  <p className="mt-1.5 text-sm text-ink-soft">{s.description}</p>
+                  <a
+                    href={`tel:${siteConfig.phoneHref}`}
+                    onClick={() => track('tel_click', { location: 'calculator_quote_only' })}
+                    className="btn-ghost mt-2 text-sm"
+                  >
+                    Call for a price
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
 
         {isCommercial && (
-          <p className="rounded-xl border border-white/10 bg-ink-100/60 p-3.5 text-xs leading-relaxed text-bone-muted">
-            Commercial inspections are priced per square foot and scale with the
-            building. For multi-structure properties or specialty add-ons, call
-            us for a tailored quote.
+          <p className="border-2 border-ink bg-paper-white p-3.5 text-sm text-ink-soft">
+            Commercial buildings are priced per square foot, with a{' '}
+            {currency.format(COMMERCIAL_MINIMUM)} minimum, up to 10,000 sq ft. Larger buildings,
+            multiple structures, or specialty add-ons: call for a tailored price.
           </p>
         )}
-      </Card>
+      </div>
 
-      {/* Right: itemized breakdown (sticky on desktop) */}
-      <Card rim className="lg:col-span-2 flex flex-col gap-5 lg:sticky lg:top-28 lg:self-start">
-        <div>
-          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-bone-muted">
-            Your Estimate
-          </h3>
-          <ul className="space-y-2.5 text-sm">
-            <li className="flex justify-between gap-3">
-              <span className="text-bone">{quote.baseLineItem.label}</span>
-              <span className="font-semibold whitespace-nowrap text-white">
-                {currency.format(quote.baseLineItem.amount)}
-              </span>
+      <div className="lg:sticky lg:top-32 lg:col-span-2 lg:self-start">
+      <div className="ticket-cast">
+      <div className="ticket flex h-full flex-col gap-5 p-5 sm:p-6">
+        <h3 className="display-3 cut-brass">Your ticket</h3>
+        <ul className="space-y-2 border-t-2 border-ink pt-3 ">
+          <li className="flex justify-between gap-3">
+            <span className="text-ink-soft">{quote.baseLineItem.label.replace('sqft', 'sq ft')}</span>
+            <span className="num font-semibold text-ink">{currency.format(quote.baseLineItem.amount)}</span>
+          </li>
+          {quote.addOnLineItems.map((li) => (
+            <li key={li.id} className="flex justify-between gap-3 motion-safe:animate-fade-up">
+              <span className="text-ink-soft">{li.label}</span>
+              <span className="num font-semibold text-ink">+{currency.format(li.amount)}</span>
             </li>
-            {quote.addOnLineItems.map((li) => (
-              <li key={li.id} className="flex animate-fade-up justify-between gap-3">
-                <span className="text-bone">{li.label}</span>
-                <span className="font-semibold whitespace-nowrap text-white">
-                  +{currency.format(li.amount)}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-4 flex items-baseline justify-between border-t border-white/10 pt-4">
-            <span className="text-sm uppercase tracking-wider text-bone-muted">
-              Estimated Total
-            </span>
-            <span
-              className="font-display text-4xl font-bold text-gradient-brass"
-              aria-live="polite"
-              aria-label={`Estimated total ${currency.format(quote.total)}`}
-            >
-              {currency.format(quote.total)}
-            </span>
-          </div>
-          {quote.durationLabel && (
-            <div className="mt-2 flex items-center justify-between text-xs text-bone-dim">
-              <span>Estimated on-site time</span>
-              <span className="font-medium text-bone">{quote.durationLabel}</span>
-            </div>
-          )}
-        </div>
-        <p className="text-xs text-bone-dim">
-          Estimate only — final price confirmed at scheduling. {PRICING_NOTE}
-        </p>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Button onClick={goToBooking} className="!py-3">
-            Book This Inspection
-          </Button>
+          ))}
+        </ul>
+        {figure}
+        <div className="grid gap-3">
+          <Button onClick={goToBooking}>Book this inspection</Button>
           <Button
             variant="secondary"
             onClick={() => setFormOpen((v) => !v)}
             aria-expanded={formOpen}
             aria-controls="quote-request-form"
-            className="!py-3"
           >
-            {formOpen ? 'Hide Form' : 'Request This Quote'}
+            {formOpen ? 'Hide the form' : 'Send this to Paul'}
           </Button>
         </div>
-      </Card>
+      </div>
+      </div>
+      </div>
 
-      {/* Lead form */}
       {formOpen && (
-        <Card rim className="animate-fade-up lg:col-span-5">
-          <h3 className="mb-1 font-display text-2xl text-white">
-            Send us this quote
-          </h3>
-          <p className="mb-6 text-bone-muted">
-            We will confirm scheduling and answer any questions within a few
-            business hours.
-          </p>
+        <div className="sheet sheet-navy p-6 motion-safe:animate-fade-up sm:p-8 lg:col-span-5">
+          <h3 className="display-3">Send this quote to Paul</h3>
+          <p className="mt-2 mb-6 text-ink-soft">He confirms scheduling and answers questions within a few business hours.</p>
 
           {sentVia ? (
-            <div
-              role="status"
-              className="rounded-md border border-flag-navyLight/40 bg-flag-navy/15 p-5 text-bone"
-            >
+            <div role="status" className="border-3 border-navy bg-paper p-5 text-ink-soft">
               {sentVia === 'mailto' ? (
                 <>
-                  <p className="mb-1 font-semibold text-white">
-                    Your email is ready to send.
-                  </p>
-                  <p className="text-sm text-bone-muted">
-                    We've opened your email app with this quote in the message —
-                    just press{' '}
-                    <span className="font-semibold text-white">Send</span>. If
-                    nothing opened, email us at{' '}
-                    <a
-                      href={`mailto:${siteConfig.email}`}
-                      className="text-white underline underline-offset-2"
-                    >
+                  <p className="mb-1 font-condensed text-xl font-bold uppercase text-ink">Your email is ready to send.</p>
+                  <p>
+                    Your email app opened with this quote in the message. Press <strong>Send</strong>. If nothing opened,
+                    email{' '}
+                    <a href={`mailto:${siteConfig.email}`} className="font-semibold text-navy underline decoration-2 underline-offset-4">
                       {siteConfig.email}
                     </a>
                     .
@@ -440,87 +451,33 @@ export default function QuoteCalculator() {
                 </>
               ) : (
                 <>
-                  <p className="mb-1 font-semibold text-white">
-                    Thanks — we got it.
-                  </p>
-                  <p className="text-sm text-bone-muted">
-                    We will call you back shortly to confirm scheduling. Keep an
-                    eye on your phone.
-                  </p>
+                  <p className="mb-1 font-condensed text-xl font-bold uppercase text-ink">Got it.</p>
+                  <p>Paul will call you back to confirm scheduling. Keep an eye on your phone.</p>
                 </>
               )}
             </div>
           ) : (
-            <form
-              id="quote-request-form"
-              onSubmit={handleSubmit}
-              noValidate
-              className="grid gap-5 sm:grid-cols-2"
-            >
-              <Field
-                id="qf-name"
-                label="Your name"
-                required
-                value={form.name}
-                onChange={(e) => update('name', e.target.value)}
-                error={errors.name}
-                autoComplete="name"
-              />
-              <Field
-                id="qf-phone"
-                label="Phone"
-                required
-                inputMode="tel"
-                value={form.phone}
-                onChange={(e) => update('phone', e.target.value)}
-                error={errors.phone}
-                autoComplete="tel"
-              />
-              <Field
-                id="qf-email"
-                label="Email"
-                required
-                type="email"
-                value={form.email}
-                onChange={(e) => update('email', e.target.value)}
-                error={errors.email}
-                autoComplete="email"
-              />
-              <Field
-                id="qf-address"
-                label="Property address (optional)"
-                value={form.propertyAddress}
-                onChange={(e) => update('propertyAddress', e.target.value)}
-                autoComplete="street-address"
-              />
+            <form id="quote-request-form" onSubmit={handleSubmit} noValidate className="grid gap-5 sm:grid-cols-2">
+              <Field id="qf-name" label="Your name" required value={form.name} onChange={(e) => update('name', e.target.value)} error={errors.name} autoComplete="name" />
+              <Field id="qf-phone" label="Phone" required inputMode="tel" value={form.phone} onChange={(e) => update('phone', e.target.value)} error={errors.phone} autoComplete="tel" />
+              <Field id="qf-email" label="Email" required type="email" value={form.email} onChange={(e) => update('email', e.target.value)} error={errors.email} autoComplete="email" />
+              <Field id="qf-address" label="Property address (optional)" value={form.propertyAddress} onChange={(e) => update('propertyAddress', e.target.value)} autoComplete="street-address" />
               <div className="sm:col-span-2">
-                <Field
-                  as="textarea"
-                  id="qf-message"
-                  label="Anything we should know? (optional)"
-                  value={form.message}
-                  onChange={(e) => update('message', e.target.value)}
-                  hint="Closing date, access notes, specific concerns, etc."
-                />
+                <Field as="textarea" id="qf-message" label="Anything Paul should know? (optional)" value={form.message} onChange={(e) => update('message', e.target.value)} hint="Closing date, access notes, specific concerns." />
               </div>
-
               {submitError && (
-                <div
-                  role="alert"
-                  className="rounded-md border border-flag-redSoft/40 bg-flag-red/10 p-4 text-sm text-bone sm:col-span-2"
-                >
+                <div role="alert" className="border-3 border-red bg-paper-white p-4 text-sm text-ink sm:col-span-2">
                   {submitError}
                 </div>
               )}
-
               <div className="flex items-center justify-end sm:col-span-2">
                 <Button type="submit" loading={submitting}>
-                  {submitting ? 'Sending…' : 'Send My Quote Request'}
+                  {submitting ? 'Sending' : 'Send my quote'}
                 </Button>
               </div>
             </form>
           )}
-        </Card>
+        </div>
       )}
     </div>
   );

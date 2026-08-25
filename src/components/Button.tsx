@@ -1,11 +1,12 @@
 import type { ButtonHTMLAttributes, ReactNode, AnchorHTMLAttributes } from 'react';
 import { Link } from 'react-router-dom';
 
-type Variant = 'primary' | 'secondary' | 'ghost';
+type Variant = 'primary' | 'secondary' | 'navy' | 'ghost';
 
 const variantClass: Record<Variant, string> = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
+  navy: 'btn-navy',
   ghost: 'btn-ghost',
 };
 
@@ -17,12 +18,13 @@ type CommonProps = {
 
 type ButtonAsButton = CommonProps & ButtonHTMLAttributes<HTMLButtonElement> & {
   as?: 'button';
-  /** Shows a spinner and blocks input during async work. */
+  /** Blocks input during async work and says so. */
   loading?: boolean;
 };
 type ButtonAsLink = CommonProps & {
   as: 'link';
   to: string;
+  onClick?: () => void;
 };
 type ButtonAsAnchor = CommonProps &
   AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -32,33 +34,15 @@ type ButtonAsAnchor = CommonProps &
 
 type Props = ButtonAsButton | ButtonAsLink | ButtonAsAnchor;
 
-function Spinner() {
-  return (
-    <svg
-      className="h-4 w-4 animate-spin"
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-    >
-      <circle className="opacity-25" cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="3" />
-      <path
-        className="opacity-90"
-        d="M21 12a9 9 0 0 0-9-9"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
+/** Block-printed button: paper type on an ink field, a second colour
+ *  misregistered behind the keyblock outline. */
 export default function Button(props: Props) {
   const variant = props.variant ?? 'primary';
   const cls = `${variantClass[variant]} ${props.className ?? ''}`.trim();
 
   if (props.as === 'link') {
     return (
-      <Link to={props.to} className={cls}>
+      <Link to={props.to} onClick={props.onClick} className={cls}>
         {props.children}
       </Link>
     );
@@ -79,7 +63,9 @@ export default function Button(props: Props) {
       aria-busy={loading || undefined}
       className={cls}
     >
-      {loading && <Spinner />}
+      {loading && (
+        <span aria-hidden="true" className="inline-block h-3 w-3 animate-pulse bg-current" />
+      )}
       {children}
     </button>
   );

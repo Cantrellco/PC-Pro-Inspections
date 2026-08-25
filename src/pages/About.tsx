@@ -5,98 +5,72 @@ import Section from '@/components/Section';
 import SectionHeader from '@/components/SectionHeader';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
-import Magnetic from '@/components/Magnetic';
 import Photo from '@/components/Photo';
 import Reveal from '@/components/Reveal';
-import CountUp from '@/components/CountUp';
+import WoodblockPrint from '@/components/WoodblockPrint';
 import CTABand from '@/components/CTABand';
 
+/**
+ * About — Paul's letter, printed. The portrait sits beside the letter, then a
+ * certificate ledger, the crawler print, a short "how Paul works" list, and
+ * the closing band. No counters, no mission statement: the letter says it.
+ */
 export default function About() {
   const c = siteConfig;
-  const eq = c.equipment;
   const story = c.ownerStory;
+  const eq = c.equipment;
+  const pc = c.primaryCertification;
 
-  const stats: { value?: number; suffix?: string; text?: string; label: string }[] = [
-    { value: 1600, suffix: '+', label: 'Point inspection' },
-    { text: 'Same-Day', label: 'Reports' },
-    { value: 14, label: 'Areas of expertise' },
+  const HOW: [string, string][] = [
+    ['He calls you back himself', `Within ${c.responsePromise.callbackHours} hours. There is no front desk. You get Paul.`],
+    ['You walk the last 45 minutes', 'Come at the end and walk the house with him. Ask anything before you leave.'],
+    ['The report lands that evening', 'Photos, a priority summary, and plain-language notes your agent can use.'],
+    ['No upsell. Prices are posted.', 'The price on the Services page is the price. Nothing gets added at the door.'],
   ];
 
   return (
     <>
       <SEO
-        title={`About — Certifications & Experience | ${c.businessName}`}
-        description={`Meet ${c.inspectorName}, owner of ${c.businessName} — an InterNACHI® Certified Professional Inspector in Fairfield, IL. Thorough, honest home inspections with same-day, photo-rich reports, plus thermal imaging, mold, termite/WDO, pool & spa, and manufactured-home expertise.`}
+        title={`Meet ${c.inspectorName} — About | ${c.businessName}`}
+        description={`${c.inspectorName} owns and runs ${c.businessName} in ${c.address.city}, IL. InterNACHI® Certified Professional Inspector with thermal, mold, termite/WDO, pool & spa and manufactured-home certifications. He calls back within ${c.responsePromise.callbackHours} hours and sends the report the same evening.`}
         pathname="/about"
       />
 
-      <Section>
-        <div className="grid gap-10 lg:grid-cols-5 lg:gap-14">
-          {/* Portrait — framed with a restrained crimson hairline accent.
-              Sticky on desktop so Paul's face accompanies the whole letter;
-              shown first on mobile so visitors meet him before they read. */}
-          <div className="lg:order-last lg:col-span-2">
-            <div className="lg:sticky lg:top-28">
-              <div className="group relative">
-                <div
-                  aria-hidden="true"
-                  className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-                />
-                <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
-                  <div aria-hidden="true" className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent" />
-                  <Photo
-                    src={c.images.inspector}
-                    alt={`${c.inspectorName} — ${c.businessName}`}
-                    aspectClass="aspect-[4/5]"
-                    roundedClass="rounded-xl"
-                    placeholderLabel={`Portrait of ${c.inspectorName}`}
-                  />
-                </div>
-              </div>
-              {c.primaryCertification && (
-                <p className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-brass-deep/30 bg-white/[0.03] py-1.5 pl-1.5 pr-4">
-                  <img
-                    src={c.primaryCertification.badgeSrc}
-                    alt={c.primaryCertification.badgeAlt}
-                    width={28}
-                    height={28}
-                    className="h-7 w-7 flex-shrink-0 object-contain"
-                  />
-                  <span className="text-sm font-medium text-bone-muted">
-                    {c.primaryCertification.shortLabel}
-                  </span>
-                </p>
-              )}
-              {/* Portrait: real photo of Paul, set in siteConfig.images.inspector.
-                  Processed from the original at src/assets/paul-original.png. For a
-                  crisper result later, drop a higher-res original and re-export. */}
+      {/* ─── The letter ──────────────────────────────────────────────── */}
+      <Section wide>
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* Portrait: first on mobile, right-hand and sticky on desktop. */}
+          <div className="lg:order-last lg:col-span-5">
+            <div className="mx-auto max-w-sm lg:sticky lg:top-24 lg:max-w-none">
+              <Photo
+                src={c.images.inspector}
+                alt={`${c.inspectorName}, owner of ${c.businessName}`}
+                aspectClass="aspect-[4/5]"
+                ink="red"
+                priority
+                placeholderLabel={`Portrait of ${c.inspectorName}`}
+              />
+              <p className="label-sm mt-4">
+                {c.inspectorName} · {c.address.city}, Illinois
+              </p>
             </div>
           </div>
 
-          {/* The owner's letter */}
-          <div className="lg:col-span-3">
-            <p className="eyebrow mb-4">{story ? story.eyebrow : `About ${c.businessName}`}</p>
-            <h1 className="mb-6 font-display text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-[1.05]">
-              Built on craft,
-              <br />
-              <span className="italic text-flag-redSoft">paid by trust.</span>
-            </h1>
+          <div className="lg:col-span-7">
+            <h1 className="display-1 cut-red">Meet Paul.</h1>
 
-            {story && (
-              <>
-                <p className="lede mb-6 max-w-2xl !text-bone">{story.greeting}</p>
+            {story ? (
+              <div className="mt-8 max-w-[68ch]">
+                <p className="lede">{story.greeting}</p>
 
-                <div className="space-y-5 text-lg leading-relaxed text-bone-muted">
+                <div className="mt-6 space-y-5 text-lg leading-relaxed text-ink-soft">
                   {story.paragraphs.flatMap((para, i) => {
                     const nodes = [<p key={`p-${i}`}>{para}</p>];
                     if (story.pullQuote && story.pullQuote.afterParagraph === i) {
                       nodes.push(
-                        <figure
-                          key={`q-${i}`}
-                          className="!my-9 border-l-2 border-flag-red/60 pl-6 sm:pl-7"
-                        >
-                          <blockquote className="font-display text-[1.55rem] sm:text-3xl font-medium leading-[1.22] text-white">
-                            {story.pullQuote.text}
+                        <figure key={`q-${i}`} className="!my-10 border-y-3 border-red py-6">
+                          <blockquote className="display-3 text-navy">
+                            “{story.pullQuote.text}”
                           </blockquote>
                         </figure>,
                       );
@@ -106,289 +80,219 @@ export default function About() {
                 </div>
 
                 {/* Signature */}
-                <div className="mt-10">
-                  <div
-                    aria-hidden="true"
-                    className="mb-5 h-px w-20 bg-gradient-to-r from-brass/70 to-transparent"
-                  />
-                  <p className="font-display text-3xl sm:text-[2rem] italic leading-none text-white">
+                <div className="mt-10 border-t-3 border-ink pt-5">
+                  <p className="font-display text-3xl uppercase leading-none text-ink sm:text-4xl">
                     {story.signature.name}
                   </p>
-                  <p className="mt-2 text-sm tracking-wide text-bone-dim">
-                    {story.signature.title}
-                  </p>
+                  <p className="label-sm mt-2">{story.signature.title}</p>
                 </div>
-              </>
+              </div>
+            ) : (
+              <p className="lede mt-8 max-w-[68ch]">
+                {c.inspectorName} owns and runs {c.businessName} in {c.address.city}, Illinois.
+              </p>
             )}
 
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Button as="link" to="/services">
-                See pricing
-              </Button>
-              <Button as="link" to="/contact" variant="secondary">
-                Get in touch
+            <div className="mt-10 flex flex-wrap gap-3">
+              <a
+                href={`tel:${c.phoneHref}`}
+                onClick={() => track('tel_click', { location: 'about_letter' })}
+                className="btn-primary"
+              >
+                Call <span className="num">{c.phone}</span>
+              </a>
+              <Button as="link" to="/services" variant="secondary">
+                See prices
               </Button>
             </div>
           </div>
         </div>
-
-        {/* Credentials at a glance */}
-        <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90}>
-              <Card rim glow className="h-full text-center sm:text-left">
-                <p className="font-display text-5xl font-semibold leading-none text-white">
-                  {s.text ? s.text : <CountUp value={s.value ?? 0} suffix={s.suffix} />}
-                </p>
-                <p className="mt-3 text-sm uppercase tracking-[0.16em] text-bone-dim">
-                  {s.label}
-                </p>
-              </Card>
-            </Reveal>
-          ))}
-        </div>
       </Section>
 
-      {/* Featured equipment — robotic crawl-space crawler */}
-      {eq && (
-        <Section tone="elevated">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-            {/* Product image — dark-framed studio plate; a vignette melts the
-                light studio backdrop into the frame so it reads on the dark theme. */}
+      {/* ─── Certificate ledger ──────────────────────────────────────── */}
+      {(pc || c.certifications.length > 0) && (
+        <Section wide tone="deep">
+          <SectionHeader
+            title="Certified. Glad to prove it."
+            description="Paul carries the papers. Ask to see any of them."
+            cut="brass"
+          />
+
+          {pc && (
             <Reveal>
-              <figure className="group relative">
-                <div
-                  aria-hidden="true"
-                  className="absolute -inset-3 -z-10 rounded-3xl bg-gradient-to-br from-flag-navy/25 via-transparent to-flag-red/15 opacity-70 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
-                />
-                <div className="relative rounded-2xl border border-white/10 bg-ink-100/60 p-2 shadow-card">
-                  <div
-                    aria-hidden="true"
-                    className="absolute -top-px inset-x-6 h-px bg-gradient-to-r from-transparent via-flag-red/70 to-transparent"
+              <Card ink="brass">
+                <div className="grid gap-6 sm:grid-cols-[7rem_1fr] sm:items-start">
+                  <img
+                    src={pc.badgeSrc}
+                    alt={pc.badgeAlt}
+                    width={112}
+                    height={112}
+                    className="h-24 w-24 object-contain sm:h-28 sm:w-28"
                   />
-                  <div className="relative aspect-square overflow-hidden rounded-xl">
-                    <img
-                      src={eq.image}
-                      alt={eq.imageAlt}
-                      width={1182}
-                      height={1117}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          'radial-gradient(115% 100% at 50% 42%, transparent 36%, rgba(8,11,18,0.80) 100%)',
-                      }}
-                    />
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-0 bg-gradient-to-br from-flag-navy/15 via-transparent to-flag-red/10 mix-blend-soft-light"
-                    />
+                  <div>
+                    <h3 className="display-3 text-ink">{pc.name}</h3>
+                    <p className="label-sm mt-2">{pc.issuer}</p>
+                    <p className="mt-4 max-w-[62ch] text-ink-soft">{pc.blurb}</p>
+                    {pc.verifyUrl && (
+                      <a
+                        href={pc.verifyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-ghost mt-5"
+                      >
+                        Verify this credential
+                      </a>
+                    )}
                   </div>
                 </div>
-                <figcaption className="mt-4 text-sm italic text-bone-dim">
-                  The {eq.name} — built by {eq.maker}.
+              </Card>
+            </Reveal>
+          )}
+
+          {c.certifications.length > 0 && (
+            <ul className={`border-t-3 border-ink ${pc ? 'mt-12' : ''}`}>
+              {c.certifications.map((cert, i) => (
+                <Reveal
+                  as="li"
+                  key={cert.name}
+                  delay={i * 50}
+                  className="grid grid-cols-[40px_1fr] items-center gap-4 border-b-2 border-ink py-4 sm:grid-cols-[40px_1fr_auto] sm:gap-6"
+                >
+                  {cert.badgeSrc ? (
+                    <img
+                      src={cert.badgeSrc}
+                      alt={cert.badgeAlt}
+                      width={40}
+                      height={40}
+                      loading="lazy"
+                      className="h-10 w-10 object-contain"
+                    />
+                  ) : (
+                    <span aria-hidden="true" className="block h-10 w-10 border-2 border-ink" />
+                  )}
+                  <h3 className="font-display text-xl uppercase leading-none text-ink sm:text-2xl">
+                    {cert.name}
+                  </h3>
+                  <p className="col-start-2 text-sm text-ink-mute sm:col-start-auto sm:text-right">
+                    {cert.issuer}
+                  </p>
+                </Reveal>
+              ))}
+            </ul>
+          )}
+        </Section>
+      )}
+
+      {/* ─── The crawler ─────────────────────────────────────────────── */}
+      {eq && (
+        <Section wide tone="navy">
+          <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="lg:col-span-6">
+              <WoodblockPrint
+                base="wombat"
+                ratio={1200 / 896}
+                alt={eq.imageAlt}
+                className="mx-auto w-full max-w-xl"
+              />
+              <figure className="mx-auto mt-8 max-w-[16rem] sm:max-w-xs">
+                <Photo
+                  src={eq.image}
+                  alt={eq.imageAlt}
+                  aspectClass="aspect-square"
+                  ink="brass"
+                  placeholderLabel={eq.name}
+                />
+                <figcaption className="label-sm mt-3 !text-paper/80">
+                  {eq.name} · {eq.maker}
                 </figcaption>
               </figure>
-            </Reveal>
+            </div>
 
-            {/* Copy + capabilities */}
-            <div>
-              <p className="eyebrow mb-3">{eq.eyebrow}</p>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-white leading-[1.1] mb-5">
+            <div className="lg:col-span-6">
+              <h2 className="display-2 text-paper" style={{ textShadow: '0.045em 0.045em 0 #c8102e' }}>
                 {eq.headline}
               </h2>
-              <p className="text-bone-muted text-lg leading-relaxed mb-8">
-                {eq.body}
-              </p>
+              <p className="mt-5 max-w-xl text-lg text-paper/90">{eq.body}</p>
 
-              <ul className="space-y-4">
+              <ul className="mt-8 border-t-3 border-paper">
                 {eq.features.map((f) => (
-                  <li key={f.label} className="flex items-start gap-3.5">
-                    <span
-                      aria-hidden="true"
-                      className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-brass-deep/40 bg-flag-navy/20 text-flag-redSoft"
-                    >
-                      <svg viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="currentColor">
-                        <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
-                      </svg>
-                    </span>
-                    <span className="leading-relaxed">
-                      <span className="font-semibold text-white">{f.label}</span>
-                      <span className="text-bone-muted"> — {f.detail}</span>
-                    </span>
+                  <li key={f.label} className="border-b-2 border-paper/40 py-4">
+                    <h3 className="font-condensed text-xl font-bold uppercase leading-none tracking-wide text-paper">
+                      {f.label}
+                    </h3>
+                    <p className="mt-1.5 max-w-xl text-paper/80">{f.detail}</p>
                   </li>
                 ))}
               </ul>
 
               {eq.productUrl && (
-                <p className="mt-8 text-sm text-bone-dim">
-                  <a
-                    href={eq.productUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 border-b border-transparent text-bone-muted transition-colors hover:border-flag-red/60 hover:text-white"
-                  >
-                    See the {eq.name} by {eq.maker}
-                    <svg
-                      viewBox="0 0 20 20"
-                      className="h-3.5 w-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.6"
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M7 13l6-6m0 0H8m5 0v5"
-                      />
-                    </svg>
-                  </a>
-                </p>
+                <a
+                  href={eq.productUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-8 inline-flex items-center gap-2 font-condensed font-bold uppercase tracking-[0.06em] text-paper underline decoration-brass decoration-[3px] underline-offset-[5px] hover:decoration-paper"
+                >
+                  See the {eq.name} by {eq.maker}
+                </a>
               )}
             </div>
           </div>
         </Section>
       )}
 
-      {/* Mission */}
-      <Section>
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="eyebrow mb-3">Our Mission</p>
-          <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-5">
-            Give buyers the report we would want on our own home.
-          </h2>
-          <p className="text-bone-muted text-lg leading-relaxed">
-            Honest findings. Clear priorities. Plain-language explanations.
-            No upselling, no fear-mongering, no rubber-stamp. Just the facts
-            you need to decide.
-          </p>
+      {/* ─── How Paul works ──────────────────────────────────────────── */}
+      <Section wide>
+        <div className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <SectionHeader
+              title="How Paul works"
+              description="One inspector. Same rules on every house."
+              cut="navy"
+              className="!mb-6"
+            />
+            <a
+              href={`tel:${c.phoneHref}`}
+              onClick={() => track('tel_click', { location: 'about_how' })}
+              className="btn-primary"
+            >
+              Call <span className="num">{c.phone}</span>
+            </a>
+          </div>
+          <ol className="border-t-3 border-ink lg:col-span-8">
+            {HOW.map(([t, d], i) => (
+              <Reveal
+                as="li"
+                key={t}
+                delay={i * 60}
+                className="grid grid-cols-[3.5rem_1fr] gap-4 border-b-3 border-ink py-5 sm:grid-cols-[5rem_1fr]"
+              >
+                <span className="num font-display text-4xl leading-none text-brass sm:text-5xl">{i + 1}</span>
+                <div>
+                  <h3 className="font-display text-2xl uppercase leading-none text-ink sm:text-3xl">{t}</h3>
+                  <p className="mt-2 max-w-xl text-ink-soft">{d}</p>
+                </div>
+              </Reveal>
+            ))}
+          </ol>
         </div>
       </Section>
 
-      {/* Certifications */}
-      <Section tone="elevated">
-        <SectionHeader
-          eyebrow="Credentials"
-          title="Certified — and glad to prove it."
-          description="An InterNACHI® Certified Professional Inspector, plus advanced specialty certifications beyond the standard inspection — each verifiable; ask for documentation any time."
-        />
-
-        {/* Headline credential — InterNACHI CPI */}
-        {c.primaryCertification && (
-          <Reveal>
-            <Card rim glow className="mb-10">
-              <div className="flex flex-col items-center gap-6 text-center sm:flex-row sm:text-left">
-                <img
-                  src={c.primaryCertification.badgeSrc}
-                  alt={c.primaryCertification.badgeAlt}
-                  width={112}
-                  height={112}
-                  className="h-24 w-24 flex-shrink-0 object-contain drop-shadow-[0_3px_16px_rgba(205,165,49,0.22)] sm:h-28 sm:w-28"
-                />
-                <div>
-                  <p className="eyebrow mb-2">Professional certification</p>
-                  <h3 className="font-display text-2xl font-semibold leading-tight text-white">
-                    {c.primaryCertification.name}
-                  </h3>
-                  <p className="mt-1.5 text-xs uppercase tracking-[0.16em] text-brass-soft">
-                    {c.primaryCertification.issuer}
-                  </p>
-                  <p className="mt-3 text-bone-muted leading-relaxed">
-                    {c.primaryCertification.blurb}
-                  </p>
-                  {c.primaryCertification.verifyUrl && (
-                    <a
-                      href={c.primaryCertification.verifyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-flag-redSoft"
-                    >
-                      <span className="link-underline">Verify this credential</span>
-                      <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </Card>
-          </Reveal>
-        )}
-
-        {c.certifications.length > 0 && (
-          <p className="mb-6 text-center text-sm uppercase tracking-[0.2em] text-bone-dim">
-            Plus specialty certifications
-          </p>
-        )}
-        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {c.certifications.map((cert) => (
-            <li key={cert.name}>
-              <Card rim glow hover className="h-full">
-                <div className="flex items-start gap-4">
-                  {cert.badgeSrc ? (
-                    <img
-                      src={cert.badgeSrc}
-                      alt={cert.badgeAlt}
-                      width={64}
-                      height={64}
-                      loading="lazy"
-                      className="h-16 w-16 object-contain rounded"
-                    />
-                  ) : (
-                    <div
-                      aria-hidden="true"
-                      className="h-16 w-16 flex-shrink-0 rounded bg-flag-navy/30 border border-flag-navyLight/40 flex items-center justify-center text-flag-redSoft"
-                    >
-                      <svg viewBox="0 0 20 20" className="h-8 w-8" fill="currentColor">
-                        <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
-                      </svg>
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="font-semibold text-white leading-snug">
-                      {cert.name}
-                    </h3>
-                    <p className="mt-1.5 text-sm text-bone-muted">
-                      {cert.issuer}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      </Section>
-
-      <div className="pb-20 sm:pb-28">
-        <CTABand
-          eyebrow="Work With Us"
-          title={
-            <>
-              The same care, on <span className="italic text-gradient-brass">your</span> home.
-            </>
-          }
-          description="See transparent pricing, or reach out and we'll take it from there."
+      {/* ─── Close ───────────────────────────────────────────────────── */}
+      <CTABand
+        title="Call Paul. He picks up."
+        description={`Callback within ${c.responsePromise.callbackHours} hours. Report the same evening.`}
+      >
+        <a
+          href={`tel:${c.phoneHref}`}
+          onClick={() => track('tel_click', { location: 'about_cta_band' })}
+          className="btn-navy !text-lg"
         >
-          <Magnetic>
-            <Button as="link" to="/services" className="!px-8 !py-4 !text-base">
-              See pricing
-            </Button>
-          </Magnetic>
-          <Button
-            as="a"
-            href={`tel:${c.phoneHref}`}
-            variant="secondary"
-            onClick={() => track('tel_click', { location: 'about_cta_band' })}
-            className="!px-8 !py-4 !text-base"
-          >
-            Call {c.phone}
-          </Button>
-        </CTABand>
-      </div>
+          Call <span className="num">{c.phone}</span>
+        </a>
+        <Button as="link" to="/services" variant="secondary" className="!text-lg">
+          See prices
+        </Button>
+      </CTABand>
     </>
   );
 }

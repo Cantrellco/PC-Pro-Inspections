@@ -5,46 +5,42 @@ type Props = {
 };
 
 /**
- * Framed locator map of the service region.
+ * Locator map of the service region, framed as a printed sheet.
  *
- * Renders a self-hosted static tile mosaic (CARTO dark basemap, no API key)
- * centered on `siteConfig.geo`, so it ALWAYS draws on the dark theme. We render
- * the tiles ourselves as <img> rather than embedding OpenStreetMap's
- * `export/embed.html` iframe, because that iframe reliably loads its controls
- * but fails to paint its tiles when framed cross-origin (it shows a black map).
+ * Renders a keyless static tile mosaic (CARTO light basemap) centered on
+ * `siteConfig.geo`. Tiles are drawn as <img> rather than through OpenStreetMap's
+ * `export/embed.html` iframe, which fails to paint its tiles when framed.
  *
- * If the owner sets `siteConfig.mapEmbedSrc` (e.g. a Google "Embed a map" src,
- * which paints fine framed), that takes over instead.
+ * If the owner sets `siteConfig.mapEmbedSrc` (e.g. a Google "Embed a map" src),
+ * that iframe takes over instead.
  */
 export default function ServiceAreaMap({ className = '' }: Props) {
   const { mapEmbedSrc, geo, address, serviceAreaSummary } = siteConfig;
 
   return (
-    <div
-      className={`relative h-full min-h-[19rem] w-full overflow-hidden rounded-2xl border border-white/10 bg-ink-200 shadow-card ${className}`}
-    >
-      {mapEmbedSrc ? (
-        <iframe
-          src={mapEmbedSrc}
-          title={`Service area map — ${serviceAreaSummary}`}
-          loading="lazy"
-          referrerPolicy="no-referrer-when-downgrade"
-          className="absolute inset-0 h-full w-full"
-          style={{ border: 0, filter: 'brightness(0.92) contrast(1.02) saturate(0.92)' }}
-        />
-      ) : geo ? (
-        <TileMosaic lat={geo.latitude} lng={geo.longitude} zoom={9} label={serviceAreaSummary} />
-      ) : (
-        <div className="photo-placeholder absolute inset-0 flex items-center justify-center text-bone-dim text-sm">
-          Service-area map
-        </div>
-      )}
+    <div className={`sheet sheet-navy p-0 ${className}`.trim()}>
+      <div className="relative h-full min-h-[19rem] w-full overflow-hidden bg-paper-deep">
+        {mapEmbedSrc ? (
+          <iframe
+            src={mapEmbedSrc}
+            title={`Service area map — ${serviceAreaSummary}`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 h-full w-full"
+            style={{ border: 0 }}
+          />
+        ) : geo ? (
+          <TileMosaic lat={geo.latitude} lng={geo.longitude} zoom={9} label={serviceAreaSummary} />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-sm text-ink-mute">
+            Service-area map
+          </div>
+        )}
 
-      {/* Edge ring + locator chip to blend the map into the dark theme. */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10" />
-      <div className="pointer-events-none absolute left-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-ink/85 px-3.5 py-1.5 text-xs font-semibold text-bone backdrop-blur">
-        <span aria-hidden="true" className="h-2 w-2 rounded-full bg-flag-red" />
-        Based in {address.city}, {address.region}
+        {/* Pinned label: where Paul starts from. */}
+        <span className="tag pointer-events-none absolute left-3 top-3 text-sm sm:left-4 sm:top-4">
+          Based in {address.city}, {address.region}
+        </span>
       </div>
     </div>
   );
@@ -53,8 +49,8 @@ export default function ServiceAreaMap({ className = '' }: Props) {
 /* ── Static slippy-map mosaic ──────────────────────────────────────────────
  * Web-Mercator tile math. We over-render a box around the center point and
  * center it in the container, so the map fills any responsive size and the
- * marker always sits dead-center. CARTO's `dark_all` basemap is key-free and
- * already matches the near-black canvas. Attribution is required and shown. */
+ * marker always sits dead-center. CARTO's `light_all` basemap is key-free.
+ * Attribution is required and shown. */
 
 const TILE = 256;
 const SUBDOMAINS = ['a', 'b', 'c', 'd'];
@@ -104,7 +100,7 @@ function TileMosaic({
       tiles.push(
         <img
           key={`${tx}-${ty}`}
-          src={`https://${s}.basemaps.cartocdn.com/dark_all/${zoom}/${tx}/${ty}@2x.png`}
+          src={`https://${s}.basemaps.cartocdn.com/light_all/${zoom}/${tx}/${ty}@2x.png`}
           alt=""
           aria-hidden="true"
           width={TILE}
@@ -131,13 +127,7 @@ function TileMosaic({
 
   return (
     <>
-      <div
-        aria-hidden="true"
-        role="img"
-        aria-label={`Map centered on ${label}`}
-        className="absolute inset-0"
-        style={{ filter: 'brightness(1.06) saturate(1.08) contrast(1.02)' }}
-      >
+      <div role="img" aria-label={`Map centered on ${label}`} className="absolute inset-0">
         <div
           className="absolute"
           style={{ left: `calc(50% - ${offsetX}px)`, top: `calc(50% - ${offsetY}px)` }}
@@ -146,28 +136,18 @@ function TileMosaic({
         </div>
       </div>
 
-      {/* Vignette: darkens the edges so any uncovered corner melts into the canvas. */}
-      <div
+      {/* Center marker: a red square cut with a black line, dead-center on the geo point. */}
+      <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(8,8,8,0.55) 100%)',
-        }}
+        className="pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 border-2 border-ink bg-red"
       />
-
-      {/* Center marker — pulsing crimson dot, anchored dead-center on the geo point. */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <span className="map-pulse absolute left-1/2 top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-flag-red/40" />
-        <span className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/85 bg-flag-red shadow-[0_2px_8px_rgba(0,0,0,0.55)]" />
-      </div>
 
       {/* Required attribution. */}
       <a
         href="https://www.openstreetmap.org/copyright"
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute bottom-2 left-3 text-[10px] leading-none text-bone-dim/70 hover:text-bone-muted"
+        className="absolute bottom-2 left-3 bg-paper-white px-1.5 py-0.5 text-[10px] font-semibold leading-none text-ink-soft hover:text-red"
       >
         © OpenStreetMap · CARTO
       </a>
@@ -177,10 +157,9 @@ function TileMosaic({
         href={osmUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full border border-white/10 bg-ink/80 px-3 py-1.5 text-xs font-semibold text-bone backdrop-blur transition-colors hover:text-white hover:border-white/20"
+        className="tag absolute bottom-3 right-3 text-xs hover:bg-paper"
       >
-        View larger map
-        <span aria-hidden="true">↗</span>
+        View larger map ↗
       </a>
     </>
   );

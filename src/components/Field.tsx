@@ -27,8 +27,6 @@ export default function Field(props: Props) {
       .filter(Boolean)
       .join(' ') || undefined;
 
-  const errorClass = error ? 'border-flag-redSoft focus:border-flag-redSoft' : '';
-
   let control: ReactNode;
   if (props.as === 'textarea') {
     const {
@@ -48,7 +46,7 @@ export default function Field(props: Props) {
         aria-describedby={describedBy}
         rows={rest.rows ?? 4}
         {...rest}
-        className={`field-input ${errorClass} ${rest.className ?? ''}`.trim()}
+        className={`field-input ${rest.className ?? ''}`.trim()}
       />
     );
   } else {
@@ -68,7 +66,7 @@ export default function Field(props: Props) {
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         {...rest}
-        className={`field-input ${errorClass} ${rest.className ?? ''}`.trim()}
+        className={`field-input ${rest.className ?? ''}`.trim()}
       />
     );
   }
@@ -77,11 +75,11 @@ export default function Field(props: Props) {
     <div>
       <label htmlFor={id} className="field-label">
         {label}
-        {required && <span className="text-flag-redSoft ml-0.5">*</span>}
+        {required && <span aria-hidden="true" className="ml-0.5 text-red">*</span>}
       </label>
       {control}
       {hint && !error && (
-        <p id={`${id}-hint`} className="mt-1.5 text-xs text-bone-dim">
+        <p id={`${id}-hint`} className="mt-1.5 text-sm text-ink-mute">
           {hint}
         </p>
       )}

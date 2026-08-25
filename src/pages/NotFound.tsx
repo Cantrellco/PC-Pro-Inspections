@@ -1,9 +1,15 @@
+import { Link } from 'react-router-dom';
 import SEO from '@/components/SEO';
-import Section from '@/components/Section';
-import Button from '@/components/Button';
 import { siteConfig } from '@/config/siteConfig';
 import { track } from '@/services/analytics';
 
+const LINKS = [
+  { to: '/', label: 'Home' },
+  { to: '/services', label: 'Services' },
+  { to: '/contact', label: 'Contact' },
+] as const;
+
+/** A blank sheet: nothing printed at this address. */
 export default function NotFound() {
   const c = siteConfig;
   return (
@@ -13,38 +19,42 @@ export default function NotFound() {
         description="The page you tried to reach does not exist. Head back to the home page or call us directly."
       />
 
-      <Section blueprint aurora>
-        <div className="text-center max-w-xl mx-auto py-10">
-          <p className="font-display text-8xl sm:text-[10rem] font-bold text-gradient-flag leading-none">
-            404
+      <section className="container-narrow py-16 sm:py-24">
+        <div className="sheet sheet-red mx-auto max-w-3xl p-6 sm:p-10 lg:p-14">
+          <p className="label-sm">
+            Error <span className="num">404</span>
           </p>
-          <div className="star-divider !my-7" aria-hidden="true">
-            <svg viewBox="0 0 20 20" className="h-4 w-4 text-brass-soft" fill="currentColor">
-              <path d="M10 1.5l2.7 5.5 6 .9-4.3 4.2 1 6L10 15.3 4.6 18l1-6L1.3 7.9l6-.9L10 1.5z" />
-            </svg>
-          </div>
-          <h1 className="mt-6 font-display text-3xl sm:text-4xl font-bold text-white">
-            We couldn't find that page.
-          </h1>
-          <p className="mt-4 text-bone-muted">
-            The link may be broken, or the page may have moved. Head back to
-            the home page — or call us and we will help you directly.
+          <h1 className="display-1 cut-red mt-4">Nothing printed here.</h1>
+          <p className="mt-6 max-w-[60ch] text-lg text-ink-soft">
+            That address is blank. The link may be old or mistyped.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3 justify-center">
-            <Button as="link" to="/">
-              Back to Home
-            </Button>
-            <Button
-              as="a"
+
+          <ul className="mt-8 border-t-2 border-ink">
+            {LINKS.map((l) => (
+              <li key={l.to} className="border-b-2 border-ink">
+                <Link to={l.to} className="label flex items-center justify-between py-3 hover:text-red">
+                  <span>{l.label}</span>
+                  <span aria-hidden="true" className="font-condensed text-brass">
+                    →
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-8 text-ink-soft">
+            Or{' '}
+            <a
               href={`tel:${c.phoneHref}`}
-              variant="secondary"
               onClick={() => track('tel_click', { location: '404' })}
+              className="font-semibold text-navy underline decoration-2 underline-offset-4 hover:text-red"
             >
-              Call {c.phone}
-            </Button>
-          </div>
+              call Paul at <span className="num">{c.phone}</span>
+            </a>
+            .
+          </p>
         </div>
-      </Section>
+      </section>
     </>
   );
 }

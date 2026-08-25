@@ -40,7 +40,9 @@ export default function Reveal({
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+      // Trip a little before the block reaches the fold so it has settled by the
+      // time the reader gets there.
+      { threshold: 0.05, rootMargin: '140px 0px -4% 0px' },
     );
     observer.observe(el);
     return () => observer.disconnect();

@@ -7,6 +7,7 @@ import { NAV_ITEMS } from './navItems';
 import { useBodyScrollLock, useFocusTrap, useInertBackground } from './hooks';
 import { CloseIcon, PhoneIcon } from './icons';
 
+/** A full paper sheet slides over the page; links are big cut letters. */
 export default function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -16,7 +17,6 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
   useBodyScrollLock(open);
   useFocusTrap(panelRef, open, closeRef);
 
-  // Flip `shown` on the next frame after mount so the staggered reveal animates.
   useEffect(() => {
     if (!open) {
       setShown(false);
@@ -26,7 +26,6 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
     return () => cancelAnimationFrame(id);
   }, [open]);
 
-  // Esc closes (also handled by focus-trapped buttons, but cover the panel).
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -48,55 +47,47 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className="fixed inset-0 z-[95] flex flex-col bg-ink/95 backdrop-blur-2xl motion-safe:animate-fade-in lg:hidden"
+      className="fixed inset-0 z-[95] flex flex-col bg-paper motion-safe:animate-fade-in lg:hidden"
     >
-      <div
-        aria-hidden="true"
-        className="h-px w-full bg-gradient-to-r from-transparent via-brass/60 to-transparent"
-      />
-
-      {/* Top bar with close */}
-      <div className="container-wide flex h-16 items-center justify-between sm:h-20">
-        <span className="eyebrow !text-bone-dim">Menu</span>
+      <div className="container-wide flex h-20 items-center justify-between border-b-3 border-ink">
+        <span className="label">Menu</span>
         <button
           ref={closeRef}
           type="button"
           onClick={onClose}
           aria-label="Close menu"
-          className="grid h-11 w-11 place-items-center rounded-full border border-white/10 bg-white/[0.03] text-bone transition-colors hover:bg-white/[0.07] hover:text-white"
+          className="grid h-11 w-11 place-items-center border-2 border-ink bg-paper-white text-ink"
         >
           <CloseIcon className="h-6 w-6" />
         </button>
       </div>
 
-      {/* Links — big editorial type with staggered reveal */}
-      <nav aria-label="Mobile" className="container-wide flex flex-1 flex-col justify-center gap-1 py-6">
+      <nav aria-label="Mobile" className="container-wide flex flex-1 flex-col justify-center py-4">
         {NAV_ITEMS.map((item, i) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
             onClick={onClose}
-            style={{ transitionDelay: `${70 + i * 45}ms` }}
+            style={{ transitionDelay: `${40 + i * 35}ms` }}
             data-show={shown}
             className={({ isActive }) =>
-              `group flex items-baseline gap-4 border-b border-white/[0.06] py-3.5 font-display text-[clamp(2rem,9vw,3rem)] leading-none tracking-tight transition-all duration-500 ease-smooth data-[show=false]:translate-y-4 data-[show=false]:opacity-0 motion-reduce:!translate-y-0 motion-reduce:!opacity-100 motion-reduce:transition-none ${
-                isActive ? 'text-white' : 'text-bone-muted hover:text-white'
+              `flex items-center justify-between border-b-2 border-ink py-3 font-display text-[clamp(2rem,9vw,3rem)] uppercase leading-none transition-all duration-300 ease-register data-[show=false]:translate-y-3 data-[show=false]:opacity-0 motion-reduce:transition-none ${
+                isActive ? 'text-red' : 'text-ink hover:text-navy'
               }`
             }
           >
-            <span className="font-sans text-xs font-semibold text-brass/70 tabular-nums">
-              0{i + 1}
+            <span>{item.label}</span>
+            <span aria-hidden="true" className="font-condensed text-lg text-brass">
+              ★
             </span>
-            <span className="flex-1">{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      {/* CTAs pinned to the bottom */}
       <div
-        className="container-wide grid grid-cols-2 gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2 transition-all duration-500 ease-smooth data-[show=false]:translate-y-3 data-[show=false]:opacity-0 motion-reduce:transition-none"
-        style={{ transitionDelay: '420ms' }}
+        className="container-wide grid grid-cols-2 gap-3 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2 transition-all duration-300 ease-register data-[show=false]:translate-y-3 data-[show=false]:opacity-0 motion-reduce:transition-none"
+        style={{ transitionDelay: '320ms' }}
         data-show={shown}
       >
         <a
@@ -105,7 +96,7 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
             track('tel_click', { location: 'mobile_menu' });
             onClose();
           }}
-          className="btn-secondary"
+          className="btn-primary"
         >
           <PhoneIcon className="h-4 w-4" />
           Call
@@ -116,9 +107,9 @@ export default function MobileMenu({ open, onClose }: { open: boolean; onClose: 
             track('book_now_click', { location: 'mobile_menu' });
             onClose();
           }}
-          className="btn-primary"
+          className="btn-navy"
         >
-          Book Now
+          Book
         </Link>
       </div>
     </div>,
